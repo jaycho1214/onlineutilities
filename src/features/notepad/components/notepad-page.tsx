@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo, lazy, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
@@ -8,6 +8,17 @@ import { NotepadActions } from "./notepad-actions";
 import { NotepadStats } from "./notepad-stats";
 import { Check, Loader2 } from "lucide-react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
+import dynamic from "next/dynamic";
+import type { MDXEditorMethods } from '@mdxeditor/editor';
+
+const MarkdownEditor = dynamic(() => import('./markdown-editor'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <Loader2 className="animate-spin" />
+    </div>
+  ),
+});
 
 interface NotepadPageProps {
   notepadId?: string;
@@ -24,6 +35,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
   const hasInitialized = useRef(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const saveIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mdxEditorRef = useRef<MDXEditorMethods>(null);
 
   // Use currentNoteId instead of notepadId prop
   const notepadId = currentNoteId;
@@ -198,13 +210,13 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
   }, [notepadId, router]);
 
   const downloadAsFile = useCallback(() => {
-    const blob = new Blob([content], { type: "text/plain" });
+    const blob = new Blob([content], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = `${title || "note"}-${
       new Date().toISOString().split("T")[0]
-    }.txt`;
+    }.md`;
     a.click();
     URL.revokeObjectURL(url);
   }, [content, title]);
@@ -253,7 +265,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
           value={title}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder={titlePlaceholder}
-          className="w-full p-6 pb-4 pr-12 md:pr-24 bg-transparent border-0 outline-0 text-foreground placeholder:text-muted-foreground font-semibold text-2xl font-serif"
+          className="w-full px-6 py-6 pb-4 pr-12 md:pr-24 bg-transparent border-0 outline-0 text-foreground placeholder:text-muted-foreground font-semibold text-2xl font-serif"
           style={{
             WebkitAppearance: "none",
             MozAppearance: "textfield",
@@ -265,18 +277,18 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
 
       {/* Main Content */}
       <div className="flex-1 min-h-0 relative">
-        <textarea
-          value={content}
-          onChange={(e) => handleContentChange(e.target.value)}
-          placeholder={contentPlaceholder}
-          className="w-full h-full p-6 pt-2 pr-12 md:pr-24 pb-6 bg-transparent border-0 outline-0 resize-none text-foreground placeholder:text-muted-foreground font-mono text-base leading-6 overflow-y-auto"
-          style={{
-            scrollbarWidth: "thin",
-            border: "none",
-            outline: "none",
-          }}
-          autoFocus
-        />
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-full">
+            <Loader2 className="animate-spin" />
+          </div>
+        }>
+          <MarkdownEditor
+            ref={mdxEditorRef}
+            value={content}
+            onChange={handleContentChange}
+            placeholder={contentPlaceholder}
+          />
+        </Suspense>
       </div>
 
       {/* Actions and Stats */}

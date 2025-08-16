@@ -1,0 +1,117 @@
+.mdx-editor-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.mdx-editor-wrapper .mdxeditor {
+  background: transparent !important;
+  height: 100%;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+    "Liberation Mono", Menlo, monospace;
+}
+
+.mdx-editor-wrapper .mdxeditor-root-contenteditable {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  color: var(--foreground) !important;
+}
+
+.mdx-editor-wrapper .mdxeditor [contenteditable="true"] {
+  caret-color: var(--foreground) !important;
+  cursor: text !important;
+  outline: none !important;
+  color: var(--foreground) !important;
+}
+
+.mdx-editor-wrapper .mdxeditor [data-placeholder]:empty::before {
+  /* color: rgb(161 161 170) !important; */
+  color: rgb(1 1 1) !important;
+  opacity: 1 !important;
+}
+
+/* Ensure text is visible */
+.mdx-editor-wrapper .mdxeditor p,
+.mdx-editor-wrapper .mdxeditor span,
+.mdx-editor-wrapper .mdxeditor div {
+  color: inherit !important;
+}
+
+.mdx-editor-wrapper .cm-editor {
+  background: transparent !important;
+}
+
+.mdx-editor-wrapper .cm-editor .cm-cursor,
+.mdx-editor-wrapper .cm-editor .cm-cursor-primary {
+  border-left: 2px solid var(--foreground) !important;
+  border-left-color: var(--foreground) !important;
+  visibility: visible !important;
+}
+
+.mdx-editor-wrapper .cm-content {
+  color: var(--foreground) !important;
+  caret-color: var(--foreground) !important;
+}
+
+.mdx-editor-wrapper .mdxeditor-diff-source-wrapper {
+  background: transparent !important;
+  height: 100%;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar {
+  display: none !important;
+}
+
+/* Fix prose styles alignment and colors */
+.mdx-editor-wrapper .prose {
+  max-width: none !important;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem !important;
+  padding-right: 3rem !important;
+  color: var(--foreground) !important;
+}
+
+@media (min-width: 768px) {
+  .mdx-editor-wrapper .prose {
+    padding-right: 6rem !important;
+  }
+}
+
+.mdx-editor-wrapper .prose > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* Fix heading and paragraph colors and spacing */
+/* Minimal overrides only (relying on Tailwind Typography .prose & vendor CSS) */
+
+/* Color & font inheritance override (skip vendor placeholder class) */
+.mdx-editor-wrapper .prose :not(._placeholder_sects_1101) {
+  color: var(--foreground);
+}
+
+/* Placeholder */
+.mdx-editor-wrapper .mdxeditor [data-placeholder]:empty::before {
+  color: color-mix(in srgb, var(--foreground) 45%, transparent) !important;
+  opacity: 1 !important;
+  font-weight: 400;
+}
+
+/* Optional compact utility retained */
+.mdx-editor-wrapper.compact .prose { font-size: .85rem; padding: .5rem 1rem 1rem 1rem !important; }
+
+/* Override prose dark mode styles */
+.mdx-editor-wrapper .prose-invert {
+  color: var(--foreground) !important;
+}
+
+.mdx-editor-wrapper .prose-invert h1,
+.mdx-editor-wrapper .prose-invert h2,
+.mdx-editor-wrapper .prose-invert h3,
+.mdx-editor-wrapper .prose-invert h4,
+.mdx-editor-wrapper .prose-invert h5,
+.mdx-editor-wrapper .prose-invert h6,
+.mdx-editor-wrapper .prose-invert p,
+.mdx-editor-wrapper .prose-invert li,
+.mdx-editor-wrapper .prose-invert blockquote {
+  color: var(--foreground) !important;
+}
