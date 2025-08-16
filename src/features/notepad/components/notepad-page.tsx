@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+  Suspense,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
@@ -9,9 +16,9 @@ import { NotepadStats } from "./notepad-stats";
 import { Check, Loader2 } from "lucide-react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import dynamic from "next/dynamic";
-import type { MDXEditorMethods } from '@mdxeditor/editor';
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 
-const MarkdownEditor = dynamic(() => import('./markdown-editor'), {
+const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
@@ -210,7 +217,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
   }, [notepadId, router]);
 
   const downloadAsFile = useCallback(() => {
-    const blob = new Blob([content], { type: 'text/markdown' });
+    const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -249,8 +256,6 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
     return { wordCount, charCount, readingTime };
   }, [content]);
 
-  // lastSaved retained locally if needed later, but NotepadStats doesn't accept it currently
-  const lastSaved = currentNote ? new Date(currentNote.updatedAt) : null;
   const titlePlaceholder = notepadId ? "Untitled" : "Start with a title...";
   const contentPlaceholder = notepadId
     ? "Start writing..."
@@ -277,11 +282,13 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
 
       {/* Main Content */}
       <div className="flex-1 min-h-0 relative">
-        <Suspense fallback={
-          <div className="flex items-center justify-center h-full">
-            <Loader2 className="animate-spin" />
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="animate-spin" />
+            </div>
+          }
+        >
           <MarkdownEditor
             ref={mdxEditorRef}
             value={content}

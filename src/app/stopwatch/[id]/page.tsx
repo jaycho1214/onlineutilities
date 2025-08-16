@@ -1,11 +1,10 @@
-"use client";
-
 import { StopwatchFullscreen } from "@/features/stopwatch/components/stopwatch-fullscreen";
 
-export default function StopwatchFullscreenPage({
+export default async function Page({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <StopwatchFullscreen stopwatchId={params.id} />;
+  const { id } = await params;
+  return <StopwatchFullscreen stopwatchId={id} />;
 }

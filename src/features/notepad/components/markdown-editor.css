@@ -7,8 +7,9 @@
 .mdx-editor-wrapper .mdxeditor {
   background: transparent !important;
   height: 100%;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
-    "Liberation Mono", Menlo, monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
 }
 
 .mdx-editor-wrapper .mdxeditor-root-contenteditable {
@@ -97,7 +98,10 @@
 }
 
 /* Optional compact utility retained */
-.mdx-editor-wrapper.compact .prose { font-size: .85rem; padding: .5rem 1rem 1rem 1rem !important; }
+.mdx-editor-wrapper.compact .prose {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem 1rem 1rem !important;
+}
 
 /* Override prose dark mode styles */
 .mdx-editor-wrapper .prose-invert {

@@ -12,7 +12,7 @@ import { Skeleton } from "@/features/shared/ui/skeleton";
 
 export function TimerPage() {
   const { timers, activeTimerId, createTimer, setActiveTimer, isLoaded } =
-    useTimer() as any; // extended type includes isLoaded
+    useTimer();
 
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickHours, setQuickHours] = useState("0");
@@ -121,8 +121,8 @@ export function TimerPage() {
           </div>
         </div>
         <p className="text-muted-foreground max-w-2xl">
-          Set countdown timers with custom durations. Get notified when time's
-          up with optional sound alerts.
+          Set countdown timers with custom durations. Get notified when
+          time&apos;s up with optional sound alerts.
         </p>
       </div>
 
@@ -220,7 +220,7 @@ export function TimerPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {timers.map((timer: any) => (
+          {timers.map((timer) => (
             <TimerCard
               key={timer.id}
               timer={timer}

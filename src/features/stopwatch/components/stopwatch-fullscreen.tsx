@@ -40,11 +40,8 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
     setCurrentTime(getCurrentTime(stopwatch));
   }, [stopwatch, getCurrentTime, router, now]);
 
-  if (!stopwatch) {
-    return null;
-  }
-
   const handleStartPause = async () => {
+    if (!stopwatch) return;
     if (stopwatch.isRunning) {
       await pauseStopwatch(stopwatch.id);
     } else {
@@ -53,10 +50,12 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
   };
 
   const handleReset = async () => {
+    if (!stopwatch) return;
     await resetStopwatch(stopwatch.id);
   };
 
   const handleLap = async () => {
+    if (!stopwatch) return;
     await addLap(stopwatch.id);
   };
 
@@ -66,9 +65,24 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
 
   // Get last 5 laps for display
   const recentLaps = useMemo(
-    () => stopwatch.laps.slice(-5).reverse(),
-    [stopwatch.laps],
+    () => stopwatch?.laps.slice(-5).reverse() || [],
+    [stopwatch?.laps],
   );
+
+  // Early return if stopwatch not found
+  if (!stopwatch) {
+    return (
+      <div className="fixed inset-0 bg-background flex flex-col items-center justify-center p-8">
+        <GradientBackground />
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Stopwatch not found</h1>
+          <Button onClick={() => router.push("/stopwatch")}>
+            Return to Stopwatch
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col items-center justify-center p-8">

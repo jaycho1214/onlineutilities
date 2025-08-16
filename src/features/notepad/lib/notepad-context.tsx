@@ -7,7 +7,6 @@ import {
   useCallback,
   ReactNode,
   useMemo,
-  useRef,
 } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { notesService, NoteDocument, notepadDb } from "./notepad-db";
@@ -31,15 +30,17 @@ export function NotepadProvider({ children }: { children: ReactNode }) {
   const [currentNoteId, setCurrentNoteId] = useState<string | null>(null);
 
   // Use Dexie's reactive query for real-time updates with better error handling
-  const notes =
-    useLiveQuery(async () => {
-      try {
-        return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
-      } catch (error) {
-        console.error("Failed to fetch notes:", error);
-        return [];
-      }
-    }, []) ?? [];
+  const notesFromQuery = useLiveQuery(async () => {
+    try {
+      return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
+    } catch (error) {
+      console.error("Failed to fetch notes:", error);
+      return [];
+    }
+  }, []);
+
+  // Memoize notes to prevent dependency changes on every render
+  const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
 
   // Use reactive query for current note with error handling
   const currentNote =

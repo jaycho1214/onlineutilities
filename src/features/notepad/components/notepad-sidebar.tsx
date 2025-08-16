@@ -30,11 +30,13 @@ function NotepadSidebarComponent() {
   const [search, setSearch] = useState("");
 
   // Use live query to get notes directly from database
-  const notes =
-    useLiveQuery(
-      () => notepadDb.notes.orderBy("updatedAt").reverse().toArray(),
-      [],
-    ) ?? [];
+  const notesFromQuery = useLiveQuery(
+    () => notepadDb.notes.orderBy("updatedAt").reverse().toArray(),
+    [],
+  );
+
+  // Memoize notes to prevent dependency changes on every render
+  const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
 
   const createNewNote = async () => {
     router.push("/notepad");

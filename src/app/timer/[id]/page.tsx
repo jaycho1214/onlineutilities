@@ -1,11 +1,10 @@
-"use client";
-
 import { TimerFullscreen } from "@/features/timer/components/timer-fullscreen";
 
-export default function TimerFullscreenPage({
+export default async function Page({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <TimerFullscreen timerId={params.id} />;
+  const { id } = await params;
+  return <TimerFullscreen timerId={id} />;
 }

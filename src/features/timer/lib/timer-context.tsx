@@ -62,7 +62,6 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!anyRunning) return; // Only check completions while active
-    let changed = false;
     setTimers((prev) =>
       prev.map((timer) => {
         if (
@@ -74,7 +73,6 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         const elapsed = now - timer.startedAt;
         const remaining = Math.max(0, timer.remainingAtStart - elapsed);
         if (remaining === 0 && !timer.completedAt) {
-          changed = true;
           if (timer.soundEnabled) playAlarmSound();
           const updated: Timer = {
             ...timer,

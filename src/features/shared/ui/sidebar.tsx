@@ -258,10 +258,7 @@ function Sidebar({
           className="flex h-full w-full flex-col overflow-hidden"
         >
           {variant === "floating" ? (
-            <GlassSurface
-              className="h-full flex flex-col p-3 rounded-xl"
-              blur={30}
-            >
+            <GlassSurface className="h-full flex flex-col p-3 rounded-xl">
               {children}
             </GlassSurface>
           ) : (

@@ -63,6 +63,12 @@ function StopwatchCardComponent({
     stopwatch,
   ]);
 
+  // Memoize reversed laps to avoid recreating on every render
+  const reversedLaps = useMemo(
+    () => stopwatch.laps.slice().reverse(),
+    [stopwatch.laps],
+  );
+
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -273,10 +279,7 @@ function StopwatchCardComponent({
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-foreground/80">Laps</h4>
             <div className="max-h-32 overflow-y-auto space-y-1">
-              {useMemo(
-                () => stopwatch.laps.slice().reverse(),
-                [stopwatch.laps],
-              ).map((lap, index) => (
+              {reversedLaps.map((lap, index) => (
                 <div
                   key={lap.id}
                   className="flex justify-between items-center text-sm bg-white/5 rounded px-3 py-2"

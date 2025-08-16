@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/features/shared/providers/theme-provider";
 import { CommandProvider } from "@/features/shared/providers/command-provider";
 import { CommandPalette } from "@/features/shared/ui/command-palette";
 import { Toaster } from "@/features/shared/ui/sonner";
-import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { ErrorBoundary } from "@/features/shared/ui/error-boundary";
 import { SidebarProvider } from "@/features/shared/ui/sidebar";
 
