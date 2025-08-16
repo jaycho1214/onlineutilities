@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
@@ -76,45 +82,48 @@ function StopwatchCardComponent({
     }
   }, [isEditing]);
 
-  const handleStartPause = async () => {
+  const handleStartPause = useCallback(async () => {
     if (stopwatch.isRunning) {
       await pauseStopwatch(stopwatch.id);
     } else {
       await startStopwatch(stopwatch.id);
     }
-  };
+  }, [stopwatch.isRunning, stopwatch.id, pauseStopwatch, startStopwatch]);
 
-  const handleReset = async () => {
+  const handleReset = useCallback(async () => {
     await resetStopwatch(stopwatch.id);
-  };
+  }, [stopwatch.id, resetStopwatch]);
 
-  const handleLap = async () => {
+  const handleLap = useCallback(async () => {
     await addLap(stopwatch.id);
-  };
+  }, [stopwatch.id, addLap]);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     await deleteStopwatch(stopwatch.id);
-  };
+  }, [stopwatch.id, deleteStopwatch]);
 
-  const handleTitleSubmit = async () => {
+  const handleTitleSubmit = useCallback(async () => {
     if (editTitle.trim() && editTitle !== stopwatch.title) {
       await updateStopwatchTitle(stopwatch.id, editTitle.trim());
     }
     setIsEditing(false);
-  };
+  }, [editTitle, stopwatch.title, stopwatch.id, updateStopwatchTitle]);
 
-  const handleTitleCancel = () => {
+  const handleTitleCancel = useCallback(() => {
     setEditTitle(stopwatch.title);
     setIsEditing(false);
-  };
+  }, [stopwatch.title]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleTitleSubmit();
-    } else if (e.key === "Escape") {
-      handleTitleCancel();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleTitleSubmit();
+      } else if (e.key === "Escape") {
+        handleTitleCancel();
+      }
+    },
+    [handleTitleSubmit, handleTitleCancel],
+  );
 
   return (
     <GlassSurface

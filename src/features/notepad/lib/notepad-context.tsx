@@ -39,7 +39,6 @@ export function NotepadProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Memoize notes to prevent dependency changes on every render
   const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
 
   // Use reactive query for current note with error handling

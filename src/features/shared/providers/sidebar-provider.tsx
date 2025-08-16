@@ -6,6 +6,8 @@ import {
   useState,
   ReactNode,
   useEffect,
+  useCallback,
+  useMemo,
 } from "react";
 import { usePathname } from "next/navigation";
 
@@ -31,12 +33,19 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     }
   }, [pathname]);
 
-  const toggle = () => setIsOpen(!isOpen);
+  const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+
+  const value = useMemo(
+    () => ({
+      isOpen,
+      setIsOpen,
+      toggle,
+    }),
+    [isOpen, toggle],
+  );
 
   return (
-    <SidebarContext.Provider value={{ isOpen, setIsOpen, toggle }}>
-      {children}
-    </SidebarContext.Provider>
+    <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
   );
 }
 

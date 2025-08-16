@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
@@ -81,35 +81,35 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
     }
   }, [isEditingTime, timer.duration]);
 
-  const handleStartPause = async () => {
+  const handleStartPause = useCallback(async () => {
     if (timer.isRunning) {
       await pauseTimer(timer.id);
     } else {
       await startTimer(timer.id);
     }
-  };
+  }, [timer.isRunning, timer.id, pauseTimer, startTimer]);
 
-  const handleReset = async () => {
+  const handleReset = useCallback(async () => {
     await resetTimer(timer.id);
-  };
+  }, [timer.id, resetTimer]);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     await deleteTimer(timer.id);
-  };
+  }, [timer.id, deleteTimer]);
 
-  const handleTitleSubmit = async () => {
+  const handleTitleSubmit = useCallback(async () => {
     if (editTitle.trim() && editTitle !== timer.title) {
       await updateTimerTitle(timer.id, editTitle.trim());
     }
     setIsEditing(false);
-  };
+  }, [editTitle, timer.title, timer.id, updateTimerTitle]);
 
-  const handleTitleCancel = () => {
+  const handleTitleCancel = useCallback(() => {
     setEditTitle(timer.title);
     setIsEditing(false);
-  };
+  }, [timer.title]);
 
-  const handleTimeSubmit = async () => {
+  const handleTimeSubmit = useCallback(async () => {
     const hours = parseInt(editHours) || 0;
     const minutes = parseInt(editMinutes) || 0;
     const seconds = parseInt(editSeconds) || 0;
@@ -120,19 +120,22 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
       await updateTimerDuration(timer.id, totalMilliseconds);
     }
     setIsEditingTime(false);
-  };
+  }, [editHours, editMinutes, editSeconds, timer.id, updateTimerDuration]);
 
-  const handleTimeCancel = () => {
+  const handleTimeCancel = useCallback(() => {
     setIsEditingTime(false);
-  };
+  }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleTitleSubmit();
-    } else if (e.key === "Escape") {
-      handleTitleCancel();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleTitleSubmit();
+      } else if (e.key === "Escape") {
+        handleTitleCancel();
+      }
+    },
+    [handleTitleSubmit, handleTitleCancel],
+  );
 
   const progressPercentage = Math.max(
     0,

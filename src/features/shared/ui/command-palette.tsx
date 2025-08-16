@@ -34,6 +34,14 @@ export function CommandPalette() {
     return () => document.removeEventListener("keydown", down);
   }, [open, setOpen]);
 
+  const handleUtilitySelect = React.useCallback(
+    (href: string) => {
+      router.push(href);
+      setOpen(false);
+    },
+    [router, setOpen],
+  );
+
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Type a command or search..." />
@@ -54,10 +62,7 @@ export function CommandPalette() {
               <CommandItem
                 key={utility.id}
                 value={value}
-                onSelect={() => {
-                  router.push(utility.href);
-                  setOpen(false);
-                }}
+                onSelect={() => handleUtilitySelect(utility.href)}
               >
                 <IconComponent className="mr-2 h-4 w-4" />
                 <span>{utility.name}</span>

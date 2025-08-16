@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
@@ -18,10 +18,10 @@ export function StopwatchPage() {
     isLoaded,
   } = useStopwatch();
 
-  const handleCreateStopwatch = async () => {
+  const handleCreateStopwatch = useCallback(async () => {
     const id = await createStopwatch();
     setActiveStopwatch(id);
-  };
+  }, [createStopwatch, setActiveStopwatch]);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">

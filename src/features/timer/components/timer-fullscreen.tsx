@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Play, Pause, RotateCcw, Minimize2, Bell, BellOff } from "lucide-react";
@@ -26,7 +26,10 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
     getRemainingTime,
   } = useTimer();
 
-  const timer = timers.find((t) => t.id === timerId);
+  const timer = useMemo(
+    () => timers.find((t) => t.id === timerId),
+    [timers, timerId],
+  );
   const [remainingTime, setRemainingTime] = useState(
     timer ? getRemainingTime(timer) : 0,
   );
@@ -42,28 +45,40 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
     setRemainingTime(newRemainingTime);
   }, [timer, getRemainingTime, router]);
 
-  if (!timer) {
-    return null;
-  }
-
-  const handleStartPause = async () => {
+  const handleStartPause = useCallback(async () => {
+    if (!timer) return;
     if (timer.isRunning) {
       await pauseTimer(timer.id);
     } else {
       await startTimer(timer.id);
     }
-  };
+  }, [timer, pauseTimer, startTimer]);
 
-  const handleReset = async () => {
+  const handleReset = useCallback(async () => {
+    if (!timer) return;
     await resetTimer(timer.id);
-  };
+  }, [timer, resetTimer]);
 
-  const handleMinimize = () => {
+  const handleMinimize = useCallback(() => {
     router.push("/timer");
-  };
+  }, [router]);
 
-  const progressPercentage = (remainingTime / timer.duration) * 100;
-  const isCompleted = remainingTime === 0 && timer.completedAt !== null;
+  const handleToggleSound = useCallback(async () => {
+    if (!timer) return;
+    await toggleSound(timer.id);
+  }, [timer, toggleSound]);
+
+  const progressPercentage = useMemo(() => {
+    return timer ? (remainingTime / timer.duration) * 100 : 0;
+  }, [remainingTime, timer]);
+
+  const isCompleted = useMemo(() => {
+    return remainingTime === 0 && timer?.completedAt !== null;
+  }, [remainingTime, timer?.completedAt]);
+
+  if (!timer) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-background flex flex-col items-center justify-center p-8">
@@ -83,7 +98,7 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
         <Button
           size="icon"
           variant="ghost"
-          onClick={() => toggleSound(timer.id)}
+          onClick={handleToggleSound}
           className={cn(
             "w-12 h-12",
             timer.soundEnabled

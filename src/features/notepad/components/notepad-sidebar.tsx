@@ -33,34 +33,38 @@ function NotepadSidebarComponent() {
   const notesFromQuery = useLiveQuery(
     () => notepadDb.notes.orderBy("updatedAt").reverse().toArray(),
     [],
+    [],
   );
 
-  // Memoize notes to prevent dependency changes on every render
   const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
 
-  const createNewNote = async () => {
+  const createNewNote = useCallback(async () => {
     router.push("/notepad");
-  };
+  }, [router]);
 
-  const handleDeleteNote = async (noteId: string) => {
-    await notesService.deleteNote(noteId);
+  const handleDeleteNote = useCallback(
+    async (noteId: string) => {
+      await notesService.deleteNote(noteId);
 
-    // If we deleted the current note, navigate to most recent note
-    if (currentNoteId === noteId) {
-      const remaining = await notepadDb.notes
-        .orderBy("updatedAt")
-        .reverse()
-        .limit(1)
-        .toArray();
-      if (remaining.length > 0) {
-        router.push(`/notepad/${remaining[0].id}`);
-      } else {
-        router.push("/notepad");
+      // If we deleted the current note, navigate to most recent note
+      if (currentNoteId === noteId) {
+        const remaining = await notepadDb.notes
+          .orderBy("updatedAt")
+          .reverse()
+          .limit(1)
+          .toArray();
+        if (remaining.length > 0) {
+          router.push(`/notepad/${remaining[0].id}`);
+        } else {
+          router.push("/notepad");
+        }
       }
-    }
-  };
+    },
+    [currentNoteId, router],
+  );
 
-  const downloadNote = (note: (typeof notes)[0]) => {
+  const downloadNote = useCallback((note: (typeof notes)[0]) => {
+    if (!note) return;
     const blob = new Blob([note.content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -68,7 +72,7 @@ function NotepadSidebarComponent() {
     a.download = `${note.title || "note"}.txt`;
     a.click();
     URL.revokeObjectURL(url);
-  };
+  }, []);
 
   // Memoized date formatter
   const formatDate = useCallback((dateString: string) => {

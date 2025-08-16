@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
   useMemo,
+  useCallback,
 } from "react";
 import { Timer, TimerContextType } from "../types";
 import { timerDB } from "./timer-db";
@@ -21,14 +22,25 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
   const anyRunning = useMemo(() => timers.some((t) => t.isRunning), [timers]);
   const now = useRafTicker(anyRunning, 16); // ~60fps throttled
 
+  const loadTimers = useCallback(async () => {
+    try {
+      const loadedTimers = await timerDB.getAllTimers();
+      setTimers(loadedTimers);
+      setIsLoaded(true);
+    } catch (error) {
+      console.error("Failed to load timers:", error);
+      setIsLoaded(true);
+    }
+  }, []);
+
   // Load timers from IndexedDB on mount
   useEffect(() => {
     loadTimers();
-  }, []);
+  }, [loadTimers]);
 
   // Completion detection runs when ticker updates.
 
-  const playAlarmSound = async () => {
+  const playAlarmSound = useCallback(async () => {
     try {
       // Play audio
       const audio = new Audio("/alarm-clock.mp3");
@@ -58,7 +70,7 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         });
       }
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!anyRunning) return; // Only check completions while active
@@ -88,174 +100,214 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         return timer;
       }),
     );
-  }, [now, anyRunning]);
+  }, [now, anyRunning, playAlarmSound]);
 
-  const loadTimers = async () => {
-    try {
-      const loadedTimers = await timerDB.getAllTimers();
-      setTimers(loadedTimers);
-      setIsLoaded(true);
-    } catch (error) {
-      console.error("Failed to load timers:", error);
-      setIsLoaded(true);
-    }
-  };
+  const createTimer = useCallback(
+    async (duration: number): Promise<string> => {
+      const id = `timer-${Date.now()}-${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
+      const newTimer: Timer = {
+        id,
+        title: `Timer ${timers.length + 1}`,
+        duration,
+        remainingTime: duration,
+        isRunning: false,
+        startedAt: null,
+        pausedAt: null,
+        createdAt: Date.now(),
+        completedAt: null,
+        soundEnabled: true,
+        remainingAtStart: null,
+      };
 
-  const createTimer = async (duration: number): Promise<string> => {
-    const id = `timer-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newTimer: Timer = {
-      id,
-      title: `Timer ${timers.length + 1}`,
-      duration,
-      remainingTime: duration,
-      isRunning: false,
-      startedAt: null,
-      pausedAt: null,
-      createdAt: Date.now(),
-      completedAt: null,
-      soundEnabled: true,
-      remainingAtStart: null,
-    };
+      await timerDB.saveTimer(newTimer);
+      setTimers((prev) => [newTimer, ...prev]);
+      return id;
+    },
+    [timers.length],
+  );
 
-    await timerDB.saveTimer(newTimer);
-    setTimers((prev) => [newTimer, ...prev]);
-    return id;
-  };
+  const deleteTimer = useCallback(
+    async (id: string) => {
+      await timerDB.deleteTimer(id);
+      setTimers((prev) => prev.filter((t) => t.id !== id));
+      if (activeTimerId === id) {
+        setActiveTimerId(null);
+      }
+    },
+    [activeTimerId],
+  );
 
-  const deleteTimer = async (id: string) => {
-    await timerDB.deleteTimer(id);
-    setTimers((prev) => prev.filter((t) => t.id !== id));
-    if (activeTimerId === id) {
-      setActiveTimerId(null);
-    }
-  };
+  const startTimer = useCallback(
+    async (id: string) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer) return;
 
-  const startTimer = async (id: string) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer) return;
+      // Request notification permission on first timer start
+      if ("Notification" in window && Notification.permission === "default") {
+        await Notification.requestPermission();
+      }
 
-    // Request notification permission on first timer start
-    if ("Notification" in window && Notification.permission === "default") {
-      await Notification.requestPermission();
-    }
+      const updatedTimer: Timer = {
+        ...timer,
+        isRunning: true,
+        startedAt: Date.now(),
+        pausedAt: null,
+        remainingAtStart: timer.remainingTime,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      isRunning: true,
-      startedAt: Date.now(),
-      pausedAt: null,
-      remainingAtStart: timer.remainingTime,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
+  const pauseTimer = useCallback(
+    async (id: string) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer || !timer.startedAt || timer.remainingAtStart === null) return;
 
-  const pauseTimer = async (id: string) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer || !timer.startedAt || timer.remainingAtStart === null) return;
+      const elapsed = Date.now() - timer.startedAt;
+      const newRemainingTime = Math.max(0, timer.remainingAtStart - elapsed);
 
-    const elapsed = Date.now() - timer.startedAt;
-    const newRemainingTime = Math.max(0, timer.remainingAtStart - elapsed);
+      const updatedTimer: Timer = {
+        ...timer,
+        isRunning: false,
+        pausedAt: Date.now(),
+        remainingTime: newRemainingTime,
+        startedAt: null,
+        remainingAtStart: null,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      isRunning: false,
-      pausedAt: Date.now(),
-      remainingTime: newRemainingTime,
-      startedAt: null,
-      remainingAtStart: null,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
+  const resetTimer = useCallback(
+    async (id: string) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer) return;
 
-  const resetTimer = async (id: string) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer) return;
+      const updatedTimer: Timer = {
+        ...timer,
+        remainingTime: timer.duration,
+        isRunning: false,
+        startedAt: null,
+        pausedAt: null,
+        completedAt: null,
+        remainingAtStart: null,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      remainingTime: timer.duration,
-      isRunning: false,
-      startedAt: null,
-      pausedAt: null,
-      completedAt: null,
-      remainingAtStart: null,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
+  const updateTimerTitle = useCallback(
+    async (id: string, title: string) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer) return;
 
-  const updateTimerTitle = async (id: string, title: string) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer) return;
+      const updatedTimer: Timer = {
+        ...timer,
+        title,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      title,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
+  const updateTimerDuration = useCallback(
+    async (id: string, duration: number) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer || timer.isRunning) return;
 
-  const updateTimerDuration = async (id: string, duration: number) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer || timer.isRunning) return;
+      const updatedTimer: Timer = {
+        ...timer,
+        duration,
+        remainingTime: duration,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      duration,
-      remainingTime: duration,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
+  const toggleSound = useCallback(
+    async (id: string) => {
+      const timer = timers.find((t) => t.id === id);
+      if (!timer) return;
 
-  const toggleSound = async (id: string) => {
-    const timer = timers.find((t) => t.id === id);
-    if (!timer) return;
+      const updatedTimer: Timer = {
+        ...timer,
+        soundEnabled: !timer.soundEnabled,
+      };
 
-    const updatedTimer: Timer = {
-      ...timer,
-      soundEnabled: !timer.soundEnabled,
-    };
+      await timerDB.saveTimer(updatedTimer);
+      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+    },
+    [timers],
+  );
 
-    await timerDB.saveTimer(updatedTimer);
-    setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
-  };
-
-  const setActiveTimer = (id: string | null) => {
+  const setActiveTimer = useCallback((id: string | null) => {
     setActiveTimerId(id);
-  };
+  }, []);
 
-  const getRemainingTime = (timer: Timer): number => {
-    if (!timer.isRunning || !timer.startedAt || timer.remainingAtStart === null)
-      return timer.remainingTime;
-    const elapsed = now - timer.startedAt;
-    return Math.max(0, timer.remainingAtStart - elapsed);
-  };
+  const getRemainingTime = useCallback(
+    (timer: Timer): number => {
+      if (
+        !timer.isRunning ||
+        !timer.startedAt ||
+        timer.remainingAtStart === null
+      )
+        return timer.remainingTime;
+      const elapsed = now - timer.startedAt;
+      return Math.max(0, timer.remainingAtStart - elapsed);
+    },
+    [now],
+  );
 
-  const value: TimerContextType = {
-    timers,
-    activeTimerId,
-    createTimer,
-    deleteTimer,
-    startTimer,
-    pauseTimer,
-    resetTimer,
-    updateTimerTitle,
-    updateTimerDuration,
-    toggleSound,
-    setActiveTimer,
-    getRemainingTime,
-    isLoaded,
-    now,
-  };
+  const value: TimerContextType = useMemo(
+    () => ({
+      timers,
+      activeTimerId,
+      createTimer,
+      deleteTimer,
+      startTimer,
+      pauseTimer,
+      resetTimer,
+      updateTimerTitle,
+      updateTimerDuration,
+      toggleSound,
+      setActiveTimer,
+      getRemainingTime,
+      isLoaded,
+      now,
+    }),
+    [
+      timers,
+      activeTimerId,
+      createTimer,
+      deleteTimer,
+      startTimer,
+      pauseTimer,
+      resetTimer,
+      updateTimerTitle,
+      updateTimerDuration,
+      toggleSound,
+      setActiveTimer,
+      getRemainingTime,
+      isLoaded,
+      now,
+    ],
+  );
 
   return (
     <TimerContext.Provider value={value}>{children}</TimerContext.Provider>

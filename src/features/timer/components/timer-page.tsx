@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
-import { Plus, Clock } from "lucide-react";
+import { Plus, Clock, X } from "lucide-react";
 import { useTimer } from "../lib/timer-context";
 import { TimerCard } from "./timer-card";
 import { Skeleton } from "@/features/shared/ui/skeleton";
@@ -19,7 +19,7 @@ export function TimerPage() {
   const [quickMinutes, setQuickMinutes] = useState("5");
   const [quickSeconds, setQuickSeconds] = useState("0");
 
-  const handleCreateTimer = async () => {
+  const handleCreateTimer = useCallback(async () => {
     if (showQuickAdd) {
       const hours = parseInt(quickHours) || 0;
       const minutes = parseInt(quickMinutes) || 0;
@@ -41,12 +41,27 @@ export function TimerPage() {
       const id = await createTimer(5 * 60 * 1000);
       setActiveTimer(id);
     }
-  };
+  }, [
+    showQuickAdd,
+    quickHours,
+    quickMinutes,
+    quickSeconds,
+    createTimer,
+    setActiveTimer,
+  ]);
 
-  const handleQuickTimer = async (minutes: number) => {
-    const id = await createTimer(minutes * 60 * 1000);
+  const handleQuickTimer = useCallback(
+    async (minutes: number) => {
+      const id = await createTimer(minutes * 60 * 1000);
+      setActiveTimer(id);
+    },
+    [createTimer, setActiveTimer],
+  );
+
+  const handleTestTimer = useCallback(async () => {
+    const id = await createTimer(3000);
     setActiveTimer(id);
-  };
+  }, [createTimer, setActiveTimer]);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
@@ -61,9 +76,7 @@ export function TimerPage() {
             {/* Quick timer buttons */}
             <div className="flex items-center gap-2">
               <Button
-                onClick={() =>
-                  createTimer(3000).then((id: string) => setActiveTimer(id))
-                }
+                onClick={handleTestTimer}
                 size="sm"
                 variant="outline"
                 className="bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
@@ -130,10 +143,7 @@ export function TimerPage() {
       {showQuickAdd && (
         <GlassSurface className="p-4 rounded-xl">
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Clock className="size-5 text-muted-foreground" />
-              <span className="text-sm font-medium">Set Timer:</span>
-            </div>
+            <Clock className="size-5 text-muted-foreground" />
             <div className="flex items-center gap-2">
               <Input
                 type="number"
@@ -144,7 +154,7 @@ export function TimerPage() {
                 min="0"
                 max="99"
               />
-              <span className="text-lg font-mono">h</span>
+              <span className="text-lg font-mono">:</span>
               <Input
                 type="number"
                 value={quickMinutes}
@@ -154,7 +164,7 @@ export function TimerPage() {
                 min="0"
                 max="59"
               />
-              <span className="text-lg font-mono">m</span>
+              <span className="text-lg font-mono">:</span>
               <Input
                 type="number"
                 value={quickSeconds}
@@ -164,22 +174,21 @@ export function TimerPage() {
                 min="0"
                 max="59"
               />
-              <span className="text-lg font-mono">s</span>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 onClick={handleCreateTimer}
                 variant="outline"
-                className="bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30"
+                className="h-8 w-8 bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30"
               >
-                Create Timer
+                <Plus />
               </Button>
               <Button
                 onClick={() => setShowQuickAdd(false)}
                 variant="ghost"
-                className="text-red-400 hover:text-red-300"
+                className="h-8 w-8 text-red-400 hover:text-red-300"
               >
-                Cancel
+                <X />
               </Button>
             </div>
           </div>

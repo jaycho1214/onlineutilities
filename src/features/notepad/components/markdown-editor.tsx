@@ -34,7 +34,8 @@ const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
           markdown={value}
           onChange={onChange}
           placeholder={placeholder}
-          contentEditableClassName="prose prose-neutral dark:prose-invert"
+          className="overflow-y-auto"
+          contentEditableClassName="prose prose-neutral dark:prose-invert min-h-[calc(100vh-10rem)]"
           plugins={[
             headingsPlugin(),
             listsPlugin(),

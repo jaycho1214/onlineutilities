@@ -3,7 +3,7 @@
 import { Dialog, DialogContent } from "./dialog";
 import { GlassSurface } from "./glass-surface";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { savePersonalName } from "@/lib/actions";
 import { X, User, Palette, ArrowUp, Info } from "lucide-react";
@@ -23,13 +23,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [tempPersonalName, setTempPersonalName] = useState("");
 
   // Helper function to get cookie value (client-side fallback)
-  const getCookie = (name: string): string | null => {
+  const getCookie = useCallback((name: string): string | null => {
     if (typeof document === "undefined") return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
     return null;
-  };
+  }, []);
 
   useEffect(() => {
     // Load personal name from cookie
@@ -38,15 +38,15 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       setPersonalName(savedName);
       setTempPersonalName(savedName);
     }
-  }, []);
+  }, [getCookie]);
 
-  const handleSaveName = async () => {
+  const handleSaveName = useCallback(async () => {
     await savePersonalName(tempPersonalName);
     const trimmedName = tempPersonalName.trim();
     setPersonalName(trimmedName);
     // Refresh the page to update the greeting
     window.location.reload();
-  };
+  }, [tempPersonalName]);
 
   const sidebarItems = [
     { id: "personal" as const, label: "Personal", icon: User },

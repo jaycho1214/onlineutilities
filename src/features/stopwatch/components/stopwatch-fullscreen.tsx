@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Play, Pause, RotateCcw, Minimize2, Flag } from "lucide-react";
@@ -26,7 +26,10 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
     getCurrentTime,
   } = useStopwatch();
 
-  const stopwatch = stopwatches.find((s) => s.id === stopwatchId);
+  const stopwatch = useMemo(
+    () => stopwatches.find((s) => s.id === stopwatchId),
+    [stopwatches, stopwatchId],
+  );
   const [currentTime, setCurrentTime] = useState(
     stopwatch ? getCurrentTime(stopwatch) : 0,
   );
@@ -40,28 +43,28 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
     setCurrentTime(getCurrentTime(stopwatch));
   }, [stopwatch, getCurrentTime, router, now]);
 
-  const handleStartPause = async () => {
+  const handleStartPause = useCallback(async () => {
     if (!stopwatch) return;
     if (stopwatch.isRunning) {
       await pauseStopwatch(stopwatch.id);
     } else {
       await startStopwatch(stopwatch.id);
     }
-  };
+  }, [stopwatch, pauseStopwatch, startStopwatch]);
 
-  const handleReset = async () => {
+  const handleReset = useCallback(async () => {
     if (!stopwatch) return;
     await resetStopwatch(stopwatch.id);
-  };
+  }, [stopwatch, resetStopwatch]);
 
-  const handleLap = async () => {
+  const handleLap = useCallback(async () => {
     if (!stopwatch) return;
     await addLap(stopwatch.id);
-  };
+  }, [stopwatch, addLap]);
 
-  const handleMinimize = () => {
+  const handleMinimize = useCallback(() => {
     router.push("/stopwatch");
-  };
+  }, [router]);
 
   // Get last 5 laps for display
   const recentLaps = useMemo(
@@ -69,19 +72,8 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
     [stopwatch?.laps],
   );
 
-  // Early return if stopwatch not found
   if (!stopwatch) {
-    return (
-      <div className="fixed inset-0 bg-background flex flex-col items-center justify-center p-8">
-        <GradientBackground />
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Stopwatch not found</h1>
-          <Button onClick={() => router.push("/stopwatch")}>
-            Return to Stopwatch
-          </Button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
