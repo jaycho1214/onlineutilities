@@ -1,9 +1,11 @@
 import Image from "next/image";
 
-// SSR-friendly static background component. Always uses image.png.
-// Theme-specific overlays handled via CSS variables (light/dark) without client hooks.
-export function GradientBackground({ opacity = 0.58 }: { opacity?: number }) {
-  // We can't read theme on server; rely on prefers-color-scheme via CSS media.
+interface GradientBackgroundProps {
+  opacity?: number;
+  enhanced?: boolean;
+}
+
+export function GradientBackground({ opacity = 0.58, enhanced = false }: GradientBackgroundProps) {
   return (
     <div
       id="cgpt-ambient-bg"
@@ -28,7 +30,9 @@ export function GradientBackground({ opacity = 0.58 }: { opacity?: number }) {
         className="overlay fixed inset-0 pointer-events-none"
         style={{
           zIndex: 1,
-          background: `linear-gradient(to top, var(--bg-gradient-stops))`,
+          background: enhanced
+            ? `var(--gradient-enhanced)`
+            : `var(--gradient-default)`,
         }}
       />
       <div
@@ -45,17 +49,16 @@ export function GradientBackground({ opacity = 0.58 }: { opacity?: number }) {
           )`,
         }}
       />
-      <style
-        // Inline CSS variables for gradients (light/dark support via media query)
-        dangerouslySetInnerHTML={{
-          __html: `
-            #cgpt-ambient-bg { --bg-gradient-stops: rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 20%, rgba(0,0,0,0) 40%; }
-            @media (prefers-color-scheme: dark) {
-              #cgpt-ambient-bg { --bg-gradient-stops: rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 18%, rgba(0,0,0,0.50) 36%, rgba(0,0,0,0.24) 60%, rgba(0,0,0,0) 80%; }
-            }
-          `,
-        }}
-      />
+      <style>{`
+        :root #cgpt-ambient-bg {
+          --gradient-default: transparent;
+          --gradient-enhanced: linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.65) 20%, rgba(255,255,255,0.35) 40%, rgba(255,255,255,0) 60%);
+        }
+        :root.dark #cgpt-ambient-bg {
+          --gradient-default: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 18%, rgba(0,0,0,0.50) 36%, rgba(0,0,0,0.24) 60%, rgba(0,0,0,0) 80%);
+          --gradient-enhanced: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.85) 18%, rgba(0,0,0,0.65) 36%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.08) 80%);
+        }
+      `}</style>
     </div>
   );
 }
