@@ -1,0 +1,7 @@
+# Online Utilities - Robots.txt
+# Allow all crawlers to access all content
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://onlineutilities.org/sitemap.xml

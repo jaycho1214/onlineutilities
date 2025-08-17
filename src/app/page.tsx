@@ -25,7 +25,12 @@ export default function Home() {
         {utilities.map((utility) => {
           const IconComponent = utility.icon;
           return (
-            <Link key={utility.id} href={utility.href} className="group">
+            <Link 
+              key={utility.id} 
+              href={utility.href} 
+              className="group"
+              aria-label={`Open ${utility.name} tool`}
+            >
               <GlassSurface className="aspect-square cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ease-out rounded-2xl">
                 <div className="relative w-full h-full p-4 flex flex-col">
                   {/* Icon - Top Left */}

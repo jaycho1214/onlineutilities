@@ -8,6 +8,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export const baseUrl = "https://onlineutilities.org";
+
 export interface Utility {
   id: string;
   name: string;

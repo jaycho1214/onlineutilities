@@ -25,37 +25,68 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://onlineutilities.org"),
   title: {
     default: "Online Utilities",
     template: "%s | Online Utilities",
   },
   description:
-    "Free online tools and utilities for daily tasks - gradient generator, notepad, timers, calculators, and more.",
+    "Free online tools and utilities for daily productivity. Calculator, timer, stopwatch, notepad, color picker, QR code generator and more. No registration required.",
   keywords: [
     "online tools",
-    "utilities",
-    "gradient generator",
-    "notepad",
-    "calculator",
-    "timer",
-    "free tools",
+    "web utilities",
+    "free calculator",
+    "online timer",
+    "stopwatch",
+    "notepad online",
+    "color picker",
+    "QR code generator",
+    "productivity tools",
+    "browser tools",
   ],
-  authors: [{ name: "Online Utilities" }],
+  authors: [{ name: "Online Utilities", url: "https://onlineutilities.org" }],
   creator: "Online Utilities",
+  publisher: "Online Utilities",
+  category: "Technology",
   openGraph: {
     type: "website",
-    title: "Online Utilities",
-    description: "Free online tools and utilities for daily tasks",
+    locale: "en_US",
+    url: "https://onlineutilities.org",
+    title: {
+      default: "Online Utilities",
+      template: "%s | Online Utilities",
+    },
+    description:
+      "Free online tools and utilities for daily productivity. Calculator, timer, stopwatch, notepad, color picker, QR code generator and more.",
     siteName: "Online Utilities",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Online Utilities - Free Web Tools",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Online Utilities",
-    description: "Free online tools and utilities for daily tasks",
+    title: "Online Utilities - Free Web Tools for Daily Tasks",
+    description:
+      "Free online tools and utilities for daily productivity. Calculator, timer, stopwatch, notepad, color picker, QR code generator and more.",
+    images: ["/og-image.jpg"],
+    creator: "@onlineutilities",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_VERIFICATION,
+    yahoo: process.env.YAHOO_SITE_VERIFICATION,
+  },
+  alternates: {
+    canonical: "https://onlineutilities.org",
   },
 };
 
