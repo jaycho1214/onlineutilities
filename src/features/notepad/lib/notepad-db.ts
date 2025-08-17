@@ -203,6 +203,16 @@ export class NotesService {
     return true;
   }
 
+  /**
+   * Delete all notes from the database
+   * @returns Promise<number> - Number of notes deleted
+   */
+  async deleteAllNotes(): Promise<number> {
+    const count = await notepadDb.notes.count();
+    await notepadDb.notes.clear();
+    return count;
+  }
+
   // ========================================================================
   // UTILITY OPERATIONS
   // ========================================================================

@@ -5,12 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Button } from "@/features/shared/ui/button";
-import { Plus, FileText, Trash2, Edit, Download } from "lucide-react";
+import { Plus, FileText, Trash2, Edit, Download, AlertTriangle } from "lucide-react";
 import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
 import { downloadNote, deleteNoteAndNavigate, formatDate } from "@/features/notepad/lib/notepad-utils";
 import {
   SidebarHeader,
   SidebarContent,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -40,7 +41,7 @@ function NotepadSidebarComponent() {
   const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
 
   const createNewNote = useCallback(async () => {
-    router.push("/notepad");
+    router.push("/notepad?new=true");
   }, [router]);
 
   const handleDeleteNote = useCallback(
@@ -53,6 +54,26 @@ function NotepadSidebarComponent() {
   const handleDownloadNote = useCallback((note: (typeof notes)[0]) => {
     downloadNote(note);
   }, []);
+
+  const handleDeleteAllNotes = useCallback(async () => {
+    if (notes.length === 0) return;
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to delete all ${notes.length} notes? This action cannot be undone.`
+    );
+    
+    if (confirmed) {
+      try {
+        await notesService.deleteAllNotes();
+        // Navigate to base notepad page if currently viewing a note
+        if (currentNoteId && currentNoteId !== "notepad") {
+          router.push("/notepad");
+        }
+      } catch (error) {
+        console.error("Failed to delete all notes:", error);
+      }
+    }
+  }, [notes.length, currentNoteId, router]);
 
 
   // Optimized search
@@ -161,6 +182,23 @@ function NotepadSidebarComponent() {
           </SidebarMenu>
         )}
       </SidebarContent>
+
+      {/* Footer with Delete All button */}
+      {notes.length > 0 && (
+        <SidebarFooter className="mt-auto">
+          <Button
+            onClick={handleDeleteAllNotes}
+            variant="destructive"
+            size="sm"
+            className="w-full text-xs h-10 relative group overflow-hidden"
+            title={`Delete all ${notes.length} notes`}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <AlertTriangle className="w-3 h-3 mr-2 z-10" />
+            <span className="z-10">Delete All ({notes.length})</span>
+          </Button>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
