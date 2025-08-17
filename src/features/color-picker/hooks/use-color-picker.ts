@@ -173,7 +173,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
     }
 
     try {
-      // @ts-ignore - EyeDropper is not in TypeScript types yet
+      // @ts-expect-error - EyeDropper is not in TypeScript types yet
       const eyeDropper = new EyeDropper();
       const result = await eyeDropper.open();
       handleColorChange(result.sRGBHex);

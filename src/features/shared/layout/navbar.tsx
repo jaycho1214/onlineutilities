@@ -3,7 +3,7 @@
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
 import Link from "next/link";
-import { Search, Settings, PanelLeftIcon } from "lucide-react";
+import { Search, Settings, PanelLeftIcon, MessageSquare } from "lucide-react";
 import { useCommand } from "@/features/shared/providers/command-provider";
 import {
   Tooltip,
@@ -13,6 +13,7 @@ import {
 import { getModifierKey, cn } from "@/lib/utils";
 import { useState } from "react";
 import { SettingsDialog } from "@/features/shared/ui/settings-dialog";
+import { FeedbackDialog } from "@/features/feedback/components/feedback-dialog";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { usePathname } from "next/navigation";
 import { isSidebarSupported } from "@/constants";
@@ -24,6 +25,7 @@ export function Navbar() {
   const t = useTranslations("Navigation");
   const { setOpen } = useCommand();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const pageTitle = usePageTitle();
   const pathname = usePathname();
   const { toggleSidebar } = useSidebar();
@@ -79,6 +81,30 @@ export function Navbar() {
 
         {/* Right Glass Surfaces */}
         <div className="flex items-center gap-2">
+          {/* Feedback Glass Surface */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <GlassSurface
+                className={cn(
+                  "flex-shrink-0 h-9 aspect-square cursor-pointer",
+                  "hover:scale-105 hover:rotate-1 hover:shadow-lg",
+                  "transition-all duration-300 ease-out group",
+                )}
+              >
+                <button
+                  onClick={() => setFeedbackOpen(true)}
+                  aria-label={t("openFeedback")}
+                  className="w-full h-full flex items-center justify-center"
+                >
+                  <MessageSquare className="size-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
+                </button>
+              </GlassSurface>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={20}>
+              <span>{t("feedback")}</span>
+            </TooltipContent>
+          </Tooltip>
+
           {/* Settings Glass Surface */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -134,6 +160,7 @@ export function Navbar() {
         </div>
       </div>
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </nav>
   );
 }

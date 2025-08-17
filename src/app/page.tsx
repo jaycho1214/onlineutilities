@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 
 export default function Home() {
   const t = useTranslations("Utilities");
-  
+
   return (
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-8">
       <GradientBackground />
@@ -38,7 +38,8 @@ export default function Home() {
                   {/* Text - Bottom Right */}
                   <div className="absolute bottom-4 right-4 text-right">
                     <h3 className="font-medium text-sm text-foreground/90 leading-tight">
-                      {t(utility.id)}
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {t(utility.id as any)}
                     </h3>
                   </div>
                 </div>

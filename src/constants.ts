@@ -3,7 +3,6 @@ import {
   Clock,
   NotebookPen,
   Palette,
-  Hash,
   QrCode,
   Calculator,
   type LucideIcon,
@@ -55,15 +54,6 @@ export const utilities: Utility[] = [
     href: "/color-picker",
     category: "Design",
     keywords: ["color", "palette", "picker", "design", "hex"],
-  },
-  {
-    id: "hash-generator",
-    name: "Hash Generator",
-    description: "Generate hashes",
-    icon: Hash,
-    href: "/hash-generator",
-    category: "Security",
-    keywords: ["hash", "md5", "sha", "encrypt", "security"],
   },
   {
     id: "qr-code",

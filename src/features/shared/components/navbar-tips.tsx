@@ -31,7 +31,7 @@ export const NavbarTips: React.FC = () => {
     try {
       const tipsArray = navbarTipsT.raw(featureKey);
       return Array.isArray(tipsArray) ? tipsArray : [];
-    } catch (error) {
+    } catch {
       // Feature tips don't exist yet, return empty array
       return [];
     }

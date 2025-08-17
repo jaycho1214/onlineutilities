@@ -56,7 +56,7 @@ const formatConfigs = [
   },
 ] as const;
 
-export const ColorFormatsPanel: React.FC<ColorFormatsPanelProps> = React.memo(
+const ColorFormatsPanelComponent: React.FC<ColorFormatsPanelProps> = React.memo(
   ({ colorFormats }) => {
     return (
       <GlassSurface className="p-6">
@@ -84,3 +84,6 @@ export const ColorFormatsPanel: React.FC<ColorFormatsPanelProps> = React.memo(
     );
   }
 );
+
+ColorFormatsPanelComponent.displayName = 'ColorFormatsPanel';
+export const ColorFormatsPanel = ColorFormatsPanelComponent;

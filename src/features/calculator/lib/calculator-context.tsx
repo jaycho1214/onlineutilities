@@ -37,11 +37,6 @@ function CalculatorProviderComponent({ children }: CalculatorProviderProps) {
   const [history, setHistory] = useState<CalculationEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load history on mount
-  useEffect(() => {
-    loadHistory();
-  }, []);
-
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -53,6 +48,11 @@ function CalculatorProviderComponent({ children }: CalculatorProviderProps) {
       setIsLoading(false);
     }
   }, []);
+
+  // Load history on mount
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const addToHistory = useCallback((entry: CalculationEntry) => {
     setHistory(prev => [entry, ...prev.slice(0, 19)]);

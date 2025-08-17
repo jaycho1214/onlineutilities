@@ -17,7 +17,7 @@ interface ColorControlsProps {
   onSliderChange: (component: string, value: number[]) => void;
 }
 
-export const ColorControls: React.FC<ColorControlsProps> = React.memo(({
+const ColorControlsComponent: React.FC<ColorControlsProps> = React.memo(({
   selectedColor,
   colorFormat,
   colorFormats,
@@ -109,3 +109,6 @@ export const ColorControls: React.FC<ColorControlsProps> = React.memo(({
     </div>
   );
 });
+
+ColorControlsComponent.displayName = 'ColorControls';
+export const ColorControls = ColorControlsComponent;

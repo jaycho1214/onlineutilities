@@ -2,9 +2,11 @@
   "Navigation": {
     "search": "Search",
     "settings": "Settings",
+    "feedback": "Feedback",
     "toggleSidebar": "Toggle Sidebar",
     "openSearch": "Open search",
-    "openSettings": "Open settings"
+    "openSettings": "Open settings",
+    "openFeedback": "Send feedback"
   },
   "Search": {
     "placeholder": "How can I help you today?"
@@ -201,6 +203,12 @@
       "Your recent colors are automatically saved for quick access",
       "Use the eyedropper tool to sample colors from any part of an image",
       "Remove recent colors by clicking the × button on any color tile"
+    ],
+    "qr-code": [
+      "Generate QR codes for URLs, text, or any data you want to share",
+      "Customize the size and error correction level for your needs",
+      "Download your QR code as a PNG image file",
+      "Higher error correction allows the code to work even if partially damaged"
     ]
   },
   "ColorPicker": {
@@ -270,5 +278,45 @@
     "hash-generator": "Hash Generator",
     "qr-code": "QR Code",
     "calculator": "Calculator"
+  },
+  "Feedback": {
+    "title": "Send Feedback",
+    "description": "Help us improve by sharing your thoughts and suggestions.",
+    "form": {
+      "type": "Feedback Type",
+      "typeOptions": {
+        "bug": "Bug Report",
+        "feature": "Feature Request",
+        "improvement": "Improvement",
+        "general": "General Feedback"
+      },
+      "subject": "Subject",
+      "subjectPlaceholder": "Brief summary of your feedback",
+      "message": "Message",
+      "messagePlaceholder": "Please describe your feedback in detail...",
+      "email": "Email (Optional)",
+      "emailPlaceholder": "your.email@example.com",
+      "emailDescription": "We'll only use this to follow up on your feedback if needed."
+    },
+    "actions": {
+      "submit": "Send Feedback",
+      "cancel": "Cancel",
+      "clear": "Clear Form"
+    },
+    "notifications": {
+      "success": "Thank you! Your feedback has been saved.",
+      "error": "Failed to submit feedback. Please try again.",
+      "required": "Please fill in the required fields.",
+      "subjectRequired": "Subject is required",
+      "messageRequired": "Message is required",
+      "confirmClose": "Are you sure you want to close? Your changes will be lost."
+    },
+    "validation": {
+      "subjectMin": "Subject must be at least 5 characters",
+      "subjectMax": "Subject must be less than 100 characters",
+      "messageMin": "Message must be at least 10 characters",
+      "messageMax": "Message must be less than 1000 characters",
+      "emailInvalid": "Please enter a valid email address"
+    }
   }
 }

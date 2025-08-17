@@ -17,7 +17,6 @@ import { ColorDisplay } from "@/features/color-picker/components/color-display";
 import { ColorPickerHeader } from "@/features/color-picker/components/color-picker-header";
 import { DragDropOverlay } from "@/features/color-picker/components/drag-drop-overlay";
 import { useDragDrop } from "@/features/color-picker/hooks/use-drag-drop";
-import { AnimatedTips } from "@/features/shared/ui/animated-tips";
 import { ColorPickerCanvas } from "@/features/color-picker/components/color-picker-canvas";
 import { ColorPickerPalette } from "@/features/color-picker/components/color-picker-palette";
 import { ColorPickerControlPanel } from "@/features/color-picker/components/color-picker-control-panel";
@@ -82,7 +81,7 @@ export const ColorPicker: React.FC = () => {
     }
 
     try {
-      // @ts-ignore - EyeDropper is not in TypeScript types yet
+      // @ts-expect-error - EyeDropper is not in TypeScript types yet
       const eyeDropper = new EyeDropper();
       const result = await eyeDropper.open();
       handleColorChange(result.sRGBHex);
@@ -163,7 +162,7 @@ export const ColorPicker: React.FC = () => {
   // Initialize color name for default color
   React.useEffect(() => {
     debouncedFetchColorName(selectedColor);
-  }, [debouncedFetchColorName]);
+  }, [debouncedFetchColorName, selectedColor]);
 
   // Cleanup timeouts on unmount
   React.useEffect(() => {

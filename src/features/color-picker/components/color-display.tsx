@@ -17,7 +17,7 @@ interface ColorDisplayProps {
   hasImage?: boolean;
 }
 
-export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
+const ColorDisplayComponent: React.FC<ColorDisplayProps> = React.memo(({
   selectedColor,
   colorName,
   loadingColorName,
@@ -33,7 +33,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
     setIsPickerLoading(true);
     try {
       await onScreenColorPicker();
-    } catch (error) {
+    } catch {
       // Error is already logged in the hook
       alert(t("notifications.screenPickerNotSupported"));
     } finally {
@@ -121,3 +121,6 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
     </GlassSurface>
   );
 });
+
+ColorDisplayComponent.displayName = 'ColorDisplay';
+export const ColorDisplay = ColorDisplayComponent;

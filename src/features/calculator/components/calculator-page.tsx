@@ -5,7 +5,6 @@ import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
 import { calculatorService } from "../lib/calculator-db";
 import { useTranslations } from "next-intl";
-import { usePageTitle } from "@/hooks/use-page-title";
 import { useCalculator } from "../lib/calculator-context";
 import { cn } from "@/lib/utils";
 
