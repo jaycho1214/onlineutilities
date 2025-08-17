@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
 import {
   MDXEditor,
   headingsPlugin,
@@ -27,10 +27,25 @@ interface MarkdownEditorProps {
 
 const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
   ({ value, onChange, placeholder }, ref) => {
+    const editorRef = useRef<MDXEditorMethods>(null);
+    
+    // Forward the ref
+    useImperativeHandle(ref, () => editorRef.current!, []);
+    
+    // Update editor content when value prop changes
+    useEffect(() => {
+      if (editorRef.current && value !== undefined) {
+        const currentMarkdown = editorRef.current.getMarkdown();
+        if (currentMarkdown !== value) {
+          editorRef.current.setMarkdown(value);
+        }
+      }
+    }, [value]);
+    
     return (
       <div className="mdx-editor-wrapper">
         <MDXEditor
-          ref={ref}
+          ref={editorRef}
           markdown={value}
           onChange={onChange}
           placeholder={placeholder}

@@ -65,11 +65,11 @@ function NotepadSidebarComponent() {
 
   const downloadNote = useCallback((note: (typeof notes)[0]) => {
     if (!note) return;
-    const blob = new Blob([note.content], { type: "text/plain" });
+    const blob = new Blob([note.content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${note.title || "note"}.txt`;
+    a.download = `${note.title || "Untitled"}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }, []);

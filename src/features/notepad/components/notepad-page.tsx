@@ -62,10 +62,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
 
   // Initialize content from database
   useEffect(() => {
-    if (
-      currentNote &&
-      (!hasInitialized.current || notepadId !== currentNote.id)
-    ) {
+    if (currentNote) {
       setContent(currentNote.content);
       setTitle(currentNote.title);
       hasInitialized.current = true;
@@ -73,6 +70,8 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
     // Reset initialization flag when navigating to base /notepad
     if (!notepadId) {
       hasInitialized.current = false;
+      setContent("");
+      setTitle("");
     }
   }, [currentNote, notepadId]);
 
@@ -221,9 +220,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${title || "note"}-${
-      new Date().toISOString().split("T")[0]
-    }.md`;
+    a.download = `${title || "Untitled"}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }, [content, title]);
