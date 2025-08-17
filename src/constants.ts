@@ -2,14 +2,9 @@ import {
   Timer,
   Clock,
   NotebookPen,
-  Calculator,
-  Calendar,
   Palette,
   Hash,
   QrCode,
-  Image,
-  FileText,
-  Link,
   type LucideIcon,
 } from "lucide-react";
 
@@ -52,24 +47,6 @@ export const utilities: Utility[] = [
     keywords: ["notes", "text", "write", "memo"],
   },
   {
-    id: "calculator",
-    name: "Calculator",
-    description: "Basic calculations",
-    icon: Calculator,
-    href: "/calculator",
-    category: "Math",
-    keywords: ["math", "calculate", "arithmetic", "numbers"],
-  },
-  {
-    id: "calendar",
-    name: "Calendar",
-    description: "Date calculations",
-    icon: Calendar,
-    href: "/calendar",
-    category: "Time",
-    keywords: ["date", "calendar", "schedule", "time"],
-  },
-  {
     id: "color-picker",
     name: "Color Picker",
     description: "Colors & palettes",
@@ -96,42 +73,6 @@ export const utilities: Utility[] = [
     category: "Generator",
     keywords: ["qr", "code", "generate", "barcode"],
   },
-  {
-    id: "image-converter",
-    name: "Image Converter",
-    description: "Convert images",
-    icon: Image,
-    href: "/image-converter",
-    category: "Media",
-    keywords: ["image", "convert", "format", "jpg", "png"],
-  },
-  {
-    id: "text-formatter",
-    name: "Text Formatter",
-    description: "Format & transform text",
-    icon: FileText,
-    href: "/text-formatter",
-    category: "Text",
-    keywords: ["text", "format", "transform", "case", "style"],
-  },
-  {
-    id: "url-shortener",
-    name: "URL Shortener",
-    description: "Shorten long URLs",
-    icon: Link,
-    href: "/url-shortener",
-    category: "Web",
-    keywords: ["url", "link", "shorten", "redirect"],
-  },
-  {
-    id: "gradient-generator",
-    name: "Gradient Generator",
-    description: "Create CSS gradients",
-    icon: Palette,
-    href: "/gradient-generator",
-    category: "Design",
-    keywords: ["gradient", "css", "design", "colors", "background"],
-  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -148,7 +89,7 @@ export const searchUtilities = (query: string): Utility[] => {
     (utility) =>
       utility.name.toLowerCase().includes(lowercaseQuery) ||
       utility.description.toLowerCase().includes(lowercaseQuery) ||
-      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery)),
+      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery))
   );
 };
 
