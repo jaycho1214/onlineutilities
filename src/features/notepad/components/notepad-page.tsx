@@ -1,17 +1,7 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-  Suspense,
-} from "react";
-import { useRouter } from "next/navigation";
-import { useLiveQuery } from "dexie-react-hooks";
-import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
-import { downloadContent, deleteNoteAndNavigate, generateNoteId } from "@/features/notepad/lib/notepad-utils";
+import { useEffect, useRef, useMemo, Suspense, useCallback, memo } from "react";
+import { useNotepad } from "@/features/notepad/lib/notepad-context";
 import { NotepadActions } from "./notepad-actions";
 import { NotepadStats } from "./notepad-stats";
 import { Check, Loader2 } from "lucide-react";
@@ -28,213 +18,48 @@ const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
   ),
 });
 
-interface NotepadPageProps {
-  notepadId?: string;
-}
-
-export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
-  const router = useRouter();
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-  const [currentNoteId, setCurrentNoteId] = useState(initialNotepadId);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
-    "idle",
-  );
-  const hasInitialized = useRef(false);
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const saveIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+function NotepadPageComponent() {
+  const { currentNoteId } = useNotepad();
+  const {
+    title,
+    content,
+    saveStatus,
+    updateTitle,
+    updateContent,
+    textStats,
+    createNewNote,
+    deleteNote,
+    downloadCurrentNote,
+  } = useNotepad();
   const mdxEditorRef = useRef<MDXEditorMethods>(null);
 
-  // Use currentNoteId instead of notepadId prop
-  const notepadId = currentNoteId;
-
-  // Use live query to get current note - read-only
-  const currentNote = useLiveQuery(async () => {
-    if (!notepadId) return null;
-    return await notepadDb.notes.get(notepadId);
-  }, [notepadId]);
-
-  // Auto-create note if it doesn't exist (removed to prevent unnecessary creation)
-
-  // Update current note ID when prop changes (from navigation)
+  // Sync markdown editor content
   useEffect(() => {
-    setCurrentNoteId(initialNotepadId);
-  }, [initialNotepadId]);
-
-  // Initialize content from database
-  useEffect(() => {
-    if (currentNote) {
-      setContent(currentNote.content);
-      setTitle(currentNote.title);
-      hasInitialized.current = true;
-    }
-    // Reset initialization flag when navigating to base /notepad
-    if (!notepadId) {
-      hasInitialized.current = false;
-      setContent("");
-      setTitle("");
-    }
-  }, [currentNote, notepadId]);
-
-  // Cleanup timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-      if (saveIndicatorTimeoutRef.current)
-        clearTimeout(saveIndicatorTimeoutRef.current);
-    };
-  }, []);
-
-  // Handle content change with debouncing
-  const handleContentChange = useCallback(
-    (value: string) => {
-      setContent(value);
-
-      // Clear existing timeout
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-
-      // If on base /notepad, create note and update URL without navigation
-      if (!notepadId && value.trim() && !hasInitialized.current) {
-        hasInitialized.current = true;
-        const newId = generateNoteId();
-
-        // Create the note
-        notesService.createNote({
-          id: newId,
-          title: title || "Untitled",
-          content: value,
-        });
-
-        // Update internal state and URL without navigation
-        setCurrentNoteId(newId);
-        window.history.replaceState({}, "", `/notepad/${newId}`);
-        return;
-      }
-
-      // Debounce updates for existing notes
-      if (notepadId) {
-        setSaveStatus("saving");
-        saveTimeoutRef.current = setTimeout(async () => {
-          await notesService.updateNote(notepadId, {
-            content: value,
-            title: title || "Untitled",
-          });
-          setSaveStatus("saved");
-
-          // Clear saved indicator after 2 seconds
-          if (saveIndicatorTimeoutRef.current) {
-            clearTimeout(saveIndicatorTimeoutRef.current);
-          }
-          saveIndicatorTimeoutRef.current = setTimeout(() => {
-            setSaveStatus("idle");
-            saveIndicatorTimeoutRef.current = null;
-          }, 2000);
-        }, 300);
-      }
-    },
-    [notepadId, title],
-  );
-
-  // Handle title change with debouncing
-  const handleTitleChange = useCallback(
-    (value: string) => {
-      setTitle(value);
-
-      // Clear existing timeout
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-
-      // If on base /notepad, create note and update URL without navigation
-      if (!notepadId && value.trim() && !hasInitialized.current) {
-        hasInitialized.current = true;
-        const newId = generateNoteId();
-
-        // Create the note
-        notesService.createNote({
-          id: newId,
-          title: value,
-          content: content || "",
-        });
-
-        // Update internal state and URL without navigation
-        setCurrentNoteId(newId);
-        window.history.replaceState({}, "", `/notepad/${newId}`);
-        return;
-      }
-
-      // Debounce updates for existing notes
-      if (notepadId) {
-        setSaveStatus("saving");
-        saveTimeoutRef.current = setTimeout(async () => {
-          await notesService.updateNote(notepadId, {
-            title: value,
-            content: content,
-          });
-          setSaveStatus("saved");
-
-          // Clear saved indicator after 2 seconds
-          if (saveIndicatorTimeoutRef.current) {
-            clearTimeout(saveIndicatorTimeoutRef.current);
-          }
-          saveIndicatorTimeoutRef.current = setTimeout(() => {
-            setSaveStatus("idle");
-            saveIndicatorTimeoutRef.current = null;
-          }, 2000);
-        }, 300);
-      }
-    },
-    [notepadId, content],
-  );
-
-  const createNewNoteAndRedirect = useCallback(() => {
-    // Just navigate to /notepad for a new note
-    router.push("/notepad");
-  }, [router]);
-
-  const deleteCurrentNote = useCallback(async () => {
-    if (!notepadId) return;
-    await deleteNoteAndNavigate(notepadId, router, notepadId);
-  }, [notepadId, router]);
-
-  const downloadAsFile = useCallback(() => {
-    downloadContent(content, title);
-  }, [content, title]);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey) {
-        const key = e.key.toLowerCase();
-        if (key === "n") {
-          e.preventDefault();
-          void createNewNoteAndRedirect();
-        } else if (key === "d") {
-          e.preventDefault();
-          downloadAsFile();
-        }
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [downloadAsFile, createNewNoteAndRedirect]);
-
-  // Memoized text statistics
-  const textStats = useMemo(() => {
-    const words = content.split(/\s+/).filter((word) => word.length > 0);
-    const wordCount = words.length;
-    const charCount = content.length;
-    const readingTime = Math.ceil(wordCount / 200);
-
-    return { wordCount, charCount, readingTime };
+    mdxEditorRef.current?.setMarkdown(content);
   }, [content]);
 
-  const titlePlaceholder = notepadId ? "Untitled" : "Start with a title...";
-  const contentPlaceholder = notepadId
-    ? "Start writing..."
-    : "Start writing to create a new note...";
+  const handleDeleteCurrentNote = useCallback(async () => {
+    if (!currentNoteId) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this note?"
+    );
+    if (confirmDelete) {
+      await deleteNote(currentNoteId);
+    }
+  }, [currentNoteId, deleteNote]);
+
+  const titlePlaceholder = useMemo(
+    () => (currentNoteId ? "Untitled" : "Start with a title..."),
+    [currentNoteId]
+  );
+
+  const contentPlaceholder = useMemo(
+    () =>
+      currentNoteId
+        ? "Start writing..."
+        : "Start writing to create a new note...",
+    [currentNoteId]
+  );
 
   return (
     <div className="relative h-full flex flex-col overflow-hidden">
@@ -243,15 +68,17 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
         <input
           type="text"
           value={title}
-          onChange={(e) => handleTitleChange(e.target.value)}
+          onChange={(e) => updateTitle(e.target.value)}
           placeholder={titlePlaceholder}
-          className="w-full px-6 py-6 pb-4 pr-12 md:pr-24 bg-transparent border-0 outline-0 text-foreground placeholder:text-muted-foreground font-semibold text-2xl font-serif"
+          className="w-full px-6 py-6 pb-4 pr-12 md:pr-24 bg-transparent border-0 outline-0 text-foreground placeholder:text-muted-foreground font-semibold text-2xl font-serif focus:ring-0 focus:border-transparent"
           style={{
             WebkitAppearance: "none",
             MozAppearance: "textfield",
             border: "none",
             outline: "none",
           }}
+          autoComplete="off"
+          spellCheck="true"
         />
       </div>
 
@@ -267,7 +94,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
           <MarkdownEditor
             ref={mdxEditorRef}
             value={content}
-            onChange={handleContentChange}
+            onChange={updateContent}
             placeholder={contentPlaceholder}
           />
         </Suspense>
@@ -277,9 +104,9 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
       <div className="absolute bottom-3 right-3 md:top-6 md:right-6 z-20 flex flex-col md:flex-col gap-2 md:gap-3">
         <div className="flex flex-row md:flex-col gap-2 md:gap-3">
           <NotepadActions
-            onNewNote={createNewNoteAndRedirect}
-            onDownload={downloadAsFile}
-            onDelete={deleteCurrentNote}
+            onNewNote={createNewNote}
+            onDownload={downloadCurrentNote}
+            onDelete={handleDeleteCurrentNote}
           />
           <GlassSurface className="flex items-center justify-center px-2 py-1.5 md:px-3 md:py-2">
             {saveStatus === "saving" ? (
@@ -298,3 +125,5 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
     </div>
   );
 }
+
+export const NotepadPage = memo(NotepadPageComponent);

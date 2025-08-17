@@ -7,143 +7,426 @@ import {
   useCallback,
   ReactNode,
   useMemo,
+  useEffect,
+  useRef,
+  useTransition,
 } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { notesService, NoteDocument, notepadDb } from "./notepad-db";
+import { handleNotepadError, showSuccessToast } from "./notepad-error-handler";
 
 interface NotepadContextType {
   notes: NoteDocument[];
   currentNote: NoteDocument | null;
+  currentNoteId: string | null;
   loading: boolean;
-  createNote: () => Promise<NoteDocument>;
-  selectNote: (noteId: string) => Promise<void>;
-  updateCurrentNote: (
-    updates: Partial<Pick<NoteDocument, "title" | "content">>,
-  ) => Promise<void>;
+  // Form state
+  title: string;
+  content: string;
+  saveStatus: "idle" | "saving" | "saved";
+  textStats: {
+    wordCount: number;
+    charCount: number;
+    charCountNoSpaces: number;
+    readingTime: number;
+  };
+  // Actions
+  createNewNote: () => void;
+  selectNote: (noteId: string) => void;
+  updateTitle: (title: string) => void;
+  updateContent: (content: string) => void;
   deleteNote: (noteId: string) => Promise<void>;
-  refreshNotes: () => Promise<void>;
+  deleteAllNotes: () => Promise<void>;
+  downloadCurrentNote: () => void;
 }
 
 const NotepadContext = createContext<NotepadContextType | null>(null);
 
-export function NotepadProvider({ children }: { children: ReactNode }) {
-  const [currentNoteId, setCurrentNoteId] = useState<string | null>(null);
+interface NotepadProviderProps {
+  children: ReactNode;
+  initialNoteId?: string;
+}
 
-  // Use Dexie's reactive query for real-time updates with better error handling
-  const notesFromQuery = useLiveQuery(async () => {
-    try {
-      return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
-    } catch (error) {
-      console.error("Failed to fetch notes:", error);
-      return [];
-    }
-  }, []);
+export function NotepadProvider({
+  children,
+  initialNoteId,
+}: NotepadProviderProps) {
+  const [currentNoteId, setCurrentNoteId] = useState<string | null>(
+    initialNoteId || null
+  );
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
+    "idle"
+  );
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const [, startTransition] = useTransition();
 
-  const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const creatingNoteRef = useRef<string | null>(null);
+  const lastSavedContent = useRef({ title: "", content: "" });
 
-  // Use reactive query for current note with error handling
+  const textStats = useMemo(() => {
+    const cleanContent = content?.trim() ?? "";
+    const words = cleanContent
+      ? cleanContent.split(/\s+/).filter((word) => word.length > 0) || []
+      : [];
+    const wordCount = words.length;
+    const charCount = content.length;
+    const charCountNoSpaces = content.replace(/\s/g, "").length;
+    const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+    return { wordCount, charCount, charCountNoSpaces, readingTime };
+  }, [content]);
+
+  // Use Dexie's reactive query for real-time updates
+  const notes =
+    useLiveQuery(async () => {
+      try {
+        return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+        return [];
+      }
+    }, []) ?? [];
+
+  // Use reactive query for current note
   const currentNote =
     useLiveQuery(async () => {
-      if (!currentNoteId) return undefined;
+      if (!currentNoteId) return null;
       try {
         return await notepadDb.notes.get(currentNoteId);
       } catch (error) {
         console.error("Failed to fetch current note:", error);
-        return undefined;
+        return null;
       }
     }, [currentNoteId]) ?? null;
 
-  const loading = notes === undefined;
+  const loading = notes === undefined || false;
 
-  // Don't auto-select or auto-create - let the page handle it
+  // Initialize with the provided note ID
+  useEffect(() => {
+    if (initialNoteId && initialNoteId !== currentNoteId) {
+      setCurrentNoteId(initialNoteId);
+    }
+  }, [initialNoteId, currentNoteId]);
 
-  const createNote = useCallback(async (): Promise<NoteDocument> => {
-    try {
-      const newNote = await notesService.createNote({
-        id: Date.now().toString(),
-        title: "New Note",
-        content: "",
-      });
-      setCurrentNoteId(newNote.id);
-      return newNote;
-    } catch (error) {
-      console.error("Failed to create note:", error);
-      throw error;
+  // Sync form state with current note
+  useEffect(() => {
+    if (currentNote) {
+      setTitle(currentNote.title);
+      setContent(currentNote.content);
+      lastSavedContent.current = {
+        title: currentNote.title,
+        content: currentNote.content,
+      };
+      setHasInitialized(true);
+    } else if (!currentNoteId) {
+      // Clear form when no note is selected
+      setTitle("");
+      setContent("");
+      lastSavedContent.current = { title: "", content: "" };
+      setHasInitialized(false);
+    }
+  }, [currentNote, currentNoteId]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+      if (saveIndicatorTimeoutRef.current)
+        clearTimeout(saveIndicatorTimeoutRef.current);
+    };
+  }, []);
+
+  const createNewNote = useCallback(() => {
+    // Clear form fields immediately
+    setTitle("");
+    setContent("");
+    setCurrentNoteId(null);
+    setHasInitialized(false);
+    setSaveStatus("idle");
+    creatingNoteRef.current = null;
+
+    // Navigate to /notepad
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", "/notepad");
     }
   }, []);
 
-  const selectNote = useCallback(async (noteId: string) => {
-    // Simply set the current note ID
+  const selectNote = useCallback((noteId: string) => {
     setCurrentNoteId(noteId);
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", `/notepad/${noteId}`);
+    }
   }, []);
 
-  const updateCurrentNote = useCallback(
-    async (updates: Partial<Pick<NoteDocument, "title" | "content">>) => {
-      if (!currentNoteId) return;
+  const updateTitle = useCallback(
+    (newTitle: string) => {
+      setTitle(newTitle);
 
-      try {
-        // Use requestIdleCallback for non-critical updates
-        if ("requestIdleCallback" in window) {
-          window.requestIdleCallback(() => {
-            notesService.updateNote(currentNoteId, updates);
-          });
-        } else {
-          await notesService.updateNote(currentNoteId, updates);
+      // Clear existing timeout
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      // If no note exists and we haven't started creating one, create one when content is added
+      if (
+        !currentNoteId &&
+        !hasInitialized &&
+        !creatingNoteRef.current &&
+        newTitle.trim()
+      ) {
+        setHasInitialized(true);
+        const newId = Date.now().toString();
+        creatingNoteRef.current = newId;
+
+        // Create note immediately and wait for it to be created
+        startTransition(() => {
+          (async () => {
+            try {
+              await notesService.createNote({
+                id: newId,
+                title: newTitle,
+                content: content || "",
+              });
+
+              // Only set the ID after successful creation
+              setCurrentNoteId(newId);
+              creatingNoteRef.current = null;
+              lastSavedContent.current = {
+                title: newTitle,
+                content: content || "",
+              };
+
+              if (typeof window !== "undefined") {
+                window.history.replaceState({}, "", `/notepad/${newId}`);
+              }
+            } catch (error) {
+              handleNotepadError(error, "Create note");
+              // Reset state on error
+              setHasInitialized(false);
+              creatingNoteRef.current = null;
+            }
+          })();
+        });
+
+        return;
+      }
+
+      // Debounce updates for existing notes or currently being created notes
+      if (currentNoteId || creatingNoteRef.current) {
+        const noteIdToUpdate = currentNoteId || creatingNoteRef.current;
+        if (noteIdToUpdate) {
+          // Only save if content has actually changed
+          if (
+            newTitle === lastSavedContent.current.title &&
+            content === lastSavedContent.current.content
+          ) {
+            return;
+          }
+
+          setSaveStatus("saving");
+          saveTimeoutRef.current = setTimeout(async () => {
+            try {
+              await notesService.updateNote(noteIdToUpdate, {
+                title: newTitle,
+                content,
+              });
+              lastSavedContent.current = { title: newTitle, content };
+              setSaveStatus("saved");
+
+              if (saveIndicatorTimeoutRef.current) {
+                clearTimeout(saveIndicatorTimeoutRef.current);
+              }
+              saveIndicatorTimeoutRef.current = setTimeout(() => {
+                setSaveStatus("idle");
+              }, 2000);
+            } catch (error) {
+              handleNotepadError(error, "Update note");
+              setSaveStatus("idle");
+            }
+          }, 500);
         }
-      } catch (error) {
-        console.error("Failed to update note:", error);
       }
     },
-    [currentNoteId],
+    [currentNoteId, content, hasInitialized, startTransition]
+  );
+
+  const updateContent = useCallback(
+    (newContent: string) => {
+      setContent(newContent);
+
+      // Clear existing timeout
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      // If no note exists and we haven't started creating one, create one when content is added
+      if (
+        !currentNoteId &&
+        !hasInitialized &&
+        !creatingNoteRef.current &&
+        newContent.trim()
+      ) {
+        setHasInitialized(true);
+        const newId = Date.now().toString();
+        creatingNoteRef.current = newId;
+
+        // Create note immediately and wait for it to be created
+        startTransition(() => {
+          (async () => {
+            try {
+              await notesService.createNote({
+                id: newId,
+                title: title || "Untitled",
+                content: newContent,
+              });
+
+              // Only set the ID after successful creation
+              setCurrentNoteId(newId);
+              creatingNoteRef.current = null;
+              lastSavedContent.current = {
+                title: title || "Untitled",
+                content: newContent,
+              };
+
+              if (typeof window !== "undefined") {
+                window.history.replaceState({}, "", `/notepad/${newId}`);
+              }
+            } catch (error) {
+              handleNotepadError(error, "Create note");
+              // Reset state on error
+              setHasInitialized(false);
+              creatingNoteRef.current = null;
+            }
+          })();
+        });
+
+        return;
+      }
+
+      // Debounce updates for existing notes or currently being created notes
+      if (currentNoteId || creatingNoteRef.current) {
+        const noteIdToUpdate = currentNoteId || creatingNoteRef.current;
+        if (noteIdToUpdate) {
+          // Only save if content has actually changed
+          const currentTitle = title || "Untitled";
+          if (
+            currentTitle === lastSavedContent.current.title &&
+            newContent === lastSavedContent.current.content
+          ) {
+            return;
+          }
+
+          setSaveStatus("saving");
+          saveTimeoutRef.current = setTimeout(async () => {
+            try {
+              await notesService.updateNote(noteIdToUpdate, {
+                title: currentTitle,
+                content: newContent,
+              });
+              lastSavedContent.current = {
+                title: currentTitle,
+                content: newContent,
+              };
+              setSaveStatus("saved");
+
+              if (saveIndicatorTimeoutRef.current) {
+                clearTimeout(saveIndicatorTimeoutRef.current);
+              }
+              saveIndicatorTimeoutRef.current = setTimeout(() => {
+                setSaveStatus("idle");
+              }, 2000);
+            } catch (error) {
+              handleNotepadError(error, "Update note");
+              setSaveStatus("idle");
+            }
+          }, 500);
+        }
+      }
+    },
+    [currentNoteId, title, hasInitialized, startTransition]
   );
 
   const deleteNote = useCallback(
     async (noteId: string) => {
       try {
         const success = await notesService.deleteNote(noteId);
-        if (success && currentNoteId === noteId) {
-          // Just clear the current note ID
-          // Let the component handle navigation
-          setCurrentNoteId(null);
+        if (success) {
+          showSuccessToast("Note deleted successfully");
+          if (currentNoteId === noteId) {
+            // Navigate to base notepad page
+            setCurrentNoteId(null);
+            if (typeof window !== "undefined") {
+              window.history.pushState({}, "", "/notepad");
+            }
+          }
         }
       } catch (error) {
-        console.error("Failed to delete note:", error);
+        handleNotepadError(error, "Delete note");
       }
     },
-    [currentNoteId],
+    [currentNoteId]
   );
 
-  const refreshNotes = useCallback(async () => {
-    // With Dexie's reactive queries, manual refresh is not needed
-    // The UI will automatically update when the database changes
-  }, []);
+  const deleteAllNotes = useCallback(async () => {
+    if (notes.length === 0) return;
 
-  // Memoize context value to prevent unnecessary re-renders
-  const value: NotepadContextType = useMemo(
-    () => ({
-      notes,
-      currentNote: currentNote || null,
-      loading,
-      createNote,
-      selectNote,
-      updateCurrentNote,
-      deleteNote,
-      refreshNotes,
-    }),
-    [
-      notes,
-      currentNote,
-      loading,
-      createNote,
-      selectNote,
-      updateCurrentNote,
-      deleteNote,
-      refreshNotes,
-    ],
-  );
+    const confirmed = window.confirm(
+      `Are you sure you want to delete all ${notes.length} notes? This action cannot be undone.`
+    );
+
+    if (confirmed) {
+      try {
+        await notesService.deleteAllNotes();
+        showSuccessToast(`All ${notes.length} notes deleted`);
+        setCurrentNoteId(null);
+        if (typeof window !== "undefined") {
+          window.history.pushState({}, "", "/notepad");
+        }
+      } catch (error) {
+        handleNotepadError(error, "Delete all notes");
+      }
+    }
+  }, [notes.length]);
+
+  const downloadCurrentNote = useCallback(() => {
+    if (!title && !content) return;
+
+    const filename = title.trim() || "Untitled";
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${filename}.md`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [title, content]);
 
   return (
-    <NotepadContext.Provider value={value}>{children}</NotepadContext.Provider>
+    <NotepadContext.Provider
+      value={{
+        notes,
+        currentNote,
+        currentNoteId,
+        loading,
+        title,
+        textStats,
+        content,
+        saveStatus,
+        createNewNote,
+        selectNote,
+        updateTitle,
+        updateContent,
+        deleteNote,
+        deleteAllNotes,
+        downloadCurrentNote,
+      }}
+    >
+      {children}
+    </NotepadContext.Provider>
   );
 }
 

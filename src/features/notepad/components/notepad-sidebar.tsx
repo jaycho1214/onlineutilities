@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, useMemo, useCallback, memo } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useState, useMemo, useCallback, memo, useTransition } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useLiveQuery } from "dexie-react-hooks";
 import { Button } from "@/features/shared/ui/button";
-import { Plus, FileText, Trash2, Edit, Download, AlertTriangle } from "lucide-react";
-import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
-import { downloadNote, deleteNoteAndNavigate, formatDate } from "@/features/notepad/lib/notepad-utils";
+import {
+  Plus,
+  FileText,
+  Trash2,
+  Edit,
+  Download,
+  AlertTriangle,
+} from "lucide-react";
+import { useNotepad } from "@/features/notepad/lib/notepad-context";
+import { formatDate } from "@/features/notepad/lib/notepad-utils";
 import {
   SidebarHeader,
   SidebarContent,
@@ -27,64 +33,45 @@ import {
 
 function NotepadSidebarComponent() {
   const pathname = usePathname();
-  const router = useRouter();
-  const currentNoteId = pathname.split("/").pop();
+  const currentNoteIdFromUrl = useMemo(
+    () => pathname.split("/").pop(),
+    [pathname]
+  );
   const [search, setSearch] = useState("");
+  const [, startTransition] = useTransition();
 
-  // Use live query to get notes directly from database
-  const notesFromQuery = useLiveQuery(
-    () => notepadDb.notes.orderBy("updatedAt").reverse().toArray(),
-    [],
-    [],
-  );
-
-  const notes = useMemo(() => notesFromQuery ?? [], [notesFromQuery]);
-
-  const createNewNote = useCallback(async () => {
-    router.push("/notepad?new=true");
-  }, [router]);
-
-  const handleDeleteNote = useCallback(
-    async (noteId: string) => {
-      await deleteNoteAndNavigate(noteId, router, currentNoteId);
-    },
-    [currentNoteId, router],
-  );
+  const { notes, createNewNote, selectNote, deleteNote, deleteAllNotes } =
+    useNotepad();
 
   const handleDownloadNote = useCallback((note: (typeof notes)[0]) => {
-    downloadNote(note);
+    const filename = note.title.trim() || "Untitled";
+    const blob = new Blob([note.content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${filename}.md`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }, []);
 
-  const handleDeleteAllNotes = useCallback(async () => {
-    if (notes.length === 0) return;
-    
-    const confirmed = window.confirm(
-      `Are you sure you want to delete all ${notes.length} notes? This action cannot be undone.`
-    );
-    
-    if (confirmed) {
-      try {
-        await notesService.deleteAllNotes();
-        // Navigate to base notepad page if currently viewing a note
-        if (currentNoteId && currentNoteId !== "notepad") {
-          router.push("/notepad");
-        }
-      } catch (error) {
-        console.error("Failed to delete all notes:", error);
-      }
-    }
-  }, [notes.length, currentNoteId, router]);
-
-
-  // Optimized search
+  // Optimized search with debouncing
   const filteredNotes = useMemo(() => {
     const trimmedSearch = search.trim();
     if (!trimmedSearch) return notes;
 
     const searchLower = trimmedSearch.toLowerCase();
+    const searchTerms = searchLower.split(/\s+/).filter(Boolean);
+
     return notes.filter((n) => {
-      if (n.title.toLowerCase().includes(searchLower)) return true;
-      return n.content.toLowerCase().includes(searchLower);
+      const titleLower = n.title.toLowerCase();
+      const contentLower = n.content.toLowerCase();
+
+      // Match all search terms
+      return searchTerms.every(
+        (term) => titleLower.includes(term) || contentLower.includes(term)
+      );
     });
   }, [notes, search]);
 
@@ -106,9 +93,15 @@ function NotepadSidebarComponent() {
         <div className="mb-2">
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              startTransition(() => {
+                setSearch(e.target.value);
+              });
+            }}
             placeholder="Search notes..."
-            className="w-full p-2 rounded-md bg-white/5 border border-white/10 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/40 backdrop-blur-sm"
+            className="w-full p-2 rounded-md bg-white/5 border border-white/10 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/40 backdrop-blur-sm transition-all duration-200"
+            autoComplete="off"
+            spellCheck="false"
           />
         </div>
       </SidebarHeader>
@@ -137,10 +130,19 @@ function NotepadSidebarComponent() {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={currentNoteId === note.id}
-                      className="flex flex-col items-start h-auto py-2 transition-colors duration-150 cursor-pointer"
+                      isActive={currentNoteIdFromUrl === note.id}
+                      className="flex flex-col items-start h-auto py-2 transition-all duration-150 cursor-pointer hover:bg-accent/50"
                     >
-                      <Link href={`/notepad/${note.id}`} prefetch={true}>
+                      <Link
+                        href={`/notepad/${note.id}`}
+                        prefetch={false}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          startTransition(() => {
+                            selectNote(note.id);
+                          });
+                        }}
+                      >
                         <div className="flex items-center justify-between w-full">
                           <span className="font-medium text-sm truncate">
                             {note.title}
@@ -148,7 +150,7 @@ function NotepadSidebarComponent() {
                         </div>
                         <div className="flex flex-col items-start w-full mt-1">
                           <p className="text-xs text-muted-foreground line-clamp-2 text-left">
-                            {note.content || "Empty note"}
+                            {note.content.substring(0, 100) || "Empty note"}
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
                             {formatDate(note.updatedAt)}
@@ -171,7 +173,14 @@ function NotepadSidebarComponent() {
                   <ContextMenuSeparator />
                   <ContextMenuItem
                     variant="destructive"
-                    onClick={() => handleDeleteNote(note.id)}
+                    onClick={() => {
+                      const confirmDelete = window.confirm(
+                        `Delete "${note.title || "Untitled"}"?`
+                      );
+                      if (confirmDelete) {
+                        deleteNote(note.id);
+                      }
+                    }}
                   >
                     <Trash2 className="w-3 h-3 mr-2" />
                     Delete
@@ -187,7 +196,7 @@ function NotepadSidebarComponent() {
       {notes.length > 0 && (
         <SidebarFooter className="mt-auto">
           <Button
-            onClick={handleDeleteAllNotes}
+            onClick={deleteAllNotes}
             variant="destructive"
             size="sm"
             className="w-full text-xs h-10 relative group overflow-hidden"

@@ -4,11 +4,17 @@ import { NotepadProvider } from "@/features/notepad/lib/notepad-context";
 
 interface NotepadLayoutProps {
   children: React.ReactNode;
+  params: Promise<{
+    notepadId?: string[];
+  }>;
 }
 
-export default function NotepadLayout({ children }: NotepadLayoutProps) {
+export default async function NotepadLayout({ children, params }: NotepadLayoutProps) {
+  const { notepadId } = await params;
+  const id = notepadId?.[0];
+  
   return (
-    <NotepadProvider>
+    <NotepadProvider initialNoteId={id}>
       <div className="flex flex-row h-[calc(100vh-3rem)] pt-2">
         <NotepadSidebar />
         <SidebarInset className="flex-1 flex flex-col overflow-hidden">

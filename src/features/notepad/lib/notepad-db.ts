@@ -39,8 +39,22 @@ class NotepadDatabase extends Dexie {
     this.version(1).stores({
       notes: "id, updatedAt",
     });
+    
+    // Version 2: Add more indexes for better performance
+    this.version(2).stores({
+      notes: "id, updatedAt, createdAt, title",
+    });
 
     this.notes.mapToClass(NoteModel);
+    
+    // Handle database errors
+    this.on("blocked", () => {
+      console.warn("Database upgrade blocked by another connection");
+    });
+    
+    this.on("versionchange", () => {
+      console.log("Database version changed in another tab");
+    });
   }
 }
 
@@ -82,7 +96,12 @@ export class NotesService {
    * @returns Promise<NoteDocument[]> - Array of all notes
    */
   async getAllNotes(): Promise<NoteDocument[]> {
-    return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
+    try {
+      return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
+    } catch (error) {
+      console.error("Failed to get all notes:", error);
+      return [];
+    }
   }
 
   /**
@@ -91,7 +110,12 @@ export class NotesService {
    * @returns Promise<NoteDocument | undefined> - The note or undefined if not found
    */
   async getNote(id: string): Promise<NoteDocument | undefined> {
-    return await notepadDb.notes.get(id);
+    try {
+      return await notepadDb.notes.get(id);
+    } catch (error) {
+      console.error(`Failed to get note ${id}:`, error);
+      return undefined;
+    }
   }
 
   /**
@@ -104,19 +128,29 @@ export class NotesService {
       return this.getAllNotes();
     }
 
-    const searchLower = query.toLowerCase();
+    try {
+      const searchLower = query.toLowerCase();
+      const searchTerms = searchLower.split(/\s+/).filter(Boolean);
 
-    // Use indexed query first, then filter in memory for better performance
-    const allNotes = await notepadDb.notes
-      .orderBy("updatedAt")
-      .reverse()
-      .toArray();
+      // Use indexed query first, then filter in memory for better performance
+      const allNotes = await notepadDb.notes
+        .orderBy("updatedAt")
+        .reverse()
+        .toArray();
 
-    return allNotes.filter(
-      (note) =>
-        note.title.toLowerCase().includes(searchLower) ||
-        note.content.toLowerCase().includes(searchLower),
-    );
+      return allNotes.filter((note) => {
+        const titleLower = note.title.toLowerCase();
+        const contentLower = note.content.toLowerCase();
+        
+        // Match all search terms
+        return searchTerms.every(term => 
+          titleLower.includes(term) || contentLower.includes(term)
+        );
+      });
+    } catch (error) {
+      console.error("Failed to search notes:", error);
+      return [];
+    }
   }
 
   // ========================================================================
@@ -131,22 +165,33 @@ export class NotesService {
   async createNote(
     noteData: Omit<NoteDocument, "createdAt" | "updatedAt">,
   ): Promise<NoteDocument> {
-    const now = new Date().toISOString();
+    try {
+      const now = new Date().toISOString();
 
-    // Use nanoid for better uniqueness and shorter IDs
-    const id = noteData.id || nanoid();
+      // Use nanoid for better uniqueness and shorter IDs
+      const id = noteData.id || nanoid(10);
 
-    const newNote: NoteDocument = {
-      ...noteData,
-      id,
-      createdAt: now,
-      updatedAt: now,
-    };
+      const newNote: NoteDocument = {
+        ...noteData,
+        id,
+        title: noteData.title || "Untitled",
+        content: noteData.content || "",
+        createdAt: now,
+        updatedAt: now,
+      };
 
-    await notepadDb.notes.add(newNote);
+      await notepadDb.notes.add(newNote);
 
-    // Dispatch event to notify other parts of the app
-    return newNote;
+      // Dispatch custom event to notify other parts of the app
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("noteCreated", { detail: newNote }));
+      }
+      
+      return newNote;
+    } catch (error) {
+      console.error("Failed to create note:", error);
+      throw error;
+    }
   }
 
   /**
@@ -159,33 +204,43 @@ export class NotesService {
     id: string,
     updates: Partial<Pick<NoteDocument, "title" | "content">>,
   ): Promise<NoteDocument | null> {
-    // Use transaction for atomic update
-    return await notepadDb.transaction("rw", notepadDb.notes, async () => {
-      const note = await notepadDb.notes.get(id);
+    try {
+      // Use transaction for atomic update
+      return await notepadDb.transaction("rw", notepadDb.notes, async () => {
+        const note = await notepadDb.notes.get(id);
 
-      if (!note) return null;
+        if (!note) return null;
 
-      // Check if there are actual changes to the content or title
-      const hasContentChanged =
-        updates.content !== undefined && updates.content !== note.content;
-      const hasTitleChanged =
-        updates.title !== undefined && updates.title !== note.title;
+        // Check if there are actual changes to the content or title
+        const hasContentChanged =
+          updates.content !== undefined && updates.content !== note.content;
+        const hasTitleChanged =
+          updates.title !== undefined && updates.title !== note.title;
 
-      // Only update if there are actual changes
-      if (!hasContentChanged && !hasTitleChanged) {
-        return note;
-      }
+        // Only update if there are actual changes
+        if (!hasContentChanged && !hasTitleChanged) {
+          return note;
+        }
 
-      const updatedNote: NoteDocument = {
-        ...note,
-        ...updates,
-        updatedAt: new Date().toISOString(),
-      };
+        const updatedNote: NoteDocument = {
+          ...note,
+          ...updates,
+          updatedAt: new Date().toISOString(),
+        };
 
-      await notepadDb.notes.put(updatedNote);
+        await notepadDb.notes.put(updatedNote);
+        
+        // Dispatch custom event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("noteUpdated", { detail: updatedNote }));
+        }
 
-      return updatedNote;
-    });
+        return updatedNote;
+      });
+    } catch (error) {
+      console.error(`Failed to update note ${id}:`, error);
+      return null;
+    }
   }
 
   /**
@@ -194,13 +249,23 @@ export class NotesService {
    * @returns Promise<boolean> - True if deleted, false if not found
    */
   async deleteNote(id: string): Promise<boolean> {
-    const note = await notepadDb.notes.get(id);
+    try {
+      const note = await notepadDb.notes.get(id);
 
-    if (!note) return false;
+      if (!note) return false;
 
-    await notepadDb.notes.delete(id);
+      await notepadDb.notes.delete(id);
+      
+      // Dispatch custom event
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("noteDeleted", { detail: { id } }));
+      }
 
-    return true;
+      return true;
+    } catch (error) {
+      console.error(`Failed to delete note ${id}:`, error);
+      return false;
+    }
   }
 
   /**
@@ -208,9 +273,20 @@ export class NotesService {
    * @returns Promise<number> - Number of notes deleted
    */
   async deleteAllNotes(): Promise<number> {
-    const count = await notepadDb.notes.count();
-    await notepadDb.notes.clear();
-    return count;
+    try {
+      const count = await notepadDb.notes.count();
+      await notepadDb.notes.clear();
+      
+      // Dispatch custom event
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("allNotesDeleted", { detail: { count } }));
+      }
+      
+      return count;
+    } catch (error) {
+      console.error("Failed to delete all notes:", error);
+      return 0;
+    }
   }
 
   // ========================================================================
