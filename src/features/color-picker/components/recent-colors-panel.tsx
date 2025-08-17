@@ -9,6 +9,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { useRecentColors } from "@/features/color-picker/hooks/use-recent-colors";
 import { CopyButton } from "./copy-button";
+import { useTranslations } from "next-intl";
 
 interface RecentColorsPanelProps {
   onColorSelect: (color: string) => void;
@@ -17,6 +18,7 @@ interface RecentColorsPanelProps {
 export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
   onColorSelect,
 }) => {
+  const t = useTranslations("ColorPicker");
   const { recentColors, isLoading, clearRecentColors, refreshRecentColors } =
     useRecentColors();
 
@@ -34,7 +36,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
     return (
       <GlassSurface className="p-6">
         <div className="space-y-4">
-          <h3 className="font-semibold">Recent Colors</h3>
+          <h3 className="font-semibold">{t("recent.title")}</h3>
           <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2">
             {Array.from({ length: 12 }).map((_, index) => (
               <div
@@ -54,10 +56,10 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
         <div className="text-center py-8">
           <div className="text-4xl opacity-20 mb-2">🎨</div>
           <h3 className="font-semibold text-foreground/80 mb-1">
-            No Recent Colors
+            {t("recent.empty.title")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            Colors you pick will appear here for quick access
+            {t("recent.empty.description")}
           </p>
         </div>
       </GlassSurface>
@@ -68,7 +70,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
     <GlassSurface className="p-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold">Recent Colors</h3>
+          <h3 className="font-semibold">{t("recent.title")}</h3>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -80,7 +82,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
                 <Trash2 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Clear recent colors</TooltipContent>
+            <TooltipContent>{t("actions.clearRecentColors")}</TooltipContent>
           </Tooltip>
         </div>
 
@@ -95,7 +97,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
                     onClick={() => onColorSelect(color)}
                     role="button"
                     tabIndex={0}
-                    aria-label={`Select color ${color}`}
+                    aria-label={t("recent.selectColor", { color })}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
@@ -122,7 +124,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
                       {color.toUpperCase()}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Click to select • Hover to copy
+                      {t("recent.instructions")}
                     </div>
                   </div>
                 </TooltipContent>
@@ -133,8 +135,7 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
 
         {recentColors.length > 0 && (
           <p className="text-xs text-muted-foreground text-center">
-            {recentColors.length} color{recentColors.length !== 1 ? "s" : ""}{" "}
-            saved • Click to select, hover to copy
+            {t("recent.count", { count: recentColors.length })}
           </p>
         )}
       </div>

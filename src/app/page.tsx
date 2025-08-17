@@ -4,8 +4,11 @@ import { SearchInterface } from "@/features/search/components/search-interface";
 import { utilities } from "@/constants";
 import Link from "next/link";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
+  const t = useTranslations("Utilities");
+  
   return (
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-8">
       <GradientBackground />
@@ -35,7 +38,7 @@ export default function Home() {
                   {/* Text - Bottom Right */}
                   <div className="absolute bottom-4 right-4 text-right">
                     <h3 className="font-medium text-sm text-foreground/90 leading-tight">
-                      {utility.name}
+                      {t(utility.id)}
                     </h3>
                   </div>
                 </div>

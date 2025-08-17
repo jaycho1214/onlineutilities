@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import {
   getColorFormats,
@@ -16,6 +17,7 @@ import { ColorDisplay } from "@/features/color-picker/components/color-display";
 import { ColorPickerHeader } from "@/features/color-picker/components/color-picker-header";
 import { DragDropOverlay } from "@/features/color-picker/components/drag-drop-overlay";
 import { useDragDrop } from "@/features/color-picker/hooks/use-drag-drop";
+import { AnimatedTips } from "@/features/shared/ui/animated-tips";
 import { ColorPickerCanvas } from "@/features/color-picker/components/color-picker-canvas";
 import { ColorPickerPalette } from "@/features/color-picker/components/color-picker-palette";
 import { ColorPickerControlPanel } from "@/features/color-picker/components/color-picker-control-panel";
@@ -23,6 +25,7 @@ import { RecentColorsPanel } from "@/features/color-picker/components/recent-col
 import { useRecentColors } from "@/features/color-picker/hooks/use-recent-colors";
 
 export const ColorPicker: React.FC = () => {
+  const t = useTranslations("ColorPicker");
   const [selectedColor, setSelectedColor] = useState("#3b82f6");
   const [colorFormat, setColorFormat] = useState<
     "RGB" | "HSL" | "HSV" | "CMYK" | "LAB"
@@ -36,7 +39,7 @@ export const ColorPicker: React.FC = () => {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const { addRecentColor } = useRecentColors();
 
-  const colorFormats = getColorFormats(selectedColor);
+  const colorFormats = useMemo(() => getColorFormats(selectedColor), [selectedColor]);
 
 
   const debouncedFetchColorName = useCallback((color: string) => {
@@ -56,13 +59,13 @@ export const ColorPicker: React.FC = () => {
     }, 800); // 800ms debounce
   }, []);
 
-  const handleColorChange = (color: string) => {
+  const handleColorChange = useCallback((color: string) => {
     setSelectedColor(color);
     addRecentColor(color);
     debouncedFetchColorName(color);
-  };
+  }, [addRecentColor, debouncedFetchColorName]);
 
-  const handleInputChange = (input: string) => {
+  const handleInputChange = useCallback((input: string) => {
     const parsedColor = parseColorInput(input);
     if (parsedColor) {
       handleColorChange(parsedColor);
@@ -70,11 +73,11 @@ export const ColorPicker: React.FC = () => {
       // Still update the input for real-time feedback, even if invalid
       setSelectedColor(input);
     }
-  };
+  }, [handleColorChange]);
 
-  const startScreenColorPicker = async () => {
+  const startScreenColorPicker = useCallback(async () => {
     if (!("EyeDropper" in window)) {
-      alert("Screen color picker is not supported in this browser");
+      alert(t("notifications.screenPickerNotSupported"));
       return;
     }
 
@@ -86,9 +89,9 @@ export const ColorPicker: React.FC = () => {
     } catch (err) {
       console.error("Screen color picker failed:", err);
     }
-  };
+  }, [handleColorChange, t]);
 
-  const handleImageFile = (file: File) => {
+  const handleImageFile = useCallback((file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
@@ -96,28 +99,28 @@ export const ColorPicker: React.FC = () => {
       setHasImage(true);
     };
     reader.readAsDataURL(file);
-  };
+  }, []);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     handleImageFile(file);
-  };
+  }, [handleImageFile]);
 
   const { isDragOver, isVisible } = useDragDrop({
     onImageDrop: handleImageFile,
   });
 
-  const handleImageRemove = () => {
+  const handleImageRemove = useCallback(() => {
     setImageDataUrl(null);
     setHasImage(false);
     // Clear the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  };
+  }, []);
 
-  const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasClick = useCallback((event: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -134,7 +137,7 @@ export const ColorPicker: React.FC = () => {
       .map((x) => x.toString(16).padStart(2, "0"))
       .join("")}`;
     handleColorChange(hex);
-  };
+  }, [handleColorChange]);
 
   React.useEffect(() => {
     if (imageDataUrl && canvasRef.current) {
@@ -171,7 +174,7 @@ export const ColorPicker: React.FC = () => {
     };
   }, []);
 
-  const handleSliderChange = (component: string, value: number[]) => {
+  const handleSliderChange = useCallback((component: string, value: number[]) => {
     const currentValue = value[0];
 
     if (colorFormat === "RGB") {
@@ -195,7 +198,7 @@ export const ColorPicker: React.FC = () => {
       const newHex = cmykToHex(cmyk.c, cmyk.m, cmyk.y, cmyk.k);
       handleColorChange(newHex);
     }
-  };
+  }, [colorFormat, colorFormats, handleColorChange]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">

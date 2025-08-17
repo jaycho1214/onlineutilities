@@ -8,6 +8,7 @@ import { Check, Loader2 } from "lucide-react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import dynamic from "next/dynamic";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
+import { useTranslations } from "next-intl";
 
 const MarkdownEditor = dynamic(() => import("@/features/notepad/components/markdown-editor"), {
   ssr: false,
@@ -19,6 +20,7 @@ const MarkdownEditor = dynamic(() => import("@/features/notepad/components/markd
 });
 
 function NotepadComponent() {
+  const t = useTranslations("Notepad");
   const { currentNoteId } = useNotepad();
   const {
     title,
@@ -41,24 +43,24 @@ function NotepadComponent() {
   const handleDeleteCurrentNote = useCallback(async () => {
     if (!currentNoteId) return;
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this note?"
+      t("confirmations.deleteNote")
     );
     if (confirmDelete) {
       await deleteNote(currentNoteId);
     }
-  }, [currentNoteId, deleteNote]);
+  }, [currentNoteId, deleteNote, t]);
 
   const titlePlaceholder = useMemo(
-    () => (currentNoteId ? "Untitled" : "Start with a title..."),
-    [currentNoteId]
+    () => (currentNoteId ? t("placeholders.titleWithNote") : t("placeholders.titleWithoutNote")),
+    [currentNoteId, t]
   );
 
   const contentPlaceholder = useMemo(
     () =>
       currentNoteId
-        ? "Start writing..."
-        : "Start writing to create a new note...",
-    [currentNoteId]
+        ? t("placeholders.contentWithNote")
+        : t("placeholders.contentWithoutNote"),
+    [currentNoteId, t]
   );
 
   return (

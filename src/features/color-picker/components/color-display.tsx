@@ -5,6 +5,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/features/shared/ui/to
 import { Skeleton } from "@/features/shared/ui/skeleton";
 import { Pipette, Image as ImageIcon, X } from "lucide-react";
 import { CopyButton } from "./copy-button";
+import { useTranslations } from "next-intl";
 
 interface ColorDisplayProps {
   selectedColor: string;
@@ -25,6 +26,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
   onImageRemove,
   hasImage = false,
 }) => {
+  const t = useTranslations("ColorPicker");
   const [isPickerLoading, setIsPickerLoading] = React.useState(false);
   
   const handleScreenPicker = async () => {
@@ -33,7 +35,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
       await onScreenColorPicker();
     } catch (error) {
       // Error is already logged in the hook
-      alert("Screen color picker is not supported in this browser");
+      alert(t("notifications.screenPickerNotSupported"));
     } finally {
       setIsPickerLoading(false);
     }
@@ -80,7 +82,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
                   <X className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Remove Image</TooltipContent>
+              <TooltipContent>{t("actions.removeImage")}</TooltipContent>
             </Tooltip>
           ) : (
             <Tooltip>
@@ -94,7 +96,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
                   <ImageIcon className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Upload Image</TooltipContent>
+              <TooltipContent>{t("actions.uploadImage")}</TooltipContent>
             </Tooltip>
           )}
 
@@ -111,7 +113,7 @@ export const ColorDisplay: React.FC<ColorDisplayProps> = React.memo(({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {isPickerLoading ? "Opening color picker..." : "Pick from Screen"}
+              {isPickerLoading ? t("actions.openingColorPicker") : t("actions.pickFromScreen")}
             </TooltipContent>
           </Tooltip>
         </div>

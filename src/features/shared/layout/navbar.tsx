@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import { isSidebarSupported } from "@/constants";
 import { useSidebar } from "@/features/shared/ui/sidebar";
 import { useTranslations } from "next-intl";
+import { NavbarTips } from "@/features/shared/components/navbar-tips";
 
 export function Navbar() {
   const t = useTranslations("Navigation");
@@ -33,7 +34,7 @@ export function Navbar() {
     <nav className="fixed inset-x-0 top-0 z-50 p-3">
       <div className="flex items-center justify-between gap-4">
         {/* Left Glass Surface */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
           {/* Sidebar Toggle - Only show on supported pages */}
           {showSidebarButton && (
             <Tooltip>
@@ -71,6 +72,9 @@ export function Navbar() {
               </Button>
             </div>
           </GlassSurface>
+
+          {/* Contextual Tips */}
+          <NavbarTips />
         </div>
 
         {/* Right Glass Surfaces */}
