@@ -5,12 +5,12 @@ import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Plus } from "lucide-react";
-import { useStopwatch } from "../lib/stopwatch-context";
-import { StopwatchCard } from "./stopwatch-card";
+import { useStopwatch } from "@/features/stopwatch/lib/stopwatch-context";
+import { StopwatchCard } from "@/features/stopwatch/components/stopwatch-card";
 import { Skeleton } from "@/features/shared/ui/skeleton";
 import { useTranslations } from "next-intl";
 
-export function StopwatchPage() {
+export function Stopwatch() {
   const t = useTranslations("Stopwatch");
   const {
     stopwatches,

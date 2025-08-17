@@ -1,4 +1,4 @@
-import { StopwatchPage } from "@/features/stopwatch/components/stopwatch-page";
+import { Stopwatch } from "@/features/stopwatch/pages/stopwatch-page";
 
 export const metadata = {
   title: "Stopwatch - Online Utilities",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <StopwatchPage />;
+  return <Stopwatch />;
 }

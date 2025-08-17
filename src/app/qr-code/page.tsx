@@ -1,4 +1,4 @@
-import { QRCodeGenerator } from "@/features/qr-code/components/qr-code-generator";
+import { QRCodeGenerator } from "@/features/qr-code/pages/qr-code-generator-page";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata() {

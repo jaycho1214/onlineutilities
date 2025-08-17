@@ -1,7 +1,7 @@
-import { NotepadPage } from "@/features/notepad/components/notepad-page";
+import { Notepad } from "@/features/notepad/pages/notepad-page";
 
 export default function Page() {
-  return <NotepadPage />;
+  return <Notepad />;
 }
 
 export const metadata = {

@@ -1,4 +1,4 @@
-import { StopwatchFullscreen } from "@/features/stopwatch/components/stopwatch-fullscreen";
+import { StopwatchFullscreenPage } from "@/features/stopwatch/components/stopwatch-fullscreen-page";
 
 export default async function Page({
   params,
@@ -6,5 +6,5 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <StopwatchFullscreen stopwatchId={id} />;
+  return <StopwatchFullscreenPage stopwatchId={id} />;
 }

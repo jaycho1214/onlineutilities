@@ -23,8 +23,8 @@ import {
   X,
   Type,
 } from "lucide-react";
-import { ColorPickerButton } from "./color-picker-button";
-import { EmailInput, SmsInput, WifiInput, VCardInput } from "./qr-content-inputs";
+import { ColorPickerButton } from "@/features/qr-code/components/color-picker-button";
+import { EmailInput, SmsInput, WifiInput, VCardInput } from "@/features/qr-code/components/qr-content-inputs";
 
 type DotType =
   | "square"

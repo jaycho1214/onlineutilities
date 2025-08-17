@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useMemo, Suspense, useCallback, memo } from "react";
 import { useNotepad } from "@/features/notepad/lib/notepad-context";
-import { NotepadActions } from "./notepad-actions";
-import { NotepadStats } from "./notepad-stats";
+import { NotepadActions } from "@/features/notepad/components/notepad-actions";
+import { NotepadStats } from "@/features/notepad/components/notepad-stats";
 import { Check, Loader2 } from "lucide-react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import dynamic from "next/dynamic";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
-const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
+const MarkdownEditor = dynamic(() => import("@/features/notepad/components/markdown-editor"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
@@ -18,7 +18,7 @@ const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
   ),
 });
 
-function NotepadPageComponent() {
+function NotepadComponent() {
   const { currentNoteId } = useNotepad();
   const {
     title,
@@ -126,4 +126,4 @@ function NotepadPageComponent() {
   );
 }
 
-export const NotepadPage = memo(NotepadPageComponent);
+export const Notepad = memo(NotepadComponent);

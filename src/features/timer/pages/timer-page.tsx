@@ -6,12 +6,12 @@ import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
 import { Plus, Clock, X } from "lucide-react";
-import { useTimer } from "../lib/timer-context";
-import { TimerCard } from "./timer-card";
+import { useTimer } from "@/features/timer/lib/timer-context";
+import { TimerCard } from "@/features/timer/components/timer-card";
 import { Skeleton } from "@/features/shared/ui/skeleton";
 import { useTranslations } from "next-intl";
 
-export function TimerPage() {
+export function Timer() {
   const t = useTranslations("Timer");
   const { timers, activeTimerId, createTimer, setActiveTimer, isLoaded } =
     useTimer();

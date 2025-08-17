@@ -13,9 +13,9 @@ interface StopwatchFullscreenProps {
   stopwatchId: string;
 }
 
-// formatElapsedTime & formatLapTime now imported from shared util
-
-export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
+export function StopwatchFullscreenPage({
+  stopwatchId,
+}: StopwatchFullscreenProps) {
   const router = useRouter();
   const {
     stopwatches,
@@ -28,10 +28,10 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
 
   const stopwatch = useMemo(
     () => stopwatches.find((s) => s.id === stopwatchId),
-    [stopwatches, stopwatchId],
+    [stopwatches, stopwatchId]
   );
   const [currentTime, setCurrentTime] = useState(
-    stopwatch ? getCurrentTime(stopwatch) : 0,
+    stopwatch ? getCurrentTime(stopwatch) : 0
   );
 
   const { now } = useStopwatch();
@@ -69,7 +69,7 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
   // Get last 5 laps for display
   const recentLaps = useMemo(
     () => stopwatch?.laps.slice(-5).reverse() || [],
-    [stopwatch?.laps],
+    [stopwatch?.laps]
   );
 
   if (!stopwatch) {
@@ -142,7 +142,7 @@ export function StopwatchFullscreen({ stopwatchId }: StopwatchFullscreenProps) {
               "w-16 h-16 rounded-full flex items-center justify-center p-0",
               stopwatch.isRunning
                 ? "bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
-                : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30",
+                : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30"
             )}
             variant="outline"
           >

@@ -1,4 +1,4 @@
-import { TimerPage } from "@/features/timer/components/timer-page";
+import { Timer } from "@/features/timer/pages/timer-page";
 
 export const metadata = {
   title: "Timer - Online Utilities",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <TimerPage />;
+  return <Timer />;
 }

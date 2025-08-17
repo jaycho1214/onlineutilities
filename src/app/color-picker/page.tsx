@@ -1,4 +1,4 @@
-import { ColorPicker } from "@/features/color-picker/components/color-picker";
+import { ColorPicker } from "@/features/color-picker/pages/color-picker-page";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import type { Metadata } from "next";
 
