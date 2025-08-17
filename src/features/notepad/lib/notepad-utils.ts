@@ -1,4 +1,5 @@
 import { notepadDb, notesService } from "./notepad-db";
+import { nanoid } from "nanoid";
 
 export interface Note {
   id: string;
@@ -85,5 +86,5 @@ export function formatDate(dateString: string): string {
  * Generate a unique ID for a new note
  */
 export function generateNoteId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+  return nanoid();
 }

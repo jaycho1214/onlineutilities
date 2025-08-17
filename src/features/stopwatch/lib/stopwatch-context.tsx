@@ -11,6 +11,7 @@ import React, {
 import { useRafTicker } from "@/hooks/use-raf-ticker";
 import { Stopwatch, StopwatchState, Lap } from "../types";
 import { stopwatchService } from "./stopwatch-db";
+import { nanoid } from "nanoid";
 
 interface StopwatchContextType extends StopwatchState {
   createStopwatch: (title?: string) => Promise<string>;
@@ -207,7 +208,7 @@ export function StopwatchProvider({ children }: { children: React.ReactNode }) {
             : 0;
 
         const newLap: Lap = {
-          id: crypto.randomUUID(),
+          id: nanoid(),
           time: currentTime,
           lapTime: currentTime - lastLapTime,
           timestamp: Date.now(),

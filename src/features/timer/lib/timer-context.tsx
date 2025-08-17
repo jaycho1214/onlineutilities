@@ -11,6 +11,7 @@ import React, {
 import { Timer, TimerContextType } from "../types";
 import { timerDB } from "./timer-db";
 import { useRafTicker } from "@/hooks/use-raf-ticker";
+import { nanoid } from "nanoid";
 
 const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
@@ -104,9 +105,7 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
 
   const createTimer = useCallback(
     async (duration: number): Promise<string> => {
-      const id = `timer-${Date.now()}-${Math.random()
-        .toString(36)
-        .substr(2, 9)}`;
+      const id = nanoid();
       const newTimer: Timer = {
         id,
         title: `Timer ${timers.length + 1}`,

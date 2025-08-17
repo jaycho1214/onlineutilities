@@ -6,6 +6,7 @@
  */
 
 import Dexie, { type EntityTable } from "dexie";
+import { nanoid } from "nanoid";
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -132,9 +133,8 @@ export class NotesService {
   ): Promise<NoteDocument> {
     const now = new Date().toISOString();
 
-    // Use high-resolution timestamp for better uniqueness
-    const id =
-      noteData.id || `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Use nanoid for better uniqueness and shorter IDs
+    const id = noteData.id || nanoid();
 
     const newNote: NoteDocument = {
       ...noteData,

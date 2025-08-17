@@ -2,6 +2,7 @@
 
 import Dexie, { Table } from "dexie";
 import { Stopwatch } from "../types";
+import { nanoid } from "nanoid";
 
 export class StopwatchDatabase extends Dexie {
   stopwatches!: Table<Stopwatch>;
@@ -32,7 +33,7 @@ export const stopwatchService = {
   async create(
     stopwatch: Omit<Stopwatch, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
-    const id = crypto.randomUUID();
+    const id = nanoid();
     const now = Date.now();
 
     await stopwatchDb.stopwatches.add({
