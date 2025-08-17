@@ -228,12 +228,47 @@
       "screenPickerNotSupported": "Screen color picker is not supported in this browser"
     }
   },
+  "Calculator": {
+    "title": "Calculator",
+    "description": "Basic calculator with arithmetic operations and calculation history",
+    "display": {
+      "placeholder": "0"
+    },
+    "buttons": {
+      "clear": "Clear",
+      "clearEntry": "CE",
+      "backspace": "⌫",
+      "equals": "=",
+      "add": "+",
+      "subtract": "−",
+      "multiply": "×",
+      "divide": "÷",
+      "decimal": "."
+    },
+    "history": {
+      "title": "History",
+      "empty": "No calculations yet",
+      "clearAll": "Clear All",
+      "noHistory": "Your calculation history will appear here"
+    },
+    "actions": {
+      "copyResult": "Copy result",
+      "copyExpression": "Copy expression"
+    },
+    "notifications": {
+      "resultCopied": "Result copied to clipboard",
+      "expressionCopied": "Expression copied to clipboard",
+      "historyCleared": "History cleared",
+      "error": "Invalid calculation"
+    }
+  },
   "Utilities": {
     "timer": "Timer",
     "stopwatch": "Stopwatch", 
     "notepad": "Notepad",
     "color-picker": "Color Picker",
     "hash-generator": "Hash Generator",
-    "qr-code": "QR Code"
+    "qr-code": "QR Code",
+    "calculator": "Calculator"
   }
 }

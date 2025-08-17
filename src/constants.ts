@@ -5,6 +5,7 @@ import {
   Palette,
   Hash,
   QrCode,
+  Calculator,
   type LucideIcon,
 } from "lucide-react";
 
@@ -73,6 +74,15 @@ export const utilities: Utility[] = [
     category: "Generator",
     keywords: ["qr", "code", "generate", "barcode"],
   },
+  {
+    id: "calculator",
+    name: "Calculator",
+    description: "Basic calculator with history",
+    icon: Calculator,
+    href: "/calculator",
+    category: "Math",
+    keywords: ["calculate", "math", "arithmetic", "numbers"],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -96,6 +106,7 @@ export const searchUtilities = (query: string): Utility[] => {
 // Pages that support sidebar functionality
 export const SIDEBAR_SUPPORTED_PAGES = [
   "/notepad",
+  "/calculator",
   // Add more pages here as needed
 ];
 

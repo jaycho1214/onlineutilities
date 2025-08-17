@@ -64,6 +64,7 @@ const glassVariants = cva("", {
 
 function Button({
   className,
+  innerClassName,
   variant = "default",
   size,
   disableGlass = false,
@@ -74,13 +75,14 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
     disableGlass?: boolean;
+    innerClassName?: string;
   }) {
   const Comp = asChild ? Slot : "button";
 
   const buttonElement = (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size }))}
+      className={cn(buttonVariants({ variant, size }), innerClassName)}
       {...props}
     >
       {children}
