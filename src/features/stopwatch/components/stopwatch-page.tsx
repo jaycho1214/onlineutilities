@@ -8,8 +8,10 @@ import { Plus } from "lucide-react";
 import { useStopwatch } from "../lib/stopwatch-context";
 import { StopwatchCard } from "./stopwatch-card";
 import { Skeleton } from "@/features/shared/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export function StopwatchPage() {
+  const t = useTranslations("Stopwatch");
   const {
     stopwatches,
     activeStopwatchId,
@@ -30,21 +32,20 @@ export function StopwatchPage() {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-4xl font-bold text-foreground font-[family-name:var(--font-eb-garamond)]">
-            Stopwatch
+            {t("title")}
           </h1>
           <Button
             onClick={handleCreateStopwatch}
             size="icon"
             className="w-10 h-10 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30 flex items-center justify-center"
             variant="outline"
-            title="New Stopwatch"
+            title={t("actions.newStopwatch")}
           >
             <Plus className="h-5 w-5" />
           </Button>
         </div>
         <p className="text-muted-foreground max-w-2xl">
-          Create multiple stopwatches, track laps, and keep timing even when
-          your browser is closed.
+          {t("description")}
         </p>
       </div>
 
@@ -77,10 +78,10 @@ export function StopwatchPage() {
             <div className="p-8 text-center space-y-4">
               <div className="text-6xl opacity-20">⏱️</div>
               <h3 className="text-xl font-medium text-foreground/80">
-                No stopwatches yet
+                {t("states.noStopwatches")}
               </h3>
               <p className="text-muted-foreground">
-                Create your first stopwatch to start timing your activities.
+                {t("states.createFirst")}
               </p>
             </div>
           </GlassSurface>

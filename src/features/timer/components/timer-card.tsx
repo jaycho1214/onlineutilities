@@ -22,6 +22,7 @@ import { Timer } from "../types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { formatDuration } from "@/lib/time";
+import { useTranslations } from "next-intl";
 
 interface TimerCardProps {
   timer: Timer;
@@ -33,6 +34,7 @@ interface TimerCardProps {
 const formatTime = formatDuration;
 
 export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
+  const t = useTranslations("Timer");
   const router = useRouter();
   const {
     startTimer,
@@ -220,7 +222,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                   router.push(`/timer/${timer.id}`);
                 }}
                 className="w-8 h-8 flex items-center justify-center text-blue-400 hover:text-blue-300 opacity-60 hover:opacity-100"
-                title="Fullscreen"
+                title={t("actions.fullscreen")}
               >
                 <Maximize2 className="size-4" />
               </Button>
@@ -237,7 +239,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                     ? "text-blue-400 hover:text-blue-300"
                     : "text-muted-foreground hover:text-foreground opacity-60",
                 )}
-                title={timer.soundEnabled ? "Sound enabled" : "Sound disabled"}
+                title={timer.soundEnabled ? t("actions.soundEnabled") : t("actions.soundDisabled")}
               >
                 {timer.soundEnabled ? (
                   <Bell className="size-4" />
@@ -309,7 +311,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                   className="text-green-400 hover:text-green-300"
                 >
                   <Check className="size-4 mr-1" />
-                  Set
+                  {t("actions.set")}
                 </Button>
                 <Button
                   size="sm"
@@ -321,7 +323,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                   className="text-red-400 hover:text-red-300"
                 >
                   <X className="size-4 mr-1" />
-                  Cancel
+                  {t("actions.cancel")}
                 </Button>
               </div>
             </div>
@@ -344,12 +346,12 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
               {!timer.isRunning && !isCompleted && (
                 <div className="text-xs text-muted-foreground">
                   <Clock className="inline size-3 mr-1" />
-                  Click time to edit
+                  {t("states.clickToEdit")}
                 </div>
               )}
               {isCompleted && (
                 <div className="text-sm text-green-400 font-medium">
-                  Timer Complete!
+                  {t("states.timerComplete")}
                 </div>
               )}
             </>
@@ -387,7 +389,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
             )}
             variant="outline"
             disabled={isCompleted && remainingTime === 0}
-            title={timer.isRunning ? "Pause" : "Start"}
+            title={timer.isRunning ? t("actions.pause") : t("actions.start")}
           >
             {timer.isRunning ? (
               <Pause className="size-4" />
@@ -404,7 +406,7 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
             size="icon"
             variant="outline"
             className="w-10 h-10 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border-orange-500/30"
-            title="Reset"
+            title={t("actions.reset")}
           >
             <RotateCcw className="size-4" />
           </Button>

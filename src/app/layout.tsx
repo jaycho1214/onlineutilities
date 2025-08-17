@@ -1,6 +1,7 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { EB_Garamond, Poppins } from "next/font/google";
-import "./globals.css";
 import { Navbar } from "@/features/shared/layout/navbar";
 import { ThemeProvider } from "@/features/shared/providers/theme-provider";
 import { CommandProvider } from "@/features/shared/providers/command-provider";
@@ -8,6 +9,8 @@ import { CommandPalette } from "@/features/shared/ui/command-palette";
 import { Toaster } from "@/features/shared/ui/sonner";
 import { ErrorBoundary } from "@/features/shared/ui/error-boundary";
 import { SidebarProvider } from "@/features/shared/ui/sidebar";
+import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
@@ -56,33 +59,37 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${poppins.variable} ${ebGaramond.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ErrorBoundary>
-            <SidebarProvider>
-              <CommandProvider>
-                <CommandPalette />
-                <Navbar />
-                <main className="pt-9">{children}</main>
-                <Toaster />
-              </CommandProvider>
-            </SidebarProvider>
-          </ErrorBoundary>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NextIntlClientProvider>
+              <SidebarProvider>
+                <CommandProvider>
+                  <CommandPalette />
+                  <Navbar />
+                  <main className="pt-9">{children}</main>
+                  <Toaster />
+                </CommandProvider>
+              </SidebarProvider>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { FileText, Hash, Timer } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface NotepadStatsProps {
   wordCount: number;
@@ -15,6 +16,8 @@ function NotepadStatsComponent({
   charCount,
   readingTime,
 }: NotepadStatsProps) {
+  const t = useTranslations("Notepad.stats");
+  
   return (
     <GlassSurface className="px-2 py-1.5 md:px-2 md:py-2">
       <div className="flex flex-row md:flex-col gap-3 md:gap-3">
@@ -28,7 +31,7 @@ function NotepadStatsComponent({
               {wordCount.toLocaleString()}
             </span>
             <span className="text-muted-foreground text-[9px] md:text-[10px] leading-none hidden md:block">
-              {wordCount === 1 ? "word" : "words"}
+              {t("word", { count: wordCount })}
             </span>
           </div>
         </div>
@@ -43,7 +46,7 @@ function NotepadStatsComponent({
               {charCount.toLocaleString()}
             </span>
             <span className="text-muted-foreground text-[9px] md:text-[10px] leading-none hidden md:block">
-              chars
+              {t("chars")}
             </span>
           </div>
         </div>
@@ -59,7 +62,7 @@ function NotepadStatsComponent({
                 {readingTime}
               </span>
               <span className="text-muted-foreground text-[9px] md:text-[10px] leading-none hidden md:block">
-                min
+                {t("min")}
               </span>
             </div>
           </div>

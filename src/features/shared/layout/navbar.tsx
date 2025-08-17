@@ -17,8 +17,10 @@ import { usePageTitle } from "@/hooks/use-page-title";
 import { usePathname } from "next/navigation";
 import { isSidebarSupported } from "@/constants";
 import { useSidebar } from "@/features/shared/ui/sidebar";
+import { useTranslations } from "next-intl";
 
 export function Navbar() {
+  const t = useTranslations("Navigation");
   const { setOpen } = useCommand();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const pageTitle = usePageTitle();
@@ -52,7 +54,7 @@ export function Navbar() {
                 </GlassSurface>
               </TooltipTrigger>
               <TooltipContent sideOffset={20}>
-                <span>Toggle Sidebar</span>
+                <span>{t("toggleSidebar")}</span>
               </TooltipContent>
             </Tooltip>
           )}
@@ -85,7 +87,7 @@ export function Navbar() {
               >
                 <button
                   onClick={() => setSettingsOpen(true)}
-                  aria-label="Open settings"
+                  aria-label={t("openSettings")}
                   className="w-full h-full flex items-center justify-center"
                 >
                   <Settings className="size-4 group-hover:scale-110 group-hover:rotate-180 transition-all duration-300 ease-out" />
@@ -93,7 +95,7 @@ export function Navbar() {
               </GlassSurface>
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
-              <span>Settings</span>
+              <span>{t("settings")}</span>
             </TooltipContent>
           </Tooltip>
 
@@ -109,7 +111,7 @@ export function Navbar() {
               >
                 <button
                   onClick={() => setOpen(true)}
-                  aria-label="Open search"
+                  aria-label={t("openSearch")}
                   className="w-full h-full flex items-center justify-center"
                 >
                   <Search className="size-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
@@ -118,7 +120,7 @@ export function Navbar() {
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
               <div className="flex items-center gap-2">
-                <span>Search</span>
+                <span>{t("search")}</span>
                 <kbd className="inline-flex h-5 select-none items-center gap-1 rounded border bg-muted/40 px-1.5 font-mono text-xs">
                   <span>{getModifierKey()}</span>K
                 </kbd>

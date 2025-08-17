@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { savePersonalName } from "@/lib/actions";
 import { X, User, Palette, ArrowUp, Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -16,6 +17,7 @@ interface SettingsDialogProps {
 type SettingsTab = "personal" | "appearance" | "about";
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+  const t = useTranslations("Settings");
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<SettingsTab>("personal");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,8 +51,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   }, [tempPersonalName]);
 
   const sidebarItems = [
-    { id: "personal" as const, label: "Personal", icon: User },
-    { id: "appearance" as const, label: "Appearance", icon: Palette },
+    { id: "personal" as const, label: t("personalization.title"), icon: User },
+    { id: "appearance" as const, label: t("appearance.title"), icon: Palette },
     { id: "about" as const, label: "About", icon: Info },
   ];
 
@@ -74,7 +76,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             {/* Settings Header - Hidden on mobile, shown on desktop */}
             <GlassSurface className="shadow-lg hidden sm:block">
               <div className="p-3">
-                <h2 className="text-base font-bold text-left">Settings</h2>
+                <h2 className="text-base font-bold text-left">{t("title")}</h2>
               </div>
             </GlassSurface>
 
@@ -114,10 +116,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <div className="space-y-3 sm:space-y-4">
                   <div>
                     <h3 className="text-lg sm:text-xl font-semibold mb-1">
-                      Personal
+                      {t("personalization.title")}
                     </h3>
                     <p className="text-foreground/70 text-sm">
-                      Manage your personal information
+                      {t("personalization.nameDescription")}
                     </p>
                   </div>
 
@@ -129,7 +131,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                             htmlFor="name"
                             className="text-sm font-medium mb-2 block"
                           >
-                            Display Name
+                            {t("personalization.name")}
                           </label>
                           <div className="flex gap-2">
                             <input
@@ -139,7 +141,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                               onChange={(e) =>
                                 setTempPersonalName(e.target.value)
                               }
-                              placeholder="Enter your name"
+                              placeholder={t("personalization.namePlaceholder")}
                               className="flex-1 px-3 py-2.5 text-sm bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-colors"
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
@@ -166,7 +168,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 <div className="space-y-3 sm:space-y-4">
                   <div>
                     <h3 className="text-lg sm:text-xl font-semibold mb-1">
-                      Appearance
+                      {t("appearance.title")}
                     </h3>
                     <p className="text-foreground/70 text-sm">
                       Customize how the app looks
@@ -177,7 +179,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     <div className="p-3 sm:p-4">
                       <div className="space-y-3">
                         <div>
-                          <p className="text-sm font-medium mb-2">Theme</p>
+                          <p className="text-sm font-medium mb-2">{t("appearance.theme")}</p>
                           <div className="flex rounded-lg bg-white/5 backdrop-blur-sm border border-white/20 overflow-hidden">
                             <button
                               onClick={() => setTheme("light")}
@@ -188,7 +190,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                   : "hover:bg-white/10",
                               )}
                             >
-                              Light
+                              {t("appearance.light")}
                             </button>
                             <button
                               onClick={() => setTheme("dark")}
@@ -199,7 +201,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                   : "hover:bg-white/10",
                               )}
                             >
-                              Dark
+                              {t("appearance.dark")}
                             </button>
                             <button
                               onClick={() => setTheme("system")}
@@ -210,7 +212,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                   : "hover:bg-white/10",
                               )}
                             >
-                              System
+                              {t("appearance.system")}
                             </button>
                           </div>
                         </div>

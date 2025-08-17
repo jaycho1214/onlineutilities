@@ -14,6 +14,7 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 import { notesService, NoteDocument, notepadDb } from "./notepad-db";
 import { handleNotepadError, showSuccessToast } from "./notepad-error-handler";
+import { useTranslations } from "next-intl";
 
 interface NotepadContextType {
   notes: NoteDocument[];
@@ -51,6 +52,7 @@ export function NotepadProvider({
   children,
   initialNoteId,
 }: NotepadProviderProps) {
+  const t = useTranslations("Notepad");
   const [currentNoteId, setCurrentNoteId] = useState<string | null>(
     initialNoteId || null
   );
@@ -280,7 +282,7 @@ export function NotepadProvider({
             try {
               await notesService.createNote({
                 id: newId,
-                title: title || "Untitled",
+                title: title || t("defaultTitle"),
                 content: newContent,
               });
 
@@ -288,7 +290,7 @@ export function NotepadProvider({
               setCurrentNoteId(newId);
               creatingNoteRef.current = null;
               lastSavedContent.current = {
-                title: title || "Untitled",
+                title: title || t("defaultTitle"),
                 content: newContent,
               };
 
@@ -312,7 +314,7 @@ export function NotepadProvider({
         const noteIdToUpdate = currentNoteId || creatingNoteRef.current;
         if (noteIdToUpdate) {
           // Only save if content has actually changed
-          const currentTitle = title || "Untitled";
+          const currentTitle = title || t("defaultTitle");
           if (
             currentTitle === lastSavedContent.current.title &&
             newContent === lastSavedContent.current.content
@@ -347,7 +349,7 @@ export function NotepadProvider({
         }
       }
     },
-    [currentNoteId, title, hasInitialized, startTransition]
+    [currentNoteId, title, hasInitialized, startTransition, t]
   );
 
   const deleteNote = useCallback(
@@ -355,7 +357,7 @@ export function NotepadProvider({
       try {
         const success = await notesService.deleteNote(noteId);
         if (success) {
-          showSuccessToast("Note deleted successfully");
+          showSuccessToast(t("notifications.deleted"));
           if (currentNoteId === noteId) {
             // Navigate to base notepad page
             setCurrentNoteId(null);
@@ -368,7 +370,7 @@ export function NotepadProvider({
         handleNotepadError(error, "Delete note");
       }
     },
-    [currentNoteId]
+    [currentNoteId, t]
   );
 
   const deleteAllNotes = useCallback(async () => {
@@ -395,7 +397,7 @@ export function NotepadProvider({
   const downloadCurrentNote = useCallback(() => {
     if (!title && !content) return;
 
-    const filename = title.trim() || "Untitled";
+    const filename = title.trim() || t("defaultTitle");
     const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -403,7 +405,7 @@ export function NotepadProvider({
     link.download = `${filename}.md`;
     link.click();
     URL.revokeObjectURL(url);
-  }, [title, content]);
+  }, [title, content, t]);
 
   return (
     <NotepadContext.Provider

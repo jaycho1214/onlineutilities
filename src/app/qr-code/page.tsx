@@ -1,10 +1,14 @@
 import { QRCodeGenerator } from "@/features/qr-code/components/qr-code-generator";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-  title: "QR Code Generator - Online Utilities",
-  description:
-    "Generate highly customizable QR codes with various styles, colors, logos, and download formats.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("QRCode");
+  
+  return {
+    title: `${t("title")} - Online Utilities`,
+    description: t("description"),
+  };
+}
 
 export default function Page() {
   return <QRCodeGenerator />;

@@ -1,0 +1,168 @@
+{
+  "Navigation": {
+    "search": "Search",
+    "settings": "Settings",
+    "toggleSidebar": "Toggle Sidebar",
+    "openSearch": "Open search",
+    "openSettings": "Open settings"
+  },
+  "Search": {
+    "placeholder": "How can I help you today?"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved to another location."
+  },
+  "Footer": {
+    "copyright": "Copyright © 2025 Online Utilities.",
+    "privacyPolicy": "Privacy Policy",
+    "github": "Github"
+  },
+  "Welcome": {
+    "greetings": {
+      "withName": {
+        "0": "Hi {name}! How are you today?",
+        "1": "Hello {name}! What can I help you with?",
+        "2": "Hey {name}! Ready to get things done?",
+        "3": "Welcome back, {name}! How can I assist you?",
+        "4": "Good to see you, {name}! What's on your agenda?",
+        "5": "Hi there, {name}! How can I make your day better?",
+        "6": "Hello {name}! What would you like to work on?",
+        "7": "Hey {name}! Let's build something amazing together!",
+        "8": "Welcome, {name}! How can I help you today?",
+        "9": "Hi {name}! What brings you here today?"
+      },
+      "default": {
+        "0": "Hi, how are you?",
+        "1": "Hello! What can I help you with?",
+        "2": "Hey there! Ready to get things done?",
+        "3": "Welcome! How can I assist you?",
+        "4": "Good to see you! What's on your agenda?",
+        "5": "Hi! How can I make your day better?",
+        "6": "Hello! What would you like to work on?",
+        "7": "Hey! Let's build something amazing together!",
+        "8": "Welcome! How can I help you today?",
+        "9": "Hi there! What brings you here today?"
+      }
+    },
+    "fallback": "Welcome!"
+  },
+  "Notepad": {
+    "stats": {
+      "word": "{count, plural, one {word} other {words}}",
+      "chars": "chars",
+      "min": "min"
+    },
+    "actions": {
+      "save": "Save",
+      "delete": "Delete",
+      "export": "Export",
+      "share": "Share"
+    },
+    "notifications": {
+      "saved": "Note saved successfully",
+      "deleted": "Note deleted successfully",
+      "createError": "Failed to create note",
+      "updateError": "Failed to update note",
+      "deleteError": "Failed to delete note",
+      "fetchError": "Failed to fetch note"
+    },
+    "defaultTitle": "Untitled"
+  },
+  "Timer": {
+    "title": "Timer",
+    "description": "Set countdown timers with custom durations. Get notified when time's up with optional sound alerts.",
+    "buttons": {
+      "testTimer": "3 second test timer",
+      "oneMinute": "1 minute timer",
+      "fiveMinutes": "5 minute timer",
+      "tenMinutes": "10 minute timer",
+      "thirtyMinutes": "30 minute timer",
+      "customTimer": "Custom Timer"
+    },
+    "states": {
+      "noTimers": "No timers yet",
+      "createFirst": "Create your first timer to start counting down.",
+      "timerComplete": "Timer Complete!",
+      "clickToEdit": "Click time to edit"
+    },
+    "actions": {
+      "start": "Start",
+      "pause": "Pause",
+      "reset": "Reset",
+      "set": "Set",
+      "cancel": "Cancel",
+      "fullscreen": "Fullscreen",
+      "soundEnabled": "Sound enabled",
+      "soundDisabled": "Sound disabled"
+    }
+  },
+  "Stopwatch": {
+    "title": "Stopwatch",
+    "description": "Create multiple stopwatches, track laps, and keep timing even when your browser is closed.",
+    "states": {
+      "noStopwatches": "No stopwatches yet",
+      "createFirst": "Create your first stopwatch to start timing your activities."
+    },
+    "actions": {
+      "newStopwatch": "New Stopwatch",
+      "start": "Start",
+      "pause": "Pause", 
+      "reset": "Reset",
+      "lap": "Lap",
+      "fullscreen": "Fullscreen"
+    }
+  },
+  "QRCode": {
+    "title": "QR Code Generator",
+    "description": "Generate highly customizable QR codes with various styles, colors, logos, and download formats.",
+    "content": {
+      "types": {
+        "url": "URL/Link",
+        "text": "Plain Text",
+        "email": "Email",
+        "phone": "Phone",
+        "sms": "SMS/Text Message",
+        "wifi": "WiFi Network",
+        "vcard": "Contact Card"
+      },
+      "placeholders": {
+        "url": "https://example.com",
+        "text": "Enter your text here...",
+        "phone": "+1234567890"
+      }
+    },
+    "customization": {
+      "dotStyle": "Dot Style",
+      "cornerStyle": "Corner Style", 
+      "size": "Size",
+      "margin": "Margin",
+      "errorCorrection": "Error Correction",
+      "foregroundColor": "Foreground Color",
+      "backgroundColor": "Background Color",
+      "addLogo": "Add Logo",
+      "removeLogo": "Remove Logo"
+    },
+    "download": {
+      "title": "Download QR Code",
+      "format": "Format"
+    }
+  },
+  "Settings": {
+    "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "personalization": {
+      "title": "Personalization",
+      "name": "Your Name",
+      "namePlaceholder": "Enter your name (optional)",
+      "nameDescription": "Used for personalized greetings on the home page."
+    }
+  }
+}

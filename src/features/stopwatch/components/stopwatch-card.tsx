@@ -26,6 +26,7 @@ import { Stopwatch } from "../types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { formatElapsedTime, formatLapTime } from "@/lib/time";
+import { useTranslations } from "next-intl";
 
 interface StopwatchCardProps {
   stopwatch: Stopwatch;
@@ -40,6 +41,7 @@ function StopwatchCardComponent({
   isActive,
   onActivate,
 }: StopwatchCardProps) {
+  const t = useTranslations("Stopwatch");
   const router = useRouter();
   const {
     startStopwatch,
@@ -202,7 +204,7 @@ function StopwatchCardComponent({
                   router.push(`/stopwatch/${stopwatch.id}`);
                 }}
                 className="w-8 h-8 flex items-center justify-center text-blue-400 hover:text-blue-300 opacity-60 hover:opacity-100"
-                title="Fullscreen"
+                title={t("actions.fullscreen")}
               >
                 <Maximize2 className="size-4" />
               </Button>
@@ -246,7 +248,7 @@ function StopwatchCardComponent({
                 : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30",
             )}
             variant="outline"
-            title={stopwatch.isRunning ? "Pause" : "Start"}
+            title={stopwatch.isRunning ? t("actions.pause") : t("actions.start")}
           >
             {stopwatch.isRunning ? (
               <Pause className="size-4" />
@@ -264,7 +266,7 @@ function StopwatchCardComponent({
             size="icon"
             variant="outline"
             className="w-10 h-10 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Lap"
+            title={t("actions.lap")}
           >
             <Flag className="size-4" />
           </Button>
@@ -277,7 +279,7 @@ function StopwatchCardComponent({
             size="icon"
             variant="outline"
             className="w-10 h-10 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border-orange-500/30"
-            title="Reset"
+            title={t("actions.reset")}
           >
             <RotateCcw className="size-4" />
           </Button>

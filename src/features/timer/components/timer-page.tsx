@@ -9,8 +9,10 @@ import { Plus, Clock, X } from "lucide-react";
 import { useTimer } from "../lib/timer-context";
 import { TimerCard } from "./timer-card";
 import { Skeleton } from "@/features/shared/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export function TimerPage() {
+  const t = useTranslations("Timer");
   const { timers, activeTimerId, createTimer, setActiveTimer, isLoaded } =
     useTimer();
 
@@ -70,7 +72,7 @@ export function TimerPage() {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-4xl font-bold text-foreground font-[family-name:var(--font-eb-garamond)]">
-            Timer
+            {t("title")}
           </h1>
           <div className="flex items-center gap-2">
             {/* Quick timer buttons */}
@@ -80,7 +82,7 @@ export function TimerPage() {
                 size="sm"
                 variant="outline"
                 className="bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
-                title="3 second test timer"
+                title={t("buttons.testTimer")}
               >
                 3s
               </Button>
@@ -89,7 +91,7 @@ export function TimerPage() {
                 size="sm"
                 variant="outline"
                 className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
-                title="1 minute timer"
+                title={t("buttons.oneMinute")}
               >
                 1m
               </Button>
@@ -98,7 +100,7 @@ export function TimerPage() {
                 size="sm"
                 variant="outline"
                 className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
-                title="5 minute timer"
+                title={t("buttons.fiveMinutes")}
               >
                 5m
               </Button>
@@ -107,7 +109,7 @@ export function TimerPage() {
                 size="sm"
                 variant="outline"
                 className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
-                title="10 minute timer"
+                title={t("buttons.tenMinutes")}
               >
                 10m
               </Button>
@@ -116,7 +118,7 @@ export function TimerPage() {
                 size="sm"
                 variant="outline"
                 className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
-                title="30 minute timer"
+                title={t("buttons.thirtyMinutes")}
               >
                 30m
               </Button>
@@ -127,15 +129,14 @@ export function TimerPage() {
               size="icon"
               className="w-10 h-10 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30 flex items-center justify-center"
               variant="outline"
-              title="Custom Timer"
+              title={t("buttons.customTimer")}
             >
               <Plus className="size-5" />
             </Button>
           </div>
         </div>
         <p className="text-muted-foreground max-w-2xl">
-          Set countdown timers with custom durations. Get notified when
-          time&apos;s up with optional sound alerts.
+          {t("description")}
         </p>
       </div>
 
@@ -219,10 +220,10 @@ export function TimerPage() {
             <div className="p-8 text-center space-y-4">
               <div className="text-6xl opacity-20">⏰</div>
               <h3 className="text-xl font-medium text-foreground/80">
-                No timers yet
+                {t("states.noTimers")}
               </h3>
               <p className="text-muted-foreground">
-                Create your first timer to start counting down.
+                {t("states.createFirst")}
               </p>
             </div>
           </GlassSurface>
