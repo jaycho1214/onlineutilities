@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
+import { downloadContent, deleteNoteAndNavigate, generateNoteId } from "@/features/notepad/lib/notepad-utils";
 import { NotepadActions } from "./notepad-actions";
 import { NotepadStats } from "./notepad-stats";
 import { Check, Loader2 } from "lucide-react";
@@ -97,9 +98,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
       // If on base /notepad, create note and update URL without navigation
       if (!notepadId && value.trim() && !hasInitialized.current) {
         hasInitialized.current = true;
-        const newId = `${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(2, 11)}`;
+        const newId = generateNoteId();
 
         // Create the note
         notesService.createNote({
@@ -151,9 +150,7 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
       // If on base /notepad, create note and update URL without navigation
       if (!notepadId && value.trim() && !hasInitialized.current) {
         hasInitialized.current = true;
-        const newId = `${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(2, 11)}`;
+        const newId = generateNoteId();
 
         // Create the note
         notesService.createNote({
@@ -199,30 +196,11 @@ export function NotepadPage({ notepadId: initialNotepadId }: NotepadPageProps) {
 
   const deleteCurrentNote = useCallback(async () => {
     if (!notepadId) return;
-
-    await notesService.deleteNote(notepadId);
-
-    // Navigate to most recent note or base path
-    const remaining = await notepadDb.notes
-      .orderBy("updatedAt")
-      .reverse()
-      .limit(1)
-      .toArray();
-    if (remaining.length > 0) {
-      router.push(`/notepad/${remaining[0].id}`);
-    } else {
-      router.push("/notepad");
-    }
+    await deleteNoteAndNavigate(notepadId, router, notepadId);
   }, [notepadId, router]);
 
   const downloadAsFile = useCallback(() => {
-    const blob = new Blob([content], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${title || "Untitled"}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadContent(content, title);
   }, [content, title]);
 
   // Keyboard shortcuts

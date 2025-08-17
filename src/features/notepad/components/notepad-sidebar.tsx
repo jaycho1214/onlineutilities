@@ -7,6 +7,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Button } from "@/features/shared/ui/button";
 import { Plus, FileText, Trash2, Edit, Download } from "lucide-react";
 import { notepadDb, notesService } from "@/features/notepad/lib/notepad-db";
+import { downloadNote, deleteNoteAndNavigate, formatDate } from "@/features/notepad/lib/notepad-utils";
 import {
   SidebarHeader,
   SidebarContent,
@@ -44,51 +45,15 @@ function NotepadSidebarComponent() {
 
   const handleDeleteNote = useCallback(
     async (noteId: string) => {
-      await notesService.deleteNote(noteId);
-
-      // If we deleted the current note, navigate to most recent note
-      if (currentNoteId === noteId) {
-        const remaining = await notepadDb.notes
-          .orderBy("updatedAt")
-          .reverse()
-          .limit(1)
-          .toArray();
-        if (remaining.length > 0) {
-          router.push(`/notepad/${remaining[0].id}`);
-        } else {
-          router.push("/notepad");
-        }
-      }
+      await deleteNoteAndNavigate(noteId, router, currentNoteId);
     },
     [currentNoteId, router],
   );
 
-  const downloadNote = useCallback((note: (typeof notes)[0]) => {
-    if (!note) return;
-    const blob = new Blob([note.content], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${note.title || "Untitled"}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleDownloadNote = useCallback((note: (typeof notes)[0]) => {
+    downloadNote(note);
   }, []);
 
-  // Memoized date formatter
-  const formatDate = useCallback((dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return "Just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  }, []);
 
   // Optimized search
   const filteredNotes = useMemo(() => {
@@ -174,7 +139,7 @@ function NotepadSidebarComponent() {
                 </ContextMenuTrigger>
 
                 <ContextMenuContent className="w-48">
-                  <ContextMenuItem onClick={() => downloadNote(note)}>
+                  <ContextMenuItem onClick={() => handleDownloadNote(note)}>
                     <Download className="w-3 h-3 mr-2" />
                     Download
                   </ContextMenuItem>
