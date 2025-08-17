@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "./dialog";
+import { Dialog, DialogContent, DialogTitle, VisuallyHidden } from "./dialog";
 import { GlassSurface } from "./glass-surface";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useCallback } from "react";
@@ -59,9 +59,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="w-full max-w-sm sm:max-w-2xl h-[90vh] sm:h-[500px] p-2 sm:p-3 overflow-hidden"
+        className="w-full max-w-sm sm:max-w-2xl h-[500px] p-2 sm:p-3"
         showCloseButton={false}
       >
+        <VisuallyHidden>
+          <DialogTitle>{t("title")}</DialogTitle>
+        </VisuallyHidden>
         {/* Custom Close Button */}
         <button
           onClick={() => onOpenChange(false)}
@@ -94,7 +97,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           "flex-shrink-0 sm:w-full flex items-center sm:items-start gap-2 sm:gap-2.5 px-2 sm:px-2 py-2 rounded-lg text-left transition-all duration-200 text-sm justify-center sm:justify-start whitespace-nowrap",
                           activeTab === item.id
                             ? "bg-white/20 shadow-lg backdrop-blur-sm border border-white/30"
-                            : "hover:bg-white/10 border border-transparent",
+                            : "hover:bg-white/10 border border-transparent"
                         )}
                       >
                         <Icon className="w-4 h-4 sm:mt-0.5" />
@@ -179,7 +182,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                     <div className="p-3 sm:p-4">
                       <div className="space-y-3">
                         <div>
-                          <p className="text-sm font-medium mb-2">{t("appearance.theme")}</p>
+                          <p className="text-sm font-medium mb-2">
+                            {t("appearance.theme")}
+                          </p>
                           <div className="flex rounded-lg bg-white/5 backdrop-blur-sm border border-white/20 overflow-hidden">
                             <button
                               onClick={() => setTheme("light")}
@@ -187,7 +192,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200",
                                 theme === "light"
                                   ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
+                                  : "hover:bg-white/10"
                               )}
                             >
                               {t("appearance.light")}
@@ -198,7 +203,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200 border-x border-white/20",
                                 theme === "dark"
                                   ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
+                                  : "hover:bg-white/10"
                               )}
                             >
                               {t("appearance.dark")}
@@ -209,7 +214,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200",
                                 theme === "system"
                                   ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
+                                  : "hover:bg-white/10"
                               )}
                             >
                               {t("appearance.system")}

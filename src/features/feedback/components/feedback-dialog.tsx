@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent } from "@/features/shared/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, VisuallyHidden } from "@/features/shared/ui/dialog";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
@@ -149,6 +149,9 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         className="w-full max-w-sm sm:max-w-md h-[90vh] sm:h-auto max-h-[600px] p-2 sm:p-3"
         showCloseButton={false}
       >
+        <VisuallyHidden>
+          <DialogTitle>{t("title")}</DialogTitle>
+        </VisuallyHidden>
         {/* Custom Close Button */}
         <button
           onClick={handleClose}

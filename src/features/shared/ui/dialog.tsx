@@ -40,7 +40,7 @@ function DialogOverlay({
       data-slot="dialog-overlay"
       className={cn(
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className,
+        className
       )}
       {...props}
     />
@@ -62,17 +62,11 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           "fixed top-[50%] left-[50%] z-[51] w-full max-w-[calc(100%-2rem)] max-h-[calc(100vh-2rem)] translate-x-[-50%] translate-y-[-50%] sm:max-w-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200",
+          className
         )}
         {...props}
       >
-        <GlassSurface 
-          className={cn(
-            "w-full p-6 shadow-2xl",
-            // Add scrolling by default unless overridden
-            className?.includes("overflow-") ? "" : "overflow-y-auto",
-            className
-          )}
-        >
+        <GlassSurface className={cn("size-full p-6 shadow-2xl")}>
           {children}
           {showCloseButton && (
             <DialogPrimitive.Close
@@ -105,7 +99,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className,
+        className
       )}
       {...props}
     />
@@ -138,6 +132,18 @@ function DialogDescription({
   );
 }
 
+function VisuallyHidden({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn(
+        "absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
 export {
   Dialog,
   DialogClose,
@@ -149,4 +155,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  VisuallyHidden,
 };
