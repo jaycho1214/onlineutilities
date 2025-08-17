@@ -31,7 +31,6 @@ function CalculatorPageComponent() {
     operationDisplay: "",
   });
 
-
   const calculate = useCallback(
     (
       firstOperand: string,
@@ -216,7 +215,8 @@ function CalculatorPageComponent() {
         // Save to history only once using ref to prevent duplicates from StrictMode
         if (newValue !== "NaN" && lastCalculationRef.current !== expression) {
           lastCalculationRef.current = expression;
-          calculatorService.addCalculation(expression, newValue)
+          calculatorService
+            .addCalculation(expression, newValue)
             .then((newEntry) => {
               addToHistory(newEntry);
             })
@@ -288,9 +288,7 @@ function CalculatorPageComponent() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 px-6 py-4">
-        <GlassSurface
-          className="h-full flex flex-col p-6 shadow-none!"
-        >
+        <GlassSurface className="h-full flex flex-col p-6 shadow-none!">
           {/* Display */}
           <div className="mb-6">
             <GlassSurface className="p-4 bg-black/10 dark:bg-white/5">
@@ -313,7 +311,7 @@ function CalculatorPageComponent() {
             <Button
               onClick={clear}
               innerClassName={buttonTextClassName}
-              variant="destructive"
+              variant="outline"
             >
               {t("buttons.clear")}
             </Button>
@@ -447,7 +445,10 @@ function CalculatorPageComponent() {
             </Button>
             <Button
               onClick={performCalculation}
-              innerClassName={cn(buttonTextClassName, "text-white")}
+              innerClassName={cn(
+                buttonTextClassName,
+                "text-white dark:text-black"
+              )}
               variant="solid"
             >
               {t("buttons.equals")}
