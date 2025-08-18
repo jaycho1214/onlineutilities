@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Settings, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -11,8 +10,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/features/shared/ui/command-glass";
 
 import { useCommand } from "@/features/shared/providers/command-provider";
@@ -39,7 +36,7 @@ export function CommandPalette() {
       router.push(href);
       setOpen(false);
     },
-    [router, setOpen],
+    [router, setOpen]
   );
 
   return (
@@ -47,7 +44,7 @@ export function CommandPalette() {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Utilities">
+        <CommandGroup>
           {utilities.map((utility) => {
             const IconComponent = utility.icon;
             const value = [
@@ -72,19 +69,6 @@ export function CommandPalette() {
               </CommandItem>
             );
           })}
-        </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading="Settings">
-          <CommandItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-            <CommandShortcut>⌘P</CommandShortcut>
-          </CommandItem>
-          <CommandItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-            <CommandShortcut>⌘S</CommandShortcut>
-          </CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>
