@@ -4,10 +4,10 @@ import { SearchInterface } from "@/features/search/components/search-interface";
 import { utilities } from "@/constants";
 import Link from "next/link";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export default function Home() {
-  const t = useTranslations("Utilities");
+export default async function Home() {
+  const t = await getTranslations("Utilities");
 
   return (
     <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-8">
