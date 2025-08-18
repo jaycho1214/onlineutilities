@@ -5,6 +5,7 @@ import {
   Palette,
   QrCode,
   Calculator,
+  Code2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -75,6 +76,15 @@ export const utilities: Utility[] = [
     category: "Math",
     keywords: ["calculate", "math", "arithmetic", "numbers"],
   },
+  {
+    id: "formatter",
+    name: "Formatter",
+    description: "Format & validate JSON, CSV, XML, YAML with smart detection",
+    icon: Code2,
+    href: "/formatter",
+    category: "Text",
+    keywords: ["format", "json", "csv", "xml", "validate", "prettify", "minify", "detect", "auto-format", "javascript", "html", "yaml"],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -99,6 +109,7 @@ export const searchUtilities = (query: string): Utility[] => {
 export const SIDEBAR_SUPPORTED_PAGES = [
   "/notepad",
   "/calculator",
+  "/formatter",
   // Add more pages here as needed
 ];
 

@@ -209,6 +209,16 @@
       "Customize the size and error correction level for your needs",
       "Download your QR code as a PNG image file",
       "Higher error correction allows the code to work even if partially damaged"
+    ],
+    "formatter": [
+      "Drag & drop .json, .csv, .xml, .html, .js, .yaml, or .txt files anywhere on the page to load them",
+      "Press Ctrl+V (Cmd+V on Mac) anywhere on the page to auto-paste clipboard content",
+      "Press Ctrl+C (Cmd+C on Mac) anywhere on the page to auto-copy formatted output",
+      "File format is automatically detected with smart content analysis and the formatter switches accordingly",
+      "Your formatting history is automatically saved for quick access",
+      "Switch between raw and table view for CSV data visualization",
+      "Enhanced error handling shows exact line and column information for syntax errors",
+      "All processing happens locally in your browser for privacy"
     ]
   },
   "ColorPicker": {
@@ -272,12 +282,13 @@
   },
   "Utilities": {
     "timer": "Timer",
-    "stopwatch": "Stopwatch", 
+    "stopwatch": "Stopwatch",
     "notepad": "Notepad",
     "color-picker": "Color Picker",
     "hash-generator": "Hash Generator",
     "qr-code": "QR Code",
-    "calculator": "Calculator"
+    "calculator": "Calculator",
+    "formatter": "Formatter"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -317,6 +328,150 @@
       "messageMin": "Message must be at least 10 characters",
       "messageMax": "Message must be less than 1000 characters",
       "emailInvalid": "Please enter a valid email address"
+    }
+  },
+  "Formatter": {
+    "title": "Formatter",
+    "description": "Format, validate, and beautify JSON, CSV, XML, and more with smart detection and instant feedback",
+    "types": {
+      "json": "JSON",
+      "csv": "CSV",
+      "xml": "XML",
+      "javascript": "JavaScript",
+      "html": "HTML",
+      "yaml": "YAML"
+    },
+    "actions": {
+      "format": "Format",
+      "validate": "Validate",
+      "minify": "Minify",
+      "clear": "Clear",
+      "copy": "Copy",
+      "copyInput": "Copy Input",
+      "copyOutput": "Copy Output"
+    },
+    "input": {
+      "placeholder": {
+        "json": "Paste your JSON here or drag and drop a .json file to format and validate...",
+        "csv": "Paste your CSV data here or drag and drop a .csv file to format and validate...",
+        "xml": "Paste your XML here or drag and drop a .xml file to format and validate...",
+        "javascript": "Paste your JavaScript here or drag and drop a .js file to format and validate...",
+        "html": "Paste your HTML here or drag and drop a .html file to format and validate...",
+        "yaml": "Paste your YAML here or drag and drop a .yaml file to format and validate..."
+      }
+    },
+    "dragDrop": {
+      "overlay": {
+        "title": "Drop your file here",
+        "subtitle": "Release to load the file content",
+        "supportedFiles": "Supported: .json, .csv, .xml, .html, .js, .yaml, .txt files"
+      },
+      "instructions": {
+        "idle": "Drag and drop files here or paste content",
+        "active": "Drop file to load content"
+      },
+      "fileInfo": {
+        "loaded": "File loaded: {filename}",
+        "size": "{size} KB",
+        "detected": "Detected format: {format}"
+      }
+    },
+    "output": {
+      "placeholder": "Formatted output will appear here...",
+      "valid": "Valid {type}",
+      "invalid": "Invalid {type}"
+    },
+    "history": {
+      "title": "History",
+      "empty": "No formatting history yet",
+      "noHistory": "Your formatting history will appear here",
+      "clearAll": "Clear All",
+      "itemTitle": "{type} formatted"
+    },
+    "csv": {
+      "delimiter": "Delimiter",
+      "delimiters": {
+        "comma": "Comma (,)",
+        "semicolon": "Semicolon (;)",
+        "tab": "Tab",
+        "pipe": "Pipe (|)"
+      },
+      "tableView": "Table View",
+      "rawView": "Raw View"
+    },
+    "detection": {
+      "title": "Format Detection",
+      "detected": "Detected: {type}",
+      "confidence": "Confidence: {confidence}%",
+      "override": "Override Detection",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "useDetected": "Use {type}",
+      "keepCurrent": "Keep {current}",
+      "alternatives": "Other possibilities:",
+      "manualSelect": "Select format manually",
+      "autoDetection": "Auto-detection enabled",
+      "detectionDisabled": "Auto-detection disabled"
+    },
+    "validation": {
+      "syntaxError": "Syntax Error",
+      "line": "Line {line}",
+      "column": "Column {column}",
+      "validJson": "Valid JSON",
+      "validCsv": "Valid CSV",
+      "validXml": "Valid XML",
+      "validJavaScript": "Valid JavaScript",
+      "validHtml": "Valid HTML",
+      "validYaml": "Valid YAML",
+      "invalidJson": "Invalid JSON",
+      "invalidCsv": "Invalid CSV",
+      "invalidXml": "Invalid XML",
+      "invalidJavaScript": "Invalid JavaScript",
+      "invalidHtml": "Invalid HTML",
+      "invalidYaml": "Invalid YAML"
+    },
+    "notifications": {
+      "inputCopied": "Input copied to clipboard",
+      "outputCopied": "Output copied to clipboard",
+      "autoPasted": "Content auto-pasted from clipboard",
+      "autoCopied": "Formatted output auto-copied to clipboard",
+      "pasteError": "Failed to paste from clipboard",
+      "noOutputToCopy": "No formatted output to copy",
+      "formatted": "{type} formatted successfully",
+      "validated": "{type} is valid",
+      "minified": "{type} minified successfully",
+      "historyCleared": "History cleared",
+      "error": "Failed to process {type}",
+      "emptyInput": "Please enter some {type} to format",
+      "copyError": "Failed to copy to clipboard",
+      "fileLoaded": "File loaded successfully",
+      "fileError": "Failed to load file",
+      "fileTooBig": "File is too large (max {maxSize}MB)",
+      "unsupportedFile": "Unsupported file type",
+      "formatDetected": "Format detected and switched to {type}",
+      "formatDetectionFailed": "Could not detect file format",
+      "formatDetectionConfirm": "Detected {type} format. Switch to {type} formatter?",
+      "formatSwitched": "Switched to {type} formatter",
+      "formatOverridden": "Format detection overridden - using {type} formatter",
+      "multipleFormatsDetected": "Multiple formats detected. Using {primary} (confidence: {confidence}%)",
+      "lowConfidenceDetection": "Format detection has low confidence ({confidence}%). Please verify the format is correct."
+    },
+    "errors": {
+      "invalidFormat": "Invalid {type} format",
+      "parsingError": "Error parsing {type}",
+      "emptyInput": "Input cannot be empty",
+      "tooLarge": "Input is too large to process",
+      "fileReadError": "Failed to read file",
+      "unknown": "Unknown error occurred",
+      "csvInconsistentColumns": "Inconsistent number of columns across rows",
+      "htmlUnbalancedTags": "Possible unbalanced tags detected"
+    },
+    "labels": {
+      "input": "Input",
+      "output": "Output",
+      "indent": "Indent",
+      "tabs": "Tabs",
+      "spaces": "Spaces"
     }
   }
 }

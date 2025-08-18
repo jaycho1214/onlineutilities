@@ -12,6 +12,7 @@ const getFeatureKeyFromPathname = (pathname: string): string | null => {
   if (pathname.startsWith("/stopwatch")) return "stopwatch";
   if (pathname.startsWith("/qr-code")) return "qr-code";
   if (pathname.startsWith("/color-picker")) return "color-picker";
+  if (pathname.startsWith("/formatter")) return "formatter";
   return null;
 };
 
