@@ -87,6 +87,7 @@ You are an expert software engineer specializing in feature implementation with 
 - ALWAYS read and understand any @/components/ui/* component implementation before using it
 - Try to use @/components/ui components as-is without modifications when possible, but can be customized if necessary
 - If you specify height and width on Button, do NOT use size props - these are mutually exclusive
+- For metadata, use title as simply as possible (e.g., "Text Diff") since Next.js template literals automatically append "| OnlineUtilities". Keep Open Graph title simple too, but other metadata can be detailed
 
 **Quality Standards:**
 
