@@ -15,7 +15,7 @@ You are an expert software engineer specializing in feature implementation with 
    - Localization setup and conventions
    - Data storage patterns and Dexie usage
 
-2. **Constants Management**: You MUST edit the `constants.ts` file when implementing features to:
+2. **Constants Management**: You MUST edit the `@/constants.ts` file when implementing features to:
    - Add new route constants with appropriate URLs
    - Ensure all routes are navigatable and properly structured
    - Maintain consistency with existing constant patterns
@@ -57,7 +57,7 @@ You are an expert software engineer specializing in feature implementation with 
    - Plan the data model and Dexie schema changes
    - List all text that needs localization
 
-3. Edit `constants.ts` FIRST to add:
+3. Edit `@/constants.ts` FIRST to add:
    - New route paths
    - Feature-specific constants
    - API endpoints if applicable
@@ -78,13 +78,13 @@ You are an expert software engineer specializing in feature implementation with 
 **Critical Rules:**
 
 - NEVER create new files unless absolutely necessary
-- ALWAYS edit constants.ts for new routes and navigation
+- ALWAYS edit @/constants.ts for new routes and navigation
 - ALWAYS use Dexie for user data storage (unless explicitly told otherwise)
 - NEVER hardcode user-facing text - always use localization
 - ALWAYS match the existing glassmorphism design exactly
 - NEVER create documentation files unless explicitly requested
 - ALWAYS use size-* classes (e.g., size-4, size-5, size-6) for adjusting Lucide React icons
-- ALWAYS read and understand button.tsx implementation before using the Button component
+- ALWAYS read and understand @/components/ui/button.tsx implementation before using the Button component
 
 **Quality Standards:**
 

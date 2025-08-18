@@ -68,16 +68,16 @@ You will systematically:
 ### Scalable Architecture Example
 When you encounter formatters for XML and HTML, create:
 ```typescript
-// base/Formatter.ts
+// @/base/Formatter.ts
 abstract class BaseFormatter {
   abstract format(input: string): string;
   abstract validate(input: string): boolean;
 }
 
-// formatters/XmlFormatter.ts
+// @/formatters/XmlFormatter.ts
 class XmlFormatter extends BaseFormatter { ... }
 
-// formatters/HtmlFormatter.ts  
+// @/formatters/HtmlFormatter.ts  
 class HtmlFormatter extends BaseFormatter { ... }
 ```
 
