@@ -3,24 +3,14 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/features/shared/ui/button";
-import { 
-  History,
-  Trash2,
-  Copy,
-  X,
-} from "lucide-react";
+import { History, Trash2, Copy, X } from "lucide-react";
 import { useRandomGenerator } from "../lib/random-generator-context";
 import type { GenerationEntry } from "../types";
 
 export function RandomGeneratorSidebar() {
   const t = useTranslations("RandomGenerator");
-  const {
-    state,
-    clearHistory,
-    deleteHistoryEntry,
-    copyToClipboard,
-  } = useRandomGenerator();
-
+  const { state, clearHistory, deleteHistoryEntry, copyToClipboard } =
+    useRandomGenerator();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -34,7 +24,7 @@ export function RandomGeneratorSidebar() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-black/10 dark:border-white/10 backdrop-blur-sm">
+      <div className="p-4 border-b border-black/10 dark:border-white/10">
         <div className="flex items-center gap-2">
           <History className="size-5" />
           <h2 className="font-medium text-gray-900 dark:text-white">
@@ -84,7 +74,10 @@ function HistoryTab({
       <div className="p-4">
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-black/5 dark:bg-white/5 rounded-lg backdrop-blur-sm" />
+            <div
+              key={i}
+              className="h-16 bg-black/5 dark:bg-white/5 rounded-lg backdrop-blur-sm"
+            />
           ))}
         </div>
       </div>
@@ -105,7 +98,7 @@ function HistoryTab({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-black/10 dark:border-white/10 backdrop-blur-sm">
+      <div className="p-4 border-b border-black/10 dark:border-white/10">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {history.length} {history.length === 1 ? "entry" : "entries"}
@@ -146,11 +139,12 @@ function HistoryTab({
                 <X className="size-3" />
               </Button>
             </div>
-            
+
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-              {entry.results.length} {entry.results.length === 1 ? "result" : "results"}
+              {entry.results.length}{" "}
+              {entry.results.length === 1 ? "result" : "results"}
             </div>
-            
+
             <div>
               <Button
                 onClick={() => onCopy(entry.results.join("\n"))}
