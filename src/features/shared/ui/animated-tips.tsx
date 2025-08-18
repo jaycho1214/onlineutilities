@@ -22,7 +22,12 @@ export const AnimatedTips: React.FC<AnimatedTipsProps> = ({
   }
 
   return (
-    <div className={cn("flex items-center gap-1 text-sm text-muted-foreground", className)}>
+    <div
+      className={cn(
+        "flex items-center gap-1 text-sm text-muted-foreground",
+        className,
+      )}
+    >
       <span className="flex-shrink-0">{prefix}</span>
       <AnimatedTextCycler
         texts={tips}

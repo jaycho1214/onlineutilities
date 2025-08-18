@@ -14,7 +14,7 @@ export interface Note {
  */
 export function downloadNote(note: Note) {
   if (!note) return;
-  
+
   const blob = new Blob([note.content], { type: "text/markdown" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -43,7 +43,7 @@ export function downloadContent(content: string, title: string) {
 export async function deleteNoteAndNavigate(
   noteId: string,
   router: { push: (path: string) => void },
-  currentNoteId?: string
+  currentNoteId?: string,
 ) {
   if (!noteId) return;
 

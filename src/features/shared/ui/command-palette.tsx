@@ -36,7 +36,7 @@ export function CommandPalette() {
       router.push(href);
       setOpen(false);
     },
-    [router, setOpen]
+    [router, setOpen],
   );
 
   return (

@@ -35,7 +35,7 @@ function NotepadSidebarComponent() {
   const pathname = usePathname();
   const currentNoteIdFromUrl = useMemo(
     () => pathname.split("/").pop(),
-    [pathname]
+    [pathname],
   );
   const [search, setSearch] = useState("");
   const [, startTransition] = useTransition();
@@ -70,7 +70,7 @@ function NotepadSidebarComponent() {
 
       // Match all search terms
       return searchTerms.every(
-        (term) => titleLower.includes(term) || contentLower.includes(term)
+        (term) => titleLower.includes(term) || contentLower.includes(term),
       );
     });
   }, [notes, search]);
@@ -175,7 +175,7 @@ function NotepadSidebarComponent() {
                     variant="destructive"
                     onClick={() => {
                       const confirmDelete = window.confirm(
-                        `Delete "${note.title || "Untitled"}"?`
+                        `Delete "${note.title || "Untitled"}"?`,
                       );
                       if (confirmDelete) {
                         deleteNote(note.id);

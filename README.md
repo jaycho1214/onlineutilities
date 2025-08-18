@@ -5,6 +5,7 @@ A modern, privacy-focused collection of web utilities built with Next.js. Featur
 ## 🌟 Features
 
 ### Utilities
+
 - **Timer** - Customizable countdown timers with sound alerts
 - **Stopwatch** - Multi-stopwatch support with lap tracking
 - **Notepad** - Markdown-enabled text editor with auto-save
@@ -13,6 +14,7 @@ A modern, privacy-focused collection of web utilities built with Next.js. Featur
 - **Calculator** - Basic calculator with calculation history
 
 ### Core Features
+
 - 🎨 **Glassmorphism UI** - Modern frosted glass design aesthetic
 - 🗄️ **Local Storage** - All data stored locally using IndexedDB via Dexie
 - 🌍 **Internationalization** - Multi-language support with next-intl
@@ -25,18 +27,21 @@ A modern, privacy-focused collection of web utilities built with Next.js. Featur
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - pnpm (recommended) or npm
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/jaycho1214/onlineutilities.git
 cd onlineutilities
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 # or
@@ -44,6 +49,7 @@ npm install
 ```
 
 3. Run the development server:
+
 ```bash
 pnpm dev
 # or
@@ -81,27 +87,32 @@ src/
 ## 🛠️ Technology Stack
 
 ### Core
+
 - **Next.js 15** - React framework with App Router
 - **React 19** - UI library
 - **TypeScript** - Type safety and developer experience
 - **Tailwind CSS 4** - Utility-first CSS framework
 
 ### UI & Design
+
 - **Radix UI** - Accessible component primitives
 - **Lucide React** - Beautiful icon library
 - **next-themes** - Theme management
 - **Glassmorphism** - Custom glass-effect components
 
 ### Data & Storage
+
 - **Dexie** - IndexedDB wrapper for local data persistence
 - **dexie-react-hooks** - React hooks for Dexie integration
 
 ### Developer Experience
+
 - **ESLint** - Code linting and formatting
 - **Turbopack** - Fast development bundler
 - **PostHog** - Privacy-focused analytics
 
 ### Additional Libraries
+
 - **next-intl** - Internationalization framework
 - **react-colorful** - Color picker components
 - **qr-code-styling** - QR code generation with styling

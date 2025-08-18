@@ -40,12 +40,12 @@ class CalculatorDatabase extends Dexie {
     });
 
     this.calculations.mapToClass(CalculationModel);
-    
+
     // Handle database errors
     this.on("blocked", () => {
       console.warn("Calculator database upgrade blocked by another connection");
     });
-    
+
     this.on("versionchange", () => {
       console.log("Calculator database version changed in another tab");
     });
@@ -90,7 +90,10 @@ export class CalculatorService {
    */
   async getAllCalculations(): Promise<CalculationEntry[]> {
     try {
-      return await calculatorDb.calculations.orderBy("createdAt").reverse().toArray();
+      return await calculatorDb.calculations
+        .orderBy("createdAt")
+        .reverse()
+        .toArray();
     } catch (error) {
       console.error("Failed to get all calculations:", error);
       return [];
@@ -125,7 +128,10 @@ export class CalculatorService {
    * @param result - The calculation result (e.g., "5")
    * @returns Promise<CalculationEntry> - The created calculation entry
    */
-  async addCalculation(expression: string, result: string): Promise<CalculationEntry> {
+  async addCalculation(
+    expression: string,
+    result: string,
+  ): Promise<CalculationEntry> {
     try {
       const now = new Date().toISOString();
       const id = nanoid(10);
@@ -138,7 +144,7 @@ export class CalculatorService {
       };
 
       await calculatorDb.calculations.add(newCalculation);
-      
+
       return newCalculation;
     } catch (error) {
       console.error("Failed to add calculation:", error);
@@ -154,7 +160,7 @@ export class CalculatorService {
     try {
       const count = await calculatorDb.calculations.count();
       await calculatorDb.calculations.clear();
-      
+
       return count;
     } catch (error) {
       console.error("Failed to clear calculation history:", error);

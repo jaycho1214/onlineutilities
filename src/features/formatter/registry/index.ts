@@ -23,7 +23,7 @@ import { yamlFormatter } from "../formatters/yaml-formatter";
 
 /**
  * Configuration for which formatters are currently enabled
- * 
+ *
  * Enable future formatters by setting their enabled flag to true
  */
 const FORMATTER_CONFIG = {
@@ -31,7 +31,7 @@ const FORMATTER_CONFIG = {
   json: { enabled: true },
   csv: { enabled: true },
   xml: { enabled: true },
-  
+
   // Additional formatters
   javascript: { enabled: true },
   html: { enabled: true },
@@ -50,20 +50,20 @@ export function initializeFormatterRegistry(): void {
   if (FORMATTER_CONFIG.json.enabled) {
     formatterRegistry.register(jsonFormatter);
   }
-  
+
   if (FORMATTER_CONFIG.csv.enabled) {
     formatterRegistry.register(csvFormatter);
   }
-  
+
   if (FORMATTER_CONFIG.xml.enabled) {
     formatterRegistry.register(xmlFormatter);
   }
-  
+
   // Register future formatters when enabled
   if (FORMATTER_CONFIG.javascript.enabled) {
     formatterRegistry.register(javascriptFormatter);
   }
-  
+
   if (FORMATTER_CONFIG.html.enabled) {
     formatterRegistry.register(htmlFormatter);
   }
@@ -77,7 +77,7 @@ export function initializeFormatterRegistry(): void {
  * Get the list of enabled formatter IDs
  */
 export function getEnabledFormatterIds(): string[] {
-  return formatterRegistry.getAllFormatters().map(formatter => formatter.id);
+  return formatterRegistry.getAllFormatters().map((formatter) => formatter.id);
 }
 
 /**

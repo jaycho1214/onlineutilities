@@ -17,7 +17,7 @@ function NotepadStatsComponent({
   readingTime,
 }: NotepadStatsProps) {
   const t = useTranslations("Notepad.stats");
-  
+
   return (
     <GlassSurface className="px-2 py-1.5 md:px-2 md:py-2">
       <div className="flex flex-row md:flex-col gap-3 md:gap-3">

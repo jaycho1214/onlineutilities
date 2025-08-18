@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogTitle, VisuallyHidden } from "@/features/shared/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  VisuallyHidden,
+} from "@/features/shared/ui/dialog";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
@@ -140,7 +145,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
     },
-    [errors]
+    [errors],
   );
 
   return (
@@ -197,7 +202,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                       "backdrop-blur-sm transition-colors",
                       errors.message
                         ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20"
+                        : "border-white/20",
                     )}
                     maxLength={1000}
                   />
@@ -232,7 +237,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                       "backdrop-blur-sm transition-colors",
                       errors.email
                         ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20"
+                        : "border-white/20",
                     )}
                   />
                   {errors.email && (
@@ -255,7 +260,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                 className={cn(
                   "w-full px-4 py-3 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600",
                   "disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors",
-                  "flex items-center justify-center gap-2"
+                  "flex items-center justify-center gap-2",
                 )}
               >
                 {isSubmitting ? (

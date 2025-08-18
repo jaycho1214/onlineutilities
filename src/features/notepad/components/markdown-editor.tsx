@@ -1,6 +1,13 @@
 "use client";
 
-import { forwardRef, useImperativeHandle, useRef, useEffect, lazy, Suspense } from "react";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useEffect,
+  lazy,
+  Suspense,
+} from "react";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 // Lazy load the MDXEditor to reduce initial bundle size
@@ -19,7 +26,7 @@ const MDXEditorLazy = lazy(async () => {
     codeMirrorPlugin,
     diffSourcePlugin,
   } = await import("@mdxeditor/editor");
-  
+
   interface MDXEditorProps {
     ref?: React.Ref<MDXEditorMethods>;
     markdown: string;
@@ -29,7 +36,7 @@ const MDXEditorLazy = lazy(async () => {
     contentEditableClassName?: string;
     autoFocus?: boolean;
   }
-  
+
   return {
     default: (props: MDXEditorProps) => (
       <MDXEditor
@@ -88,10 +95,10 @@ interface MarkdownEditorProps {
 const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
   ({ value, onChange, placeholder }, ref) => {
     const editorRef = useRef<MDXEditorMethods>(null);
-    
+
     // Forward the ref
     useImperativeHandle(ref, () => editorRef.current!, []);
-    
+
     // Update editor content when value prop changes
     useEffect(() => {
       if (editorRef.current && value !== undefined) {
@@ -101,7 +108,7 @@ const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
         }
       }
     }, [value]);
-    
+
     return (
       <div className="mdx-editor-wrapper">
         <Suspense

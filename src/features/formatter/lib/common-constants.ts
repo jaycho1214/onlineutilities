@@ -6,7 +6,7 @@
 export const COMMON_ERROR_MESSAGES = {
   EMPTY_INPUT: "Input cannot be empty",
   INVALID_FORMAT: "Invalid format",
-  TOO_LARGE: "Input is too large to process"
+  TOO_LARGE: "Input is too large to process",
 } as const;
 
 /**

@@ -39,19 +39,19 @@ class NotepadDatabase extends Dexie {
     this.version(1).stores({
       notes: "id, updatedAt",
     });
-    
+
     // Version 2: Add more indexes for better performance
     this.version(2).stores({
       notes: "id, updatedAt, createdAt, title",
     });
 
     this.notes.mapToClass(NoteModel);
-    
+
     // Handle database errors
     this.on("blocked", () => {
       console.warn("Database upgrade blocked by another connection");
     });
-    
+
     this.on("versionchange", () => {
       console.log("Database version changed in another tab");
     });
@@ -141,10 +141,10 @@ export class NotesService {
       return allNotes.filter((note) => {
         const titleLower = note.title.toLowerCase();
         const contentLower = note.content.toLowerCase();
-        
+
         // Match all search terms
-        return searchTerms.every(term => 
-          titleLower.includes(term) || contentLower.includes(term)
+        return searchTerms.every(
+          (term) => titleLower.includes(term) || contentLower.includes(term),
         );
       });
     } catch (error) {
@@ -184,9 +184,11 @@ export class NotesService {
 
       // Dispatch custom event to notify other parts of the app
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("noteCreated", { detail: newNote }));
+        window.dispatchEvent(
+          new CustomEvent("noteCreated", { detail: newNote }),
+        );
       }
-      
+
       return newNote;
     } catch (error) {
       console.error("Failed to create note:", error);
@@ -229,10 +231,12 @@ export class NotesService {
         };
 
         await notepadDb.notes.put(updatedNote);
-        
+
         // Dispatch custom event
         if (typeof window !== "undefined") {
-          window.dispatchEvent(new CustomEvent("noteUpdated", { detail: updatedNote }));
+          window.dispatchEvent(
+            new CustomEvent("noteUpdated", { detail: updatedNote }),
+          );
         }
 
         return updatedNote;
@@ -255,10 +259,12 @@ export class NotesService {
       if (!note) return false;
 
       await notepadDb.notes.delete(id);
-      
+
       // Dispatch custom event
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("noteDeleted", { detail: { id } }));
+        window.dispatchEvent(
+          new CustomEvent("noteDeleted", { detail: { id } }),
+        );
       }
 
       return true;
@@ -276,12 +282,14 @@ export class NotesService {
     try {
       const count = await notepadDb.notes.count();
       await notepadDb.notes.clear();
-      
+
       // Dispatch custom event
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("allNotesDeleted", { detail: { count } }));
+        window.dispatchEvent(
+          new CustomEvent("allNotesDeleted", { detail: { count } }),
+        );
       }
-      
+
       return count;
     } catch (error) {
       console.error("Failed to delete all notes:", error);

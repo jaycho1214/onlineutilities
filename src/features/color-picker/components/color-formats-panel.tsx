@@ -82,8 +82,8 @@ const ColorFormatsPanelComponent: React.FC<ColorFormatsPanelProps> = React.memo(
         </div>
       </GlassSurface>
     );
-  }
+  },
 );
 
-ColorFormatsPanelComponent.displayName = 'ColorFormatsPanel';
+ColorFormatsPanelComponent.displayName = "ColorFormatsPanel";
 export const ColorFormatsPanel = ColorFormatsPanelComponent;

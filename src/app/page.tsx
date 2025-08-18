@@ -25,9 +25,9 @@ export default function Home() {
         {utilities.map((utility) => {
           const IconComponent = utility.icon;
           return (
-            <Link 
-              key={utility.id} 
-              href={utility.href} 
+            <Link
+              key={utility.id}
+              href={utility.href}
               className="group"
               aria-label={`Open ${utility.name} tool`}
             >

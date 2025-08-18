@@ -9,27 +9,31 @@ interface EmailDataProps {
   setEmailData: (data: { to: string; subject: string; body: string }) => void;
 }
 
-export const EmailInput = memo(({ emailData, setEmailData }: EmailDataProps) => (
-  <div className="space-y-2">
-    <Input
-      value={emailData.to}
-      onChange={(e) => setEmailData({ ...emailData, to: e.target.value })}
-      placeholder="recipient@example.com"
-    />
-    <Input
-      value={emailData.subject}
-      onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
-      placeholder="Subject"
-    />
-    <textarea
-      value={emailData.body}
-      onChange={(e) => setEmailData({ ...emailData, body: e.target.value })}
-      placeholder="Message body..."
-      className="w-full h-16 px-3 py-2 rounded-lg border border-border bg-white/10 backdrop-blur-sm resize-none"
-    />
-  </div>
-));
-EmailInput.displayName = 'EmailInput';
+export const EmailInput = memo(
+  ({ emailData, setEmailData }: EmailDataProps) => (
+    <div className="space-y-2">
+      <Input
+        value={emailData.to}
+        onChange={(e) => setEmailData({ ...emailData, to: e.target.value })}
+        placeholder="recipient@example.com"
+      />
+      <Input
+        value={emailData.subject}
+        onChange={(e) =>
+          setEmailData({ ...emailData, subject: e.target.value })
+        }
+        placeholder="Subject"
+      />
+      <textarea
+        value={emailData.body}
+        onChange={(e) => setEmailData({ ...emailData, body: e.target.value })}
+        placeholder="Message body..."
+        className="w-full h-16 px-3 py-2 rounded-lg border border-border bg-white/10 backdrop-blur-sm resize-none"
+      />
+    </div>
+  ),
+);
+EmailInput.displayName = "EmailInput";
 
 interface SmsDataProps {
   smsData: { phone: string; message: string };
@@ -51,7 +55,7 @@ export const SmsInput = memo(({ smsData, setSmsData }: SmsDataProps) => (
     />
   </div>
 ));
-SmsInput.displayName = 'SmsInput';
+SmsInput.displayName = "SmsInput";
 
 interface WifiDataProps {
   wifiData: {
@@ -111,7 +115,7 @@ export const WifiInput = memo(({ wifiData, setWifiData }: WifiDataProps) => (
     </div>
   </div>
 ));
-WifiInput.displayName = 'WifiInput';
+WifiInput.displayName = "WifiInput";
 
 interface VCardDataProps {
   vcardData: {
@@ -132,38 +136,46 @@ interface VCardDataProps {
   }) => void;
 }
 
-export const VCardInput = memo(({ vcardData, setVcardData }: VCardDataProps) => (
-  <div className="grid grid-cols-2 gap-2">
-    <Input
-      value={vcardData.firstName}
-      onChange={(e) => setVcardData({ ...vcardData, firstName: e.target.value })}
-      placeholder="First name"
-    />
-    <Input
-      value={vcardData.lastName}
-      onChange={(e) => setVcardData({ ...vcardData, lastName: e.target.value })}
-      placeholder="Last name"
-    />
-    <Input
-      value={vcardData.phone}
-      onChange={(e) => setVcardData({ ...vcardData, phone: e.target.value })}
-      placeholder="Phone"
-    />
-    <Input
-      value={vcardData.email}
-      onChange={(e) => setVcardData({ ...vcardData, email: e.target.value })}
-      placeholder="Email"
-    />
-    <Input
-      value={vcardData.organization}
-      onChange={(e) => setVcardData({ ...vcardData, organization: e.target.value })}
-      placeholder="Organization"
-    />
-    <Input
-      value={vcardData.title}
-      onChange={(e) => setVcardData({ ...vcardData, title: e.target.value })}
-      placeholder="Job title"
-    />
-  </div>
-));
-VCardInput.displayName = 'VCardInput';
+export const VCardInput = memo(
+  ({ vcardData, setVcardData }: VCardDataProps) => (
+    <div className="grid grid-cols-2 gap-2">
+      <Input
+        value={vcardData.firstName}
+        onChange={(e) =>
+          setVcardData({ ...vcardData, firstName: e.target.value })
+        }
+        placeholder="First name"
+      />
+      <Input
+        value={vcardData.lastName}
+        onChange={(e) =>
+          setVcardData({ ...vcardData, lastName: e.target.value })
+        }
+        placeholder="Last name"
+      />
+      <Input
+        value={vcardData.phone}
+        onChange={(e) => setVcardData({ ...vcardData, phone: e.target.value })}
+        placeholder="Phone"
+      />
+      <Input
+        value={vcardData.email}
+        onChange={(e) => setVcardData({ ...vcardData, email: e.target.value })}
+        placeholder="Email"
+      />
+      <Input
+        value={vcardData.organization}
+        onChange={(e) =>
+          setVcardData({ ...vcardData, organization: e.target.value })
+        }
+        placeholder="Organization"
+      />
+      <Input
+        value={vcardData.title}
+        onChange={(e) => setVcardData({ ...vcardData, title: e.target.value })}
+        placeholder="Job title"
+      />
+    </div>
+  ),
+);
+VCardInput.displayName = "VCardInput";

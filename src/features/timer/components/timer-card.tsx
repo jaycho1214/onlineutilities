@@ -239,7 +239,11 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                     ? "text-blue-400 hover:text-blue-300"
                     : "text-muted-foreground hover:text-foreground opacity-60",
                 )}
-                title={timer.soundEnabled ? t("actions.soundEnabled") : t("actions.soundDisabled")}
+                title={
+                  timer.soundEnabled
+                    ? t("actions.soundEnabled")
+                    : t("actions.soundDisabled")
+                }
               >
                 {timer.soundEnabled ? (
                   <Bell className="size-4" />

@@ -45,7 +45,7 @@ export class ColorDB {
       if (allColors.length > 24) {
         const colorsToDelete = allColors.slice(24);
         await db.recentColors.bulkDelete(
-          colorsToDelete.map((c) => c.id!).filter(Boolean)
+          colorsToDelete.map((c) => c.id!).filter(Boolean),
         );
       }
     } catch (error) {

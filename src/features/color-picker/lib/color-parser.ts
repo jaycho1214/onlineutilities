@@ -1,4 +1,4 @@
-import { rgbToHex, hslToHex, hsvToHex, cmykToHex } from './color-conversions';
+import { rgbToHex, hslToHex, hsvToHex, cmykToHex } from "./color-conversions";
 
 // Parse color input based on format
 export const parseColorInput = (input: string): string | null => {
@@ -18,7 +18,7 @@ export const parseColorInput = (input: string): string | null => {
 
   // HSL format
   const hslMatch = input.match(
-    /hsl\s*\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/
+    /hsl\s*\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/,
   );
   if (hslMatch) {
     const [, h, s, l] = hslMatch;
@@ -27,7 +27,7 @@ export const parseColorInput = (input: string): string | null => {
 
   // HSV format
   const hsvMatch = input.match(
-    /hsv\s*\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/
+    /hsv\s*\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/,
   );
   if (hsvMatch) {
     const [, h, s, v] = hsvMatch;
@@ -36,7 +36,7 @@ export const parseColorInput = (input: string): string | null => {
 
   // CMYK format
   const cmykMatch = input.match(
-    /cmyk\s*\(\s*(\d+)%?\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/
+    /cmyk\s*\(\s*(\d+)%?\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/,
   );
   if (cmykMatch) {
     const [, c, m, y, k] = cmykMatch;

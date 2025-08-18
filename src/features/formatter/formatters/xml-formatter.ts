@@ -12,10 +12,10 @@ import type {
   FormatOptions,
 } from "../registry/formatter-registry";
 import type { ValidationResult, FormatResult } from "../types";
-import { 
-  checkEmptyInput, 
-  createEmptyInputFormatResult, 
-  createEmptyInputValidationResult 
+import {
+  checkEmptyInput,
+  createEmptyInputFormatResult,
+  createEmptyInputValidationResult,
 } from "../lib/common-constants";
 
 // ============================================================================
@@ -45,7 +45,7 @@ function hasXmlStructure(content: string): boolean {
   ];
 
   let patternMatches = 0;
-  xmlPatterns.forEach(pattern => {
+  xmlPatterns.forEach((pattern) => {
     if (pattern.test(content)) {
       patternMatches++;
     }
@@ -66,26 +66,26 @@ function analyzeXmlStructure(content: string): {
 } {
   const hasDeclaration = /^\s*<\?xml/i.test(content);
   const hasDoctype = /<!DOCTYPE/i.test(content);
-  
+
   // Count tags (rough estimate)
   const openingTags = (content.match(/<[a-zA-Z][^>]*[^\/]>/g) || []).length;
   const closingTags = (content.match(/<\/[a-zA-Z][^>]*>/g) || []).length;
   const selfClosingTags = (content.match(/<[a-zA-Z][^>]*\/>/g) || []).length;
-  
+
   const tagCount = openingTags + closingTags + selfClosingTags;
-  
+
   // Rough validation: opening tags should match closing tags
   const isBalanced = openingTags === closingTags;
-  
+
   // Estimate maximum depth
   let depth = 0;
   let currentDepth = 0;
   const tagMatches = content.match(/<\/?[a-zA-Z][^>]*\/?>/g) || [];
-  
+
   for (const tag of tagMatches) {
-    if (tag.startsWith('</')) {
+    if (tag.startsWith("</")) {
       currentDepth--;
-    } else if (!tag.endsWith('/>')) {
+    } else if (!tag.endsWith("/>")) {
       currentDepth++;
       depth = Math.max(depth, currentDepth);
     }
@@ -103,10 +103,13 @@ function analyzeXmlStructure(content: string): {
 /**
  * Get attributes string for XML element
  */
-function getAttributesString(element: Element, options: XmlFormatOptions = {}): string {
+function getAttributesString(
+  element: Element,
+  options: XmlFormatOptions = {},
+): string {
   const attributes = Array.from(element.attributes);
   if (attributes.length === 0) {
-    return '';
+    return "";
   }
 
   let attrs = attributes;
@@ -114,33 +117,36 @@ function getAttributesString(element: Element, options: XmlFormatOptions = {}): 
     attrs = attrs.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  return ' ' + attrs
-    .map(attr => `${attr.name}="${attr.value}"`)
-    .join(' ');
+  return " " + attrs.map((attr) => `${attr.name}="${attr.value}"`).join(" ");
 }
 
 /**
  * Format XML node with indentation
  */
-function formatXmlNode(node: Node, indent: number, level: number = 0, options: XmlFormatOptions = {}): string {
-  const indentStr = ' '.repeat(indent);
+function formatXmlNode(
+  node: Node,
+  indent: number,
+  level: number = 0,
+  options: XmlFormatOptions = {},
+): string {
+  const indentStr = " ".repeat(indent);
   const currentIndent = indentStr.repeat(level);
   const nextIndent = indentStr.repeat(level + 1);
 
   if (node.nodeType === Node.DOCUMENT_NODE) {
     return Array.from(node.childNodes)
-      .map(child => formatXmlNode(child, indent, level, options))
-      .join('');
+      .map((child) => formatXmlNode(child, indent, level, options))
+      .join("");
   }
 
   if (node.nodeType === Node.ELEMENT_NODE) {
     const element = node as Element;
     const hasChildElements = Array.from(element.childNodes).some(
-      child => child.nodeType === Node.ELEMENT_NODE
+      (child) => child.nodeType === Node.ELEMENT_NODE,
     );
 
     const hasTextContent = Array.from(element.childNodes).some(
-      child => child.nodeType === Node.TEXT_NODE && child.textContent?.trim()
+      (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim(),
     );
 
     const attributesStr = getAttributesString(element, options);
@@ -156,32 +162,32 @@ function formatXmlNode(node: Node, indent: number, level: number = 0, options: X
 
     if (hasChildElements) {
       const children = Array.from(element.childNodes)
-        .map(child => {
+        .map((child) => {
           if (child.nodeType === Node.ELEMENT_NODE) {
-            return '\n' + formatXmlNode(child, indent, level + 1, options);
+            return "\n" + formatXmlNode(child, indent, level + 1, options);
           } else if (child.nodeType === Node.TEXT_NODE) {
             const text = child.textContent?.trim();
-            return text ? `\n${nextIndent}${text}` : '';
+            return text ? `\n${nextIndent}${text}` : "";
           }
-          return '';
+          return "";
         })
-        .filter(content => content.length > 0)
-        .join('');
+        .filter((content) => content.length > 0)
+        .join("");
 
       return `${currentIndent}<${element.tagName}${attributesStr}>${children}\n${currentIndent}</${element.tagName}>`;
     } else {
-      const textContent = element.textContent?.trim() || '';
+      const textContent = element.textContent?.trim() || "";
       return `${currentIndent}<${element.tagName}${attributesStr}>${textContent}</${element.tagName}>`;
     }
   }
 
   if (node.nodeType === Node.TEXT_NODE) {
     const text = node.textContent?.trim();
-    return text ? `${currentIndent}${text}` : '';
+    return text ? `${currentIndent}${text}` : "";
   }
 
   if (node.nodeType === Node.COMMENT_NODE) {
-    const comment = node.textContent || '';
+    const comment = node.textContent || "";
     return `${currentIndent}<!--${comment}-->`;
   }
 
@@ -190,7 +196,7 @@ function formatXmlNode(node: Node, indent: number, level: number = 0, options: X
     return `${currentIndent}<?${pi.target} ${pi.data}?>`;
   }
 
-  return '';
+  return "";
 }
 
 // ============================================================================
@@ -202,7 +208,7 @@ function formatXmlNode(node: Node, indent: number, level: number = 0, options: X
  */
 function detectXmlContent(content: string): ContentDetectionResult {
   const trimmedContent = content.trim();
-  
+
   if (!trimmedContent) {
     return { confidence: 0 };
   }
@@ -232,10 +238,10 @@ function detectXmlContent(content: string): ContentDetectionResult {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(trimmedContent, "text/xml");
     const parseError = xmlDoc.getElementsByTagName("parsererror");
-    
+
     if (parseError.length === 0) {
       confidence = Math.max(confidence, 0.9);
-      
+
       // Analyze structure
       const structure = analyzeXmlStructure(trimmedContent);
       metadata.tagCount = structure.tagCount;
@@ -252,8 +258,9 @@ function detectXmlContent(content: string): ContentDetectionResult {
 
   // Additional structure analysis
   if (confidence > 0) {
-    metadata.lineCount = trimmedContent.split('\n').length;
-    metadata.avgLineLength = trimmedContent.length / metadata.lineCount;
+    metadata.lineCount = trimmedContent.split("\n").length;
+    metadata.avgLineLength =
+      trimmedContent.length / (metadata.lineCount as number);
   }
 
   return {
@@ -269,7 +276,10 @@ function detectXmlContent(content: string): ContentDetectionResult {
 /**
  * Format XML with proper indentation
  */
-function formatXml(content: string, options: XmlFormatOptions = {}): FormatResult {
+function formatXml(
+  content: string,
+  options: XmlFormatOptions = {},
+): FormatResult {
   try {
     if (checkEmptyInput(content)) {
       return createEmptyInputFormatResult();
@@ -281,7 +291,8 @@ function formatXml(content: string, options: XmlFormatOptions = {}): FormatResul
     // Check for parsing errors
     const parseError = xmlDoc.getElementsByTagName("parsererror");
     if (parseError.length > 0) {
-      const errorText = parseError[0].textContent || "Unknown XML parsing error";
+      const errorText =
+        parseError[0].textContent || "Unknown XML parsing error";
       return {
         success: false,
         error: `Invalid XML: ${errorText}`,
@@ -297,7 +308,8 @@ function formatXml(content: string, options: XmlFormatOptions = {}): FormatResul
       output: formatted,
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       error: `XML formatting error: ${errorMessage}`,
@@ -320,8 +332,9 @@ function validateXml(content: string): ValidationResult {
     // Check for parsing errors
     const parseError = xmlDoc.getElementsByTagName("parsererror");
     if (parseError.length > 0) {
-      const errorText = parseError[0].textContent || "Unknown XML parsing error";
-      
+      const errorText =
+        parseError[0].textContent || "Unknown XML parsing error";
+
       // Try to extract line information from error
       const lineMatch = errorText.match(/line (\d+)/i);
       const line = lineMatch ? parseInt(lineMatch[1], 10) : undefined;
@@ -362,7 +375,8 @@ function minifyXml(content: string): FormatResult {
     // Check for parsing errors
     const parseError = xmlDoc.getElementsByTagName("parsererror");
     if (parseError.length > 0) {
-      const errorText = parseError[0].textContent || "Unknown XML parsing error";
+      const errorText =
+        parseError[0].textContent || "Unknown XML parsing error";
       return {
         success: false,
         error: `Invalid XML: ${errorText}`,
@@ -372,18 +386,17 @@ function minifyXml(content: string): FormatResult {
     // Minify by removing unnecessary whitespace
     const serializer = new XMLSerializer();
     let minified = serializer.serializeToString(xmlDoc);
-    
+
     // Remove whitespace between tags while preserving content
-    minified = minified
-      .replace(/>\s+</g, '><')
-      .replace(/^\s+|\s+$/g, '');
+    minified = minified.replace(/>\s+</g, "><").replace(/^\s+|\s+$/g, "");
 
     return {
       success: true,
       output: minified,
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       error: `XML minification error: ${errorMessage}`,

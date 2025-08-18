@@ -16,18 +16,21 @@ function CalculatorSidebarComponent() {
   const t = useTranslations("Calculator");
   const { history, isLoading, clearHistory } = useCalculator();
 
-  const copyToClipboard = useCallback(async (text: string, type: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      if (type === "result") {
-        toast.success(t("notifications.resultCopied"));
-      } else {
-        toast.success(t("notifications.expressionCopied"));
+  const copyToClipboard = useCallback(
+    async (text: string, type: string) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        if (type === "result") {
+          toast.success(t("notifications.resultCopied"));
+        } else {
+          toast.success(t("notifications.expressionCopied"));
+        }
+      } catch (error) {
+        console.error("Failed to copy to clipboard:", error);
       }
-    } catch (error) {
-      console.error("Failed to copy to clipboard:", error);
-    }
-  }, [t]);
+    },
+    [t],
+  );
 
   const handleClearHistory = useCallback(async () => {
     await clearHistory();

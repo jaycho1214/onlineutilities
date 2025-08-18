@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  memo,
+} from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
@@ -24,7 +31,12 @@ import {
   Type,
 } from "lucide-react";
 import { ColorPickerButton } from "@/features/qr-code/components/color-picker-button";
-import { EmailInput, SmsInput, WifiInput, VCardInput } from "@/features/qr-code/components/qr-content-inputs";
+import {
+  EmailInput,
+  SmsInput,
+  WifiInput,
+  VCardInput,
+} from "@/features/qr-code/components/qr-content-inputs";
 
 type DotType =
   | "square"
@@ -67,35 +79,35 @@ const SquareIcon = memo(() => (
     <rect x="2" y="2" width="12" height="12" />
   </svg>
 ));
-SquareIcon.displayName = 'SquareIcon';
+SquareIcon.displayName = "SquareIcon";
 
 const DotsIcon = memo(() => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
     <circle cx="8" cy="8" r="5" />
   </svg>
 ));
-DotsIcon.displayName = 'DotsIcon';
+DotsIcon.displayName = "DotsIcon";
 
 const RoundedIcon = memo(() => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
     <rect x="2" y="2" width="12" height="12" rx="2" />
   </svg>
 ));
-RoundedIcon.displayName = 'RoundedIcon';
+RoundedIcon.displayName = "RoundedIcon";
 
 const ExtraRoundedIcon = memo(() => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
     <rect x="2" y="2" width="12" height="12" rx="4" />
   </svg>
 ));
-ExtraRoundedIcon.displayName = 'ExtraRoundedIcon';
+ExtraRoundedIcon.displayName = "ExtraRoundedIcon";
 
 const ClassyIcon = memo(() => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
     <path d="M8 2 L14 8 L8 14 L2 8 Z" />
   </svg>
 ));
-ClassyIcon.displayName = 'ClassyIcon';
+ClassyIcon.displayName = "ClassyIcon";
 
 const ClassyRoundedIcon = memo(() => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -107,12 +119,15 @@ const ClassyRoundedIcon = memo(() => (
     />
   </svg>
 ));
-ClassyRoundedIcon.displayName = 'ClassyRoundedIcon';
+ClassyRoundedIcon.displayName = "ClassyRoundedIcon";
 
 // Define type for QRCodeStyling instance
 type QRCodeStylingInstance = {
   append: (element: HTMLElement) => void;
-  download: (options?: { name?: string; extension?: FileType }) => Promise<void>;
+  download: (options?: {
+    name?: string;
+    extension?: FileType;
+  }) => Promise<void>;
 };
 
 const QRCodeGeneratorComponent = () => {
@@ -186,7 +201,7 @@ const QRCodeGeneratorComponent = () => {
         return textData || "Hello, World!";
       case "email":
         return `mailto:${emailData.to}?subject=${encodeURIComponent(
-          emailData.subject
+          emailData.subject,
         )}&body=${encodeURIComponent(emailData.body)}`;
       case "phone":
         return `tel:${phoneData}`;
@@ -209,58 +224,67 @@ END:VCARD`;
       default:
         return "https://example.com";
     }
-  }, [contentType, urlData, textData, emailData, phoneData, smsData, wifiData, vcardData]);
+  }, [
+    contentType,
+    urlData,
+    textData,
+    emailData,
+    phoneData,
+    smsData,
+    wifiData,
+    vcardData,
+  ]);
 
   // Debounce QR generation for text inputs
   const [debouncedData, setDebouncedData] = useState(() => generateQRData());
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedData(generateQRData());
     }, 300);
-    
+
     return () => clearTimeout(timer);
   }, [generateQRData]);
 
   // Initialize QR Code
   useEffect(() => {
     const currentRef = qrRef.current;
-    
+
     // Lazy load QRCodeStyling
-    import('qr-code-styling').then((module) => {
+    import("qr-code-styling").then((module) => {
       const QRCodeStyling = module.default;
       const options = {
-      width: size,
-      height: size,
-      margin,
-      type: "canvas" as const,
-      data: debouncedData,
-      image: logoImage || undefined,
-      dotsOptions: {
-        color: dotsColor,
-        type: dotsType,
-      },
-      backgroundOptions: {
-        color: backgroundColor,
-      },
-      cornersSquareOptions: {
-        color: cornerSquareColor,
-        type: cornerSquareType,
-      },
-      cornersDotOptions: {
-        color: cornerDotColor,
-        type: cornerDotType,
-      },
-      imageOptions: {
-        crossOrigin: "anonymous",
-        margin: logoMargin,
-        imageSize: logoSize,
-        hideBackgroundDots: logoRemoveBg,
-      },
-      qrOptions: {
-        errorCorrectionLevel,
-      },
-    };
+        width: size,
+        height: size,
+        margin,
+        type: "canvas" as const,
+        data: debouncedData,
+        image: logoImage || undefined,
+        dotsOptions: {
+          color: dotsColor,
+          type: dotsType,
+        },
+        backgroundOptions: {
+          color: backgroundColor,
+        },
+        cornersSquareOptions: {
+          color: cornerSquareColor,
+          type: cornerSquareType,
+        },
+        cornersDotOptions: {
+          color: cornerDotColor,
+          type: cornerDotType,
+        },
+        imageOptions: {
+          crossOrigin: "anonymous",
+          margin: logoMargin,
+          imageSize: logoSize,
+          hideBackgroundDots: logoRemoveBg,
+        },
+        qrOptions: {
+          errorCorrectionLevel,
+        },
+      };
 
       const qr = new QRCodeStyling(options);
       setQrCode(qr);
@@ -303,16 +327,19 @@ END:VCARD`;
     }
   }, [qrCode, downloadFormat]);
 
-  const handleLogoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setLogoImage(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  }, []);
+  const handleLogoUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setLogoImage(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [],
+  );
 
   const removeLogo = useCallback(() => {
     setLogoImage(null);
@@ -321,36 +348,47 @@ END:VCARD`;
     }
   }, []);
 
-  const contentTabs = useMemo(() => [
-    { id: "url", icon: Link2, label: "URL" },
-    { id: "text", icon: Type, label: "Text" },
-    { id: "email", icon: Mail, label: "Email" },
-    { id: "phone", icon: Phone, label: "Phone" },
-    { id: "sms", icon: MessageSquare, label: "SMS" },
-    { id: "wifi", icon: Wifi, label: "WiFi" },
-    { id: "vcard", icon: CreditCard, label: "vCard" },
-  ], []);
+  const contentTabs = useMemo(
+    () => [
+      { id: "url", icon: Link2, label: "URL" },
+      { id: "text", icon: Type, label: "Text" },
+      { id: "email", icon: Mail, label: "Email" },
+      { id: "phone", icon: Phone, label: "Phone" },
+      { id: "sms", icon: MessageSquare, label: "SMS" },
+      { id: "wifi", icon: Wifi, label: "WiFi" },
+      { id: "vcard", icon: CreditCard, label: "vCard" },
+    ],
+    [],
+  );
 
-  const dotStyles = useMemo(() => [
-    { id: "square", icon: SquareIcon },
-    { id: "dots", icon: DotsIcon },
-    { id: "rounded", icon: RoundedIcon },
-    { id: "extra-rounded", icon: ExtraRoundedIcon },
-    { id: "classy", icon: ClassyIcon },
-    { id: "classy-rounded", icon: ClassyRoundedIcon },
-  ], []);
+  const dotStyles = useMemo(
+    () => [
+      { id: "square", icon: SquareIcon },
+      { id: "dots", icon: DotsIcon },
+      { id: "rounded", icon: RoundedIcon },
+      { id: "extra-rounded", icon: ExtraRoundedIcon },
+      { id: "classy", icon: ClassyIcon },
+      { id: "classy-rounded", icon: ClassyRoundedIcon },
+    ],
+    [],
+  );
 
-  const cornerSquareStyles = useMemo(() => [
-    { id: "square", icon: SquareIcon },
-    { id: "extra-rounded", icon: ExtraRoundedIcon },
-    { id: "dot", icon: DotsIcon },
-  ], []);
+  const cornerSquareStyles = useMemo(
+    () => [
+      { id: "square", icon: SquareIcon },
+      { id: "extra-rounded", icon: ExtraRoundedIcon },
+      { id: "dot", icon: DotsIcon },
+    ],
+    [],
+  );
 
-  const cornerDotStyles = useMemo(() => [
-    { id: "dot", icon: DotsIcon },
-    { id: "square", icon: SquareIcon },
-  ], []);
-
+  const cornerDotStyles = useMemo(
+    () => [
+      { id: "dot", icon: DotsIcon },
+      { id: "square", icon: SquareIcon },
+    ],
+    [],
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
@@ -381,7 +419,7 @@ END:VCARD`;
                   className={cn(
                     "flex items-center gap-1.5 transition-all",
                     contentType === id &&
-                      "bg-primary/20 text-primary border-primary/50 backdrop-blur-sm"
+                      "bg-primary/20 text-primary border-primary/50 backdrop-blur-sm",
                   )}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -460,7 +498,7 @@ END:VCARD`;
                     className={cn(
                       "h-9 w-9 p-0 flex items-center justify-center transition-all",
                       dotsType === id &&
-                        "bg-primary/20 text-primary backdrop-blur-sm"
+                        "bg-primary/20 text-primary backdrop-blur-sm",
                     )}
                     title={id}
                   >
@@ -485,7 +523,7 @@ END:VCARD`;
                     className={cn(
                       "h-9 w-9 p-0 flex items-center justify-center transition-all",
                       cornerSquareType === id &&
-                        "bg-primary/20 text-primary backdrop-blur-sm"
+                        "bg-primary/20 text-primary backdrop-blur-sm",
                     )}
                     title={`Corner square: ${id}`}
                   >
@@ -504,7 +542,7 @@ END:VCARD`;
                     className={cn(
                       "h-9 w-9 p-0 flex items-center justify-center transition-all",
                       cornerDotType === id &&
-                        "bg-primary/20 text-primary backdrop-blur-sm"
+                        "bg-primary/20 text-primary backdrop-blur-sm",
                     )}
                     title={`Corner dot: ${id}`}
                   >
@@ -590,7 +628,7 @@ END:VCARD`;
                     value={errorCorrectionLevel}
                     onChange={(e) =>
                       setErrorCorrectionLevel(
-                        e.target.value as "L" | "M" | "Q" | "H"
+                        e.target.value as "L" | "M" | "Q" | "H",
                       )
                     }
                     className="w-full h-9 px-3 rounded-lg text-sm appearance-none"
@@ -721,12 +759,12 @@ END:VCARD`;
                           className={cn(
                             "h-8 text-xs uppercase transition-all flex items-center justify-center",
                             downloadFormat === format &&
-                              "bg-primary/20 text-primary border-primary/50 backdrop-blur-sm"
+                              "bg-primary/20 text-primary border-primary/50 backdrop-blur-sm",
                           )}
                         >
                           {format}
                         </Button>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -747,7 +785,7 @@ END:VCARD`;
       </div>
     </div>
   );
-}
+};
 
 export const QRCodeGenerator = memo(QRCodeGeneratorComponent);
-QRCodeGenerator.displayName = 'QRCodeGenerator';
+QRCodeGenerator.displayName = "QRCodeGenerator";

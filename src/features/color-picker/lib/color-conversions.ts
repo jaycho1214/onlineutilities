@@ -21,7 +21,7 @@ export const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
 export const rgbToHsl = (
   r: number,
   g: number,
-  b: number
+  b: number,
 ): { h: number; s: number; l: number } => {
   r /= 255;
   g /= 255;
@@ -61,7 +61,7 @@ export const rgbToHsl = (
 export const rgbToHsv = (
   r: number,
   g: number,
-  b: number
+  b: number,
 ): { h: number; s: number; v: number } => {
   r /= 255;
   g /= 255;
@@ -98,7 +98,7 @@ export const rgbToHsv = (
 export const rgbToCmyk = (
   r: number,
   g: number,
-  b: number
+  b: number,
 ): { c: number; m: number; y: number; k: number } => {
   r /= 255;
   g /= 255;
@@ -120,7 +120,7 @@ export const rgbToCmyk = (
 export const rgbToLab = (
   r: number,
   g: number,
-  b: number
+  b: number,
 ): { l: number; a: number; b: number } => {
   // Simplified LAB conversion for display purposes
   r /= 255;
@@ -255,7 +255,12 @@ export const hsvToHex = (h: number, s: number, v: number): string => {
   return rgbToHex((r + m) * 255, (g + m) * 255, (b + m) * 255);
 };
 
-export const cmykToHex = (c: number, m: number, y: number, k: number): string => {
+export const cmykToHex = (
+  c: number,
+  m: number,
+  y: number,
+  k: number,
+): string => {
   c = Math.max(0, Math.min(100, c)) / 100;
   m = Math.max(0, Math.min(100, m)) / 100;
   y = Math.max(0, Math.min(100, y)) / 100;

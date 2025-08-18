@@ -1,4 +1,4 @@
-import { ColorFormats } from './color-conversions';
+import { ColorFormats } from "./color-conversions";
 
 export interface SliderConfig {
   label: string;
@@ -10,7 +10,7 @@ export interface SliderConfig {
 
 export const getSliderConfig = (
   colorFormat: "RGB" | "HSL" | "HSV" | "CMYK" | "LAB",
-  colorFormats: ColorFormats
+  colorFormats: ColorFormats,
 ): SliderConfig[] => {
   switch (colorFormat) {
     case "RGB":

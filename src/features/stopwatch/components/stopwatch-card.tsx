@@ -248,7 +248,9 @@ function StopwatchCardComponent({
                 : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30",
             )}
             variant="outline"
-            title={stopwatch.isRunning ? t("actions.pause") : t("actions.start")}
+            title={
+              stopwatch.isRunning ? t("actions.pause") : t("actions.start")
+            }
           >
             {stopwatch.isRunning ? (
               <Pause className="size-4" />

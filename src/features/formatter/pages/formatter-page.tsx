@@ -9,6 +9,14 @@ import { cn } from "@/lib/utils";
 import { DragOverlay } from "../components/drag-overlay";
 import { FormatDetectionDialog } from "../components/format-detection-dialog";
 import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/features/shared/ui/command-glass";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -26,6 +34,9 @@ import {
   Eye,
   Table,
   AlertCircle,
+  ChevronDown,
+  Globe,
+  Braces,
 } from "lucide-react";
 import type { FormatterType, CsvDelimiter } from "../types";
 import {
@@ -60,6 +71,7 @@ function FormatterPageComponent() {
   // Local state for UI
   const [inputFocused, setInputFocused] = useState(false);
   const [outputFocused, setOutputFocused] = useState(false);
+  const [formatterDialogOpen, setFormatterDialogOpen] = useState(false);
   const [showDetectionDialog, setShowDetectionDialog] = useState(false);
   const [detectionData, setDetectionData] = useState<{
     detectedFormat: FormatterType;
@@ -96,7 +108,6 @@ function FormatterPageComponent() {
       }
     };
 
-
     // Add event listeners
     document.addEventListener("keydown", handleKeyDown);
 
@@ -108,22 +119,23 @@ function FormatterPageComponent() {
   const handleTypeChange = useCallback(
     (value: string) => {
       setType(value as FormatterType);
+      setFormatterDialogOpen(false);
     },
-    [setType]
+    [setType],
   );
 
   const handleDelimiterChange = useCallback(
     (value: string) => {
       setCsvDelimiter(value as CsvDelimiter);
     },
-    [setCsvDelimiter]
+    [setCsvDelimiter],
   );
 
   const handleViewModeChange = useCallback(
     (mode: "raw" | "table") => {
       setCsvViewMode(mode);
     },
-    [setCsvViewMode]
+    [setCsvViewMode],
   );
 
   // Format detection dialog handlers
@@ -133,7 +145,7 @@ function FormatterPageComponent() {
       setShowDetectionDialog(false);
       setDetectionData(null);
     },
-    [setType]
+    [setType],
   );
 
   const handleFormatDetectionClose = useCallback(() => {
@@ -145,7 +157,7 @@ function FormatterPageComponent() {
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setInput(e.target.value);
     },
-    [setInput]
+    [setInput],
   );
 
   // Page-level drag and drop is handled on the main container
@@ -157,6 +169,12 @@ function FormatterPageComponent() {
       case "csv":
         return <Table className="h-4 w-4" />;
       case "xml":
+        return <FileText className="h-4 w-4" />;
+      case "javascript":
+        return <Braces className="h-4 w-4" />;
+      case "html":
+        return <Globe className="h-4 w-4" />;
+      case "yaml":
         return <FileText className="h-4 w-4" />;
       default:
         return <Code2 className="h-4 w-4" />;
@@ -224,19 +242,19 @@ function FormatterPageComponent() {
           {/* Header Controls */}
           <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between flex-shrink-0 w-full">
             <div className="flex flex-wrap items-center gap-3 min-w-0">
-              {getTypeIcon(state.type)}
-              <Select value={state.type} onValueChange={handleTypeChange}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableFormatters.map((formatter) => (
-                    <SelectItem key={formatter.id} value={formatter.id}>
-                      {t(`types.${formatter.id}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Button
+                onClick={() => setFormatterDialogOpen(true)}
+                variant="outline"
+                className="h-10 px-4 flex items-center gap-2 hover:bg-white/5"
+                title="Click to change formatter"
+              >
+                {getTypeIcon(state.type)}
+                <span className="font-medium">
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {t(`types.${state.type}` as any)}
+                </span>
+                <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
+              </Button>
 
               {/* CSV-specific controls */}
               {state.type === "csv" && (
@@ -413,14 +431,15 @@ function FormatterPageComponent() {
                 onChange={handleInputChange}
                 onFocus={() => setInputFocused(true)}
                 onBlur={() => setInputFocused(false)}
-                placeholder={t(`input.placeholder.${state.type}`)}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                placeholder={t(`input.placeholder.${state.type}` as any)}
                 className={cn(
                   "flex-1 w-full h-full p-4 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10 rounded-xl",
                   "outline-none resize-none font-mono text-sm text-foreground/90 placeholder:text-foreground/40",
                   "transition-all duration-200",
                   inputFocused && "ring-2 ring-blue-500/50 border-blue-500/30",
                   state.dragDrop.isDragOver &&
-                    "border-blue-500/50 bg-blue-500/5"
+                    "border-blue-500/50 bg-blue-500/5",
                 )}
                 spellCheck={false}
                 disabled={state.fileLoading.isLoading}
@@ -448,7 +467,7 @@ function FormatterPageComponent() {
                 className={cn(
                   "flex-1 p-4 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10 rounded-xl",
                   "transition-all duration-200 flex flex-col",
-                  outputFocused && "ring-2 ring-blue-500/50 border-blue-500/30"
+                  outputFocused && "ring-2 ring-blue-500/50 border-blue-500/30",
                 )}
               >
                 {state.type === "csv" &&
@@ -514,6 +533,52 @@ function FormatterPageComponent() {
           fileName={detectionData.fileName}
         />
       )}
+
+      {/* Formatter Selection Dialog */}
+      <CommandDialog
+        open={formatterDialogOpen}
+        onOpenChange={setFormatterDialogOpen}
+      >
+        <CommandInput placeholder="Search formatters..." />
+        <CommandList>
+          <CommandEmpty>No formatter found</CommandEmpty>
+          <CommandGroup heading="Available Formatters">
+            {availableFormatters.map((formatter) => (
+              <CommandItem
+                key={formatter.id}
+                value={formatter.id}
+                onSelect={() => handleTypeChange(formatter.id)}
+                className="flex items-center gap-3 py-3"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5">
+                  {formatter.id === "json" && <Code2 className="h-5 w-5" />}
+                  {formatter.id === "csv" && <Table className="h-5 w-5" />}
+                  {formatter.id === "xml" && <FileText className="h-5 w-5" />}
+                  {formatter.id === "javascript" && (
+                    <Braces className="h-5 w-5" />
+                  )}
+                  {formatter.id === "html" && <Globe className="h-5 w-5" />}
+                  {formatter.id === "yaml" && <FileText className="h-5 w-5" />}
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    {t(`types.${formatter.id}` as any)}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatter.extensions.slice(0, 3).join(", ")}
+                    {formatter.extensions.length > 3 &&
+                      ` +${formatter.extensions.length - 3} more`}
+                  </span>
+                </div>
+                {state.type === formatter.id && (
+                  <CheckCircle className="ml-auto h-4 w-4 text-green-500" />
+                )}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
     </div>
   );
 }

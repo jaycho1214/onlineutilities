@@ -25,7 +25,7 @@ function DragOverlayComponent({ isVisible, className }: DragOverlayProps) {
         "border-2 border-dashed border-blue-500/50 rounded-xl",
         "transition-all duration-200 ease-in-out",
         "animate-in fade-in-0 zoom-in-95",
-        className
+        className,
       )}
     >
       <div className="text-center space-y-4 p-8">

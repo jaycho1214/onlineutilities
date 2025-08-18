@@ -5,9 +5,9 @@ interface GradientBackgroundProps {
   enhanced?: boolean;
 }
 
-export function GradientBackground({ 
-  opacity = 0.58, 
-  enhanced = false 
+export function GradientBackground({
+  opacity = 0.58,
+  enhanced = false,
 }: GradientBackgroundProps) {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
@@ -36,7 +36,8 @@ export function GradientBackground({
         <div
           className="dark:block hidden fixed inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 18%, rgba(0,0,0,0.50) 36%, rgba(0,0,0,0.24) 60%, rgba(0,0,0,0) 80%)",
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 18%, rgba(0,0,0,0.50) 36%, rgba(0,0,0,0.24) 60%, rgba(0,0,0,0) 80%)",
           }}
         />
       )}
@@ -44,14 +45,16 @@ export function GradientBackground({
         <div
           className="dark:block hidden fixed inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.85) 18%, rgba(0,0,0,0.65) 36%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.08) 80%)",
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.85) 18%, rgba(0,0,0,0.65) 36%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.08) 80%)",
           }}
         />
       )}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(to bottom, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.10) 22%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 68%, rgba(255,255,255,0.00) 85%)",
+          background:
+            "linear-gradient(to bottom, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.10) 22%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 68%, rgba(255,255,255,0.00) 85%)",
         }}
       />
     </div>

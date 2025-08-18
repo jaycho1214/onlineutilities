@@ -1,13 +1,13 @@
 "use client";
 
-import { 
-  createContext, 
-  useContext, 
-  useState, 
-  useEffect, 
-  useCallback, 
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
   ReactNode,
-  memo
+  memo,
 } from "react";
 import { calculatorService } from "./calculator-db";
 import { type CalculationEntry } from "./calculator-db";
@@ -43,7 +43,7 @@ function CalculatorProviderComponent({ children }: CalculatorProviderProps) {
       const calculations = await calculatorService.getRecentCalculations(20);
       setHistory(calculations);
     } catch (error) {
-      console.error('Failed to load calculation history:', error);
+      console.error("Failed to load calculation history:", error);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +55,7 @@ function CalculatorProviderComponent({ children }: CalculatorProviderProps) {
   }, [loadHistory]);
 
   const addToHistory = useCallback((entry: CalculationEntry) => {
-    setHistory(prev => [entry, ...prev.slice(0, 19)]);
+    setHistory((prev) => [entry, ...prev.slice(0, 19)]);
   }, []);
 
   const clearHistory = useCallback(async () => {

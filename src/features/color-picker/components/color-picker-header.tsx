@@ -9,9 +9,7 @@ export const ColorPickerHeader: React.FC = () => {
       <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
         {t("title")}
       </h1>
-      <p className="text-muted-foreground">
-        {t("description")}
-      </p>
+      <p className="text-muted-foreground">{t("description")}</p>
     </div>
   );
 };

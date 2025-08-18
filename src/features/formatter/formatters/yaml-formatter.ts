@@ -6,12 +6,13 @@
  */
 
 import { FileText, type LucideIcon } from "lucide-react";
-import * as yaml from 'js-yaml';
+import * as yaml from "js-yaml";
 import type { ValidationResult, FormatResult } from "../types";
-import { 
-  checkEmptyInput, 
-  createEmptyInputFormatResult, 
-  createEmptyInputValidationResult 
+import type { FormatterCategory } from "../registry/formatter-registry";
+import {
+  checkEmptyInput,
+  createEmptyInputFormatResult,
+  createEmptyInputValidationResult,
 } from "../lib/common-constants";
 
 // Import the correct types from registry
@@ -22,7 +23,7 @@ interface ContentDetectionResult {
 
 interface FormatOptions {
   indent?: number;
-  lineEndings?: 'LF' | 'CRLF';
+  lineEndings?: "LF" | "CRLF";
   [key: string]: unknown;
 }
 
@@ -36,7 +37,7 @@ interface FormatterDefinition {
   validate: (content: string) => ValidationResult;
   minify?: (content: string) => FormatResult;
   icon: LucideIcon;
-  category: string;
+  category: FormatterCategory;
   supportsMinify: boolean;
   supportsTableView: boolean;
   config?: Record<string, unknown>;
@@ -55,31 +56,31 @@ interface FormatterDefinition {
  */
 function detectYamlContent(content: string): ContentDetectionResult {
   const trimmedContent = content.trim();
-  
+
   if (!trimmedContent) {
     return { confidence: 0 };
   }
 
   let confidence = 0;
   const metadata: Record<string, unknown> = {};
-  const lines = trimmedContent.split('\n');
+  const lines = trimmedContent.split("\n");
 
   // Strong indicators
-  if (trimmedContent.startsWith('---')) {
+  if (trimmedContent.startsWith("---")) {
     confidence += 0.4;
   }
-  if (trimmedContent.includes('...')) {
+  if (trimmedContent.includes("...")) {
     confidence += 0.2;
   }
 
   // Check if it's likely JSON or XML first (to avoid false positives)
-  if (trimmedContent.startsWith('{') && trimmedContent.endsWith('}')) {
+  if (trimmedContent.startsWith("{") && trimmedContent.endsWith("}")) {
     return { confidence: 0 }; // Likely JSON
   }
-  if (trimmedContent.startsWith('[') && trimmedContent.endsWith(']')) {
+  if (trimmedContent.startsWith("[") && trimmedContent.endsWith("]")) {
     return { confidence: 0 }; // Likely JSON array
   }
-  if (trimmedContent.startsWith('<') && trimmedContent.includes('>')) {
+  if (trimmedContent.startsWith("<") && trimmedContent.includes(">")) {
     return { confidence: 0 }; // Likely XML/HTML
   }
 
@@ -91,34 +92,34 @@ function detectYamlContent(content: string): ContentDetectionResult {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // Skip empty lines and comments
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
     totalMeaningfulLines++;
-    
+
     // Check indentation patterns (YAML uses spaces, not tabs typically)
     if (line.match(/^  +[^\s]/)) {
       hasIndentation = true;
     }
-    
+
     // YAML key-value patterns
     if (/^[a-zA-Z_][a-zA-Z0-9_\-\s]*\s*:/.test(trimmed)) {
       yamlPatterns++;
       hasColons = true;
     }
-    
-    // YAML list patterns  
+
+    // YAML list patterns
     else if (/^-\s+/.test(trimmed)) {
       yamlPatterns++;
       hasLists = true;
     }
-    
+
     // Nested key-value with proper indentation
     else if (/^\s{2,}[a-zA-Z_][a-zA-Z0-9_\-\s]*\s*:/.test(line)) {
       yamlPatterns++;
     }
-    
+
     // Array items with colons (objects in arrays)
     else if (/^-\s+[a-zA-Z_][a-zA-Z0-9_\-\s]*\s*:/.test(trimmed)) {
       yamlPatterns += 2; // Strong indicator
@@ -139,15 +140,15 @@ function detectYamlContent(content: string): ContentDetectionResult {
   // Try parsing to validate
   try {
     const parsed = yaml.load(trimmedContent);
-    
-    if (parsed !== null && typeof parsed === 'object') {
+
+    if (parsed !== null && typeof parsed === "object") {
       // Successfully parsed as complex structure
       confidence = Math.max(confidence, 0.7);
-      
-      metadata.type = Array.isArray(parsed) ? 'array' : 'object';
+
+      metadata.type = Array.isArray(parsed) ? "array" : "object";
       if (Array.isArray(parsed)) {
         metadata.length = parsed.length;
-      } else if (typeof parsed === 'object') {
+      } else if (typeof parsed === "object") {
         metadata.keys = Object.keys(parsed).length;
       }
     } else if (parsed !== null) {
@@ -160,16 +161,18 @@ function detectYamlContent(content: string): ContentDetectionResult {
   }
 
   // Additional checks for common YAML patterns
-  if (trimmedContent.includes('version:') || 
-      trimmedContent.includes('apiVersion:') ||
-      trimmedContent.includes('kind:') ||
-      trimmedContent.includes('metadata:')) {
+  if (
+    trimmedContent.includes("version:") ||
+    trimmedContent.includes("apiVersion:") ||
+    trimmedContent.includes("kind:") ||
+    trimmedContent.includes("metadata:")
+  ) {
     confidence += 0.3; // Common in k8s/config files
   }
 
-  return { 
+  return {
     confidence: Math.min(confidence, 0.95),
-    metadata 
+    metadata,
   };
 }
 
@@ -180,7 +183,10 @@ function detectYamlContent(content: string): ContentDetectionResult {
 /**
  * Format YAML with proper indentation
  */
-function formatYaml(content: string, options: FormatOptions = {}): FormatResult {
+function formatYaml(
+  content: string,
+  options: FormatOptions = {},
+): FormatResult {
   try {
     if (checkEmptyInput(content)) {
       return createEmptyInputFormatResult();
@@ -199,8 +205,9 @@ function formatYaml(content: string, options: FormatOptions = {}): FormatResult 
       success: true,
       output: formatted,
     };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "Invalid YAML";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Invalid YAML";
     return {
       success: false,
       error: `YAML formatting failed: ${errorMessage}`,
@@ -219,15 +226,16 @@ function validateYaml(content: string): ValidationResult {
 
     yaml.load(content);
     return { isValid: true };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "Invalid YAML";
-    
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Invalid YAML";
+
     // Try to extract line information from YAML error
     let line: number | undefined;
     if (error instanceof yaml.YAMLException && error.mark) {
       line = error.mark.line + 1; // Convert to 1-based line number
     }
-    
+
     return {
       isValid: false,
       error: {
@@ -260,8 +268,9 @@ function minifyYaml(content: string): FormatResult {
       success: true,
       output: minified,
     };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       error: `YAML minification failed: ${errorMessage}`,
@@ -290,7 +299,7 @@ export const yamlFormatter: FormatterDefinition = {
     maxInputSize: 15 * 1024 * 1024, // 15MB
     defaultOptions: {
       indent: 2,
-      lineEndings: 'LF',
+      lineEndings: "LF",
     },
     performance: {
       enableChunking: false, // YAML needs to be parsed as a whole

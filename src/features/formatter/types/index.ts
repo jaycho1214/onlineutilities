@@ -11,7 +11,15 @@
 /**
  * Supported formatter types
  */
-export type FormatterType = "json" | "csv" | "xml" | "javascript" | "html" | "yaml" | "css" | "sql";
+export type FormatterType =
+  | "json"
+  | "csv"
+  | "xml"
+  | "javascript"
+  | "html"
+  | "yaml"
+  | "css"
+  | "sql";
 
 /**
  * CSV delimiter options
@@ -112,11 +120,22 @@ export interface FormatterState {
  * Formatter operations interface
  */
 export interface FormatterOperations {
-  format: (input: string, type: FormatterType, options?: FormatOptions) => FormatResult;
+  format: (
+    input: string,
+    type: FormatterType,
+    options?: FormatOptions,
+  ) => FormatResult;
   validate: (input: string, type: FormatterType) => ValidationResult;
   minify: (input: string, type: FormatterType) => FormatResult;
-  convertCsvDelimiter: (input: string, fromDelimiter: CsvDelimiter, toDelimiter: CsvDelimiter) => FormatResult;
-  parseCsvToTable: (input: string, delimiter: CsvDelimiter) => CsvTableData | null;
+  convertCsvDelimiter: (
+    input: string,
+    fromDelimiter: CsvDelimiter,
+    toDelimiter: CsvDelimiter,
+  ) => FormatResult;
+  parseCsvToTable: (
+    input: string,
+    delimiter: CsvDelimiter,
+  ) => CsvTableData | null;
 }
 
 /**
@@ -180,8 +199,8 @@ export interface FormatterContextValue {
   // Drag and drop operations
   handleDragEnter: () => void;
   handleDragLeave: () => void;
-  handleDragOver: (e: DragEvent) => void;
-  handleDrop: (e: DragEvent) => Promise<void>;
+  handleDragOver: React.DragEventHandler<HTMLDivElement>;
+  handleDrop: React.DragEventHandler<HTMLDivElement>;
   handleFileLoad: (file: File) => Promise<void>;
 }
 
@@ -210,7 +229,7 @@ export class FormatterError extends Error {
     type: FormatterErrorType,
     message: string,
     line?: number,
-    column?: number
+    column?: number,
   ) {
     super(message);
     this.name = "FormatterError";
@@ -233,19 +252,32 @@ export const FORMATTER_CONSTANTS = {
     tab: "\t",
     pipe: "|",
   } as const,
-  SUPPORTED_FILE_EXTENSIONS: [".json", ".csv", ".xml", ".js", ".jsx", ".html", ".htm", ".yaml", ".yml", ".css", ".sql", ".txt"] as const,
+  SUPPORTED_FILE_EXTENSIONS: [
+    ".json",
+    ".csv",
+    ".xml",
+    ".js",
+    ".jsx",
+    ".html",
+    ".htm",
+    ".yaml",
+    ".yml",
+    ".css",
+    ".sql",
+    ".txt",
+  ] as const,
   FILE_TYPE_MAPPING: {
-    "json": "json",
-    "csv": "csv", 
-    "xml": "xml",
-    "js": "javascript",
-    "jsx": "javascript",
-    "html": "html",
-    "htm": "html",
-    "yaml": "yaml",
-    "yml": "yaml",
-    "css": "css",
-    "sql": "sql",
-    "txt": null // Will try to detect from content
+    json: "json",
+    csv: "csv",
+    xml: "xml",
+    js: "javascript",
+    jsx: "javascript",
+    html: "html",
+    htm: "html",
+    yaml: "yaml",
+    yml: "yaml",
+    css: "css",
+    sql: "sql",
+    txt: null, // Will try to detect from content
   } as const,
 } as const;

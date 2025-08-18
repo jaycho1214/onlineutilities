@@ -10,14 +10,17 @@ import dynamic from "next/dynamic";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 import { useTranslations } from "next-intl";
 
-const MarkdownEditor = dynamic(() => import("@/features/notepad/components/markdown-editor"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full">
-      <Loader2 className="animate-spin" />
-    </div>
-  ),
-});
+const MarkdownEditor = dynamic(
+  () => import("@/features/notepad/components/markdown-editor"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="animate-spin" />
+      </div>
+    ),
+  },
+);
 
 function NotepadComponent() {
   const t = useTranslations("Notepad");
@@ -42,17 +45,18 @@ function NotepadComponent() {
 
   const handleDeleteCurrentNote = useCallback(async () => {
     if (!currentNoteId) return;
-    const confirmDelete = window.confirm(
-      t("confirmations.deleteNote")
-    );
+    const confirmDelete = window.confirm(t("confirmations.deleteNote"));
     if (confirmDelete) {
       await deleteNote(currentNoteId);
     }
   }, [currentNoteId, deleteNote, t]);
 
   const titlePlaceholder = useMemo(
-    () => (currentNoteId ? t("placeholders.titleWithNote") : t("placeholders.titleWithoutNote")),
-    [currentNoteId, t]
+    () =>
+      currentNoteId
+        ? t("placeholders.titleWithNote")
+        : t("placeholders.titleWithoutNote"),
+    [currentNoteId, t],
   );
 
   const contentPlaceholder = useMemo(
@@ -60,7 +64,7 @@ function NotepadComponent() {
       currentNoteId
         ? t("placeholders.contentWithNote")
         : t("placeholders.contentWithoutNote"),
-    [currentNoteId, t]
+    [currentNoteId, t],
   );
 
   return (

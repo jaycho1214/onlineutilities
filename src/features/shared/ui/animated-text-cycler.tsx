@@ -30,21 +30,22 @@ export const AnimatedTextCycler: React.FC<AnimatedTextCyclerProps> = ({
 
     // Random order logic
     let availableIndices = Array.from(
-      { length: texts.length }, 
-      (_, i) => i
-    ).filter(i => !usedIndices.has(i) && i !== currentIndex);
+      { length: texts.length },
+      (_, i) => i,
+    ).filter((i) => !usedIndices.has(i) && i !== currentIndex);
 
     // If all indices have been used (except current), reset
     if (availableIndices.length === 0) {
       setUsedIndices(new Set([currentIndex]));
       availableIndices = Array.from(
-        { length: texts.length }, 
-        (_, i) => i
-      ).filter(i => i !== currentIndex);
+        { length: texts.length },
+        (_, i) => i,
+      ).filter((i) => i !== currentIndex);
     }
 
-    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-    setUsedIndices(prev => new Set([...prev, randomIndex]));
+    const randomIndex =
+      availableIndices[Math.floor(Math.random() * availableIndices.length)];
+    setUsedIndices((prev) => new Set([...prev, randomIndex]));
     return randomIndex;
   }, [currentIndex, texts.length, randomOrder, usedIndices]);
 
@@ -53,7 +54,7 @@ export const AnimatedTextCycler: React.FC<AnimatedTextCyclerProps> = ({
 
     // Fade out
     setIsVisible(false);
-    
+
     // Change text after fade out completes
     setTimeout(() => {
       setCurrentIndex(getNextIndex());
@@ -89,7 +90,7 @@ export const AnimatedTextCycler: React.FC<AnimatedTextCyclerProps> = ({
       className={cn(
         "inline-block transition-opacity ease-in-out",
         isVisible ? "opacity-100" : "opacity-0",
-        className
+        className,
       )}
       style={{
         transitionDuration: `${animationDuration}ms`,

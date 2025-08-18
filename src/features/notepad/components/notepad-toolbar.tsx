@@ -2,17 +2,17 @@
 
 import { memo } from "react";
 import { Button } from "@/features/shared/ui/button";
-import { 
-  Bold, 
-  Italic, 
-  List, 
-  ListOrdered, 
-  Quote, 
-  Code, 
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Quote,
+  Code,
   Link2,
   Heading1,
   Heading2,
-  Table
+  Table,
 } from "lucide-react";
 import {
   Tooltip,
@@ -32,7 +32,12 @@ function NotepadToolbarComponent({ onFormat }: NotepadToolbarProps) {
     { icon: Heading1, label: "Heading 1", format: "h1", shortcut: "⌘1" },
     { icon: Heading2, label: "Heading 2", format: "h2", shortcut: "⌘2" },
     { icon: List, label: "Bullet List", format: "ul", shortcut: "⌘⇧8" },
-    { icon: ListOrdered, label: "Numbered List", format: "ol", shortcut: "⌘⇧7" },
+    {
+      icon: ListOrdered,
+      label: "Numbered List",
+      format: "ol",
+      shortcut: "⌘⇧7",
+    },
     { icon: Quote, label: "Quote", format: "quote", shortcut: "⌘⇧9" },
     { icon: Code, label: "Code", format: "code", shortcut: "⌘E" },
     { icon: Link2, label: "Link", format: "link", shortcut: "⌘K" },

@@ -31,10 +31,7 @@ const validators = {
    */
   validateInputSize(input: string): void {
     if (input.length > FORMATTER_CONSTANTS.MAX_INPUT_SIZE) {
-      throw new FormatterError(
-        FormatterErrorType.TOO_LARGE,
-        "errors.tooLarge"
-      );
+      throw new FormatterError(FormatterErrorType.TOO_LARGE, "errors.tooLarge");
     }
   },
 
@@ -45,7 +42,7 @@ const validators = {
     if (!input.trim()) {
       throw new FormatterError(
         FormatterErrorType.EMPTY_INPUT,
-        "errors.emptyInput"
+        "errors.emptyInput",
       );
     }
   },
@@ -56,7 +53,7 @@ const validators = {
   validateInput(input: string): void {
     this.validateInputNotEmpty(input);
     this.validateInputSize(input);
-  }
+  },
 };
 
 /**
@@ -112,7 +109,7 @@ function getFileExtension(filename: string): string {
 function detectFormatFromExtension(filename: string): FormatterType | null {
   const extension = getFileExtension(filename);
   const extensionWithoutDot = extension.slice(
-    1
+    1,
   ) as keyof typeof FORMATTER_CONSTANTS.FILE_TYPE_MAPPING;
 
   if (extensionWithoutDot in FORMATTER_CONSTANTS.FILE_TYPE_MAPPING) {
@@ -175,7 +172,7 @@ function detectFormatFromContent(content: string): FormatterType | null {
 
     const firstCount = columnCounts[0];
     const hasConsistentColumns = columnCounts.every(
-      (count) => count === firstCount
+      (count) => count === firstCount,
     );
 
     if (hasConsistentColumns && firstCount > 1) {
@@ -210,7 +207,9 @@ function validateFile(file: File): { valid: boolean; error?: string } {
   ) {
     const extension = getFileExtension(file.name);
     if (
-      !FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS.includes(extension)
+      !(
+        FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS as readonly string[]
+      ).includes(extension)
     ) {
       return {
         valid: false,
@@ -309,9 +308,9 @@ export function hasValidFiles(dataTransfer: DataTransfer): boolean {
   return files.some((file) => {
     const extension = getFileExtension(file.name);
     return (
-      FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS.includes(
-        extension
-      ) ||
+      (
+        FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS as readonly string[]
+      ).includes(extension) ||
       file.type.includes("text") ||
       file.type.includes("json") ||
       file.type.includes("xml") ||
@@ -330,9 +329,9 @@ export function getFirstValidFile(files: FileList): File | null {
     fileArray.find((file) => {
       const extension = getFileExtension(file.name);
       return (
-        FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS.includes(
-          extension
-        ) ||
+        (
+          FORMATTER_CONSTANTS.SUPPORTED_FILE_EXTENSIONS as readonly string[]
+        ).includes(extension) ||
         file.type.includes("text") ||
         file.type.includes("json") ||
         file.type.includes("xml") ||
@@ -351,7 +350,7 @@ export function getFirstValidFile(files: FileList): File | null {
  */
 export function formatJson(
   input: string,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): FormatResult {
   try {
     validators.validateInput(input);
@@ -477,7 +476,7 @@ function stringifyCsv(rows: string[][], delimiter: CsvDelimiter): string {
  */
 export function formatCsv(
   input: string,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): FormatResult {
   try {
     validators.validateInput(input);
@@ -541,7 +540,7 @@ export function validateCsv(input: string): ValidationResult {
     const columnCounts = rows.map((row) => row.length);
     const firstColumnCount = columnCounts[0];
     const hasInconsistentColumns = columnCounts.some(
-      (count) => count !== firstColumnCount
+      (count) => count !== firstColumnCount,
     );
 
     if (hasInconsistentColumns) {
@@ -580,7 +579,7 @@ export function validateCsv(input: string): ValidationResult {
 export function convertCsvDelimiter(
   input: string,
   fromDelimiter: CsvDelimiter,
-  toDelimiter: CsvDelimiter
+  toDelimiter: CsvDelimiter,
 ): FormatResult {
   try {
     validators.validateInput(input);
@@ -607,7 +606,7 @@ export function convertCsvDelimiter(
  */
 export function parseCsvToTable(
   input: string,
-  delimiter: CsvDelimiter
+  delimiter: CsvDelimiter,
 ): CsvTableData | null {
   try {
     const rows = parseCsv(input, delimiter);
@@ -637,7 +636,7 @@ export function parseCsvToTable(
  */
 export function formatXml(
   input: string,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): FormatResult {
   try {
     validators.validateInput(input);
@@ -660,7 +659,7 @@ export function formatXml(
     // Format XML with indentation
     const formatted = formatXmlNode(
       xmlDoc,
-      options.indent ?? FORMATTER_CONSTANTS.DEFAULT_INDENT
+      options.indent ?? FORMATTER_CONSTANTS.DEFAULT_INDENT,
     );
 
     return {
@@ -785,7 +784,7 @@ function formatXmlNode(node: Node, indent: number, level: number = 0): string {
   if (node.nodeType === Node.ELEMENT_NODE) {
     const element = node as Element;
     const hasChildElements = Array.from(element.childNodes).some(
-      (child) => child.nodeType === Node.ELEMENT_NODE
+      (child) => child.nodeType === Node.ELEMENT_NODE,
     );
 
     if (hasChildElements) {
@@ -793,7 +792,7 @@ function formatXmlNode(node: Node, indent: number, level: number = 0): string {
         .filter(
           (child) =>
             child.nodeType === Node.ELEMENT_NODE ||
-            (child.nodeType === Node.TEXT_NODE && child.textContent?.trim())
+            (child.nodeType === Node.TEXT_NODE && child.textContent?.trim()),
         )
         .map((child) => {
           if (child.nodeType === Node.ELEMENT_NODE) {
@@ -806,12 +805,12 @@ function formatXmlNode(node: Node, indent: number, level: number = 0): string {
         .join("");
 
       return `${currentIndent}<${element.tagName}${getAttributesString(
-        element
+        element,
       )}>${children}\n${currentIndent}</${element.tagName}>`;
     } else {
       const textContent = element.textContent?.trim() || "";
       return `${currentIndent}<${element.tagName}${getAttributesString(
-        element
+        element,
       )}>${textContent}</${element.tagName}>`;
     }
   }
@@ -848,7 +847,7 @@ function getAttributesString(element: Element): string {
 export function format(
   input: string,
   type: FormatterType,
-  options: FormatOptions = {}
+  options: FormatOptions = {},
 ): FormatResult {
   switch (type) {
     case "json":

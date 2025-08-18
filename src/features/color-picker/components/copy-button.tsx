@@ -1,6 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { Button } from "@/features/shared/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/features/shared/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/features/shared/ui/tooltip";
 import { Copy } from "lucide-react";
 
 interface CopyButtonProps {
@@ -8,7 +12,13 @@ interface CopyButtonProps {
   format?: string;
   className?: string;
   size?: "sm" | "default" | "lg" | "icon";
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   onClick?: (e: React.MouseEvent) => void;
 }
 
@@ -22,44 +32,47 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  
-  const handleCopy = useCallback(async (e: React.MouseEvent) => {
-    onClick?.(e);
-    
-    try {
-      await navigator.clipboard.writeText(value);
-      setIsCopied(true);
-      setIsOpen(true);
-      
-      setTimeout(() => {
-        setIsCopied(false);
-        setIsOpen(false);
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-      // Fallback for older browsers
+
+  const handleCopy = useCallback(
+    async (e: React.MouseEvent) => {
+      onClick?.(e);
+
       try {
-        const textArea = document.createElement('textarea');
-        textArea.value = value;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        
+        await navigator.clipboard.writeText(value);
         setIsCopied(true);
         setIsOpen(true);
+
         setTimeout(() => {
           setIsCopied(false);
           setIsOpen(false);
         }, 2000);
-      } catch (fallbackErr) {
-        console.error("Fallback copy failed:", fallbackErr);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        // Fallback for older browsers
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = value;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+
+          setIsCopied(true);
+          setIsOpen(true);
+          setTimeout(() => {
+            setIsCopied(false);
+            setIsOpen(false);
+          }, 2000);
+        } catch (fallbackErr) {
+          console.error("Fallback copy failed:", fallbackErr);
+        }
       }
-    }
-  }, [value, onClick]);
-  
+    },
+    [value, onClick],
+  );
+
   const tooltipText = isCopied ? "Copied!" : format ? `Copy ${format}` : "Copy";
-  
+
   return (
     <Tooltip open={isOpen} onOpenChange={setIsOpen}>
       <TooltipTrigger asChild>
@@ -73,9 +86,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           <Copy className="w-3 h-3" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
-        {tooltipText}
-      </TooltipContent>
+      <TooltipContent>{tooltipText}</TooltipContent>
     </Tooltip>
   );
 };

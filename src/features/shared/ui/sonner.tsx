@@ -22,7 +22,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "border border-black/20 dark:border-white/[0.06]",
           "shadow-[0_20px_70px_-15px_rgba(0,0,0,0.15),0_0_0_1px_inset_rgba(255,255,255,0.1)]",
           "dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.5),0_0_0_1px_inset_rgba(255,255,255,0.05)]",
-          "text-foreground"
+          "text-foreground",
         ),
       }}
       {...props}

@@ -44,9 +44,7 @@ export function Stopwatch() {
             <Plus className="h-5 w-5" />
           </Button>
         </div>
-        <p className="text-muted-foreground max-w-2xl">
-          {t("description")}
-        </p>
+        <p className="text-muted-foreground max-w-2xl">{t("description")}</p>
       </div>
 
       {/* Stopwatch Grid / Loading */}
@@ -80,9 +78,7 @@ export function Stopwatch() {
               <h3 className="text-xl font-medium text-foreground/80">
                 {t("states.noStopwatches")}
               </h3>
-              <p className="text-muted-foreground">
-                {t("states.createFirst")}
-              </p>
+              <p className="text-muted-foreground">{t("states.createFirst")}</p>
             </div>
           </GlassSurface>
         </div>

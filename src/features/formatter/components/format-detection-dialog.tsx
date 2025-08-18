@@ -62,12 +62,16 @@ function FormatDetectionDialogComponent({
   fileName,
 }: FormatDetectionDialogProps) {
   const t = useTranslations("Formatter");
-  
+
   const availableFormatters = getAvailableFormatters();
-  
-  const getFormatterName = useCallback((format: FormatterType) => {
-    return t(`types.${format}`);
-  }, [t]);
+
+  const getFormatterName = useCallback(
+    (format: FormatterType) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return t(`types.${format}` as any);
+    },
+    [t],
+  );
 
   const getConfidenceColor = useCallback((conf: number) => {
     if (conf >= 80) return "text-green-500";
@@ -90,10 +94,13 @@ function FormatDetectionDialogComponent({
     onClose();
   }, [onClose]);
 
-  const handleManualSelect = useCallback((format: string) => {
-    onConfirm(format as FormatterType);
-    onClose();
-  }, [onConfirm, onClose]);
+  const handleManualSelect = useCallback(
+    (format: string) => {
+      onConfirm(format as FormatterType);
+      onClose();
+    },
+    [onConfirm, onClose],
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -105,21 +112,19 @@ function FormatDetectionDialogComponent({
           </DialogTitle>
           <DialogDescription>
             {fileName && (
-              <span className="block mb-2 font-medium">
-                {fileName}
-              </span>
+              <span className="block mb-2 font-medium">{fileName}</span>
             )}
             {confidence >= 60 ? (
               <>
-                {t("detection.detected", { type: getFormatterName(detectedFormat) })}{" "}
+                {t("detection.detected", {
+                  type: getFormatterName(detectedFormat),
+                })}{" "}
                 <span className="text-sm text-muted-foreground">
                   ({t("detection.confidence", { confidence })})
                 </span>
               </>
             ) : (
-              <>
-                {t("notifications.lowConfidenceDetection", { confidence })}
-              </>
+              <>{t("notifications.lowConfidenceDetection", { confidence })}</>
             )}
           </DialogDescription>
         </DialogHeader>
@@ -160,7 +165,9 @@ function FormatDetectionDialogComponent({
                       {getFormatterName(alt.format)}
                     </span>
                   </div>
-                  <span className={`text-xs ${getConfidenceColor(alt.confidence)}`}>
+                  <span
+                    className={`text-xs ${getConfidenceColor(alt.confidence)}`}
+                  >
                     {alt.confidence}%
                   </span>
                 </div>
@@ -194,14 +201,18 @@ function FormatDetectionDialogComponent({
               className="flex-1"
               variant="secondary"
             >
-              {t("detection.useDetected", { type: getFormatterName(detectedFormat) })}
+              {t("detection.useDetected", {
+                type: getFormatterName(detectedFormat),
+              })}
             </Button>
             <Button
               onClick={handleKeepCurrent}
               variant="outline"
               className="flex-1"
             >
-              {t("detection.keepCurrent", { current: getFormatterName(currentFormat) })}
+              {t("detection.keepCurrent", {
+                current: getFormatterName(currentFormat),
+              })}
             </Button>
           </div>
         </div>

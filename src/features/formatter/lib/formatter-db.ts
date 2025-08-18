@@ -27,15 +27,11 @@ class FormatterDatabase extends Dexie {
     });
 
     this.entries.mapToClass(FormatterEntryModel);
-    
+
     // Handle database errors
-    this.on("blocked", () => {
-      
-    });
-    
-    this.on("versionchange", () => {
-      
-    });
+    this.on("blocked", () => {});
+
+    this.on("versionchange", () => {});
   }
 }
 
@@ -83,7 +79,6 @@ export class FormatterService {
     try {
       return await formatterDb.entries.orderBy("timestamp").reverse().toArray();
     } catch {
-      
       return [];
     }
   }
@@ -101,7 +96,6 @@ export class FormatterService {
         .limit(limit)
         .toArray();
     } catch {
-      
       return [];
     }
   }
@@ -114,18 +108,16 @@ export class FormatterService {
    */
   async getEntriesByType(
     type: FormatterEntry["type"],
-    limit: number = 50
+    limit: number = 50,
   ): Promise<FormatterEntry[]> {
     try {
       return await formatterDb.entries
-        .where("type")
-        .equals(type)
         .orderBy("timestamp")
         .reverse()
+        .filter((entry) => entry.type === type)
         .limit(limit)
         .toArray();
     } catch {
-      
       return [];
     }
   }
@@ -138,18 +130,16 @@ export class FormatterService {
    */
   async getEntriesByOperation(
     operation: FormatterEntry["operation"],
-    limit: number = 50
+    limit: number = 50,
   ): Promise<FormatterEntry[]> {
     try {
       return await formatterDb.entries
-        .where("operation")
-        .equals(operation)
         .orderBy("timestamp")
         .reverse()
+        .filter((entry) => entry.operation === operation)
         .limit(limit)
         .toArray();
     } catch {
-      
       return [];
     }
   }
@@ -164,7 +154,7 @@ export class FormatterService {
    * @returns Promise<FormatterEntry> - The created entry
    */
   async addEntry(
-    entry: Omit<FormatterEntry, "id" | "timestamp">
+    entry: Omit<FormatterEntry, "id" | "timestamp">,
   ): Promise<FormatterEntry> {
     try {
       const now = new Date().toISOString();
@@ -177,10 +167,9 @@ export class FormatterService {
       };
 
       await formatterDb.entries.add(newEntry);
-      
+
       return newEntry;
-    } catch {
-      
+    } catch (error) {
       throw error;
     }
   }
@@ -193,13 +182,12 @@ export class FormatterService {
    */
   async updateEntry(
     id: string,
-    updates: Partial<Omit<FormatterEntry, "id" | "timestamp">>
+    updates: Partial<Omit<FormatterEntry, "id" | "timestamp">>,
   ): Promise<boolean> {
     try {
       const count = await formatterDb.entries.update(id, updates);
       return count > 0;
     } catch {
-      
       return false;
     }
   }
@@ -212,10 +200,9 @@ export class FormatterService {
     try {
       const count = await formatterDb.entries.count();
       await formatterDb.entries.clear();
-      
+
       return count;
     } catch {
-      
       return 0;
     }
   }
@@ -235,7 +222,6 @@ export class FormatterService {
 
       return true;
     } catch {
-      
       return false;
     }
   }
@@ -249,7 +235,6 @@ export class FormatterService {
     try {
       return await formatterDb.entries.where("type").equals(type).delete();
     } catch {
-      
       return 0;
     }
   }
@@ -271,13 +256,12 @@ export class FormatterService {
       }
 
       const entriesToDelete = allEntries.slice(limit);
-      const idsToDelete = entriesToDelete.map(entry => entry.id);
+      const idsToDelete = entriesToDelete.map((entry) => entry.id);
 
       await formatterDb.entries.bulkDelete(idsToDelete);
 
       return entriesToDelete.length;
     } catch {
-      
       return 0;
     }
   }
@@ -294,7 +278,6 @@ export class FormatterService {
     try {
       return await formatterDb.entries.count();
     } catch {
-      
       return 0;
     }
   }
@@ -308,7 +291,6 @@ export class FormatterService {
     try {
       return await formatterDb.entries.where("type").equals(type).count();
     } catch {
-      
       return 0;
     }
   }
@@ -323,11 +305,29 @@ export class FormatterService {
     byOperation: Record<FormatterEntry["operation"], number>;
   }> {
     try {
-      const [total, jsonCount, csvCount, xmlCount, formatCount, validateCount, minifyCount] = await Promise.all([
+      const [
+        total,
+        jsonCount,
+        csvCount,
+        xmlCount,
+        javascriptCount,
+        htmlCount,
+        yamlCount,
+        cssCount,
+        sqlCount,
+        formatCount,
+        validateCount,
+        minifyCount,
+      ] = await Promise.all([
         this.getEntryCount(),
         this.getCountByType("json"),
         this.getCountByType("csv"),
         this.getCountByType("xml"),
+        this.getCountByType("javascript"),
+        this.getCountByType("html"),
+        this.getCountByType("yaml"),
+        this.getCountByType("css"),
+        this.getCountByType("sql"),
         formatterDb.entries.where("operation").equals("format").count(),
         formatterDb.entries.where("operation").equals("validate").count(),
         formatterDb.entries.where("operation").equals("minify").count(),
@@ -339,6 +339,11 @@ export class FormatterService {
           json: jsonCount,
           csv: csvCount,
           xml: xmlCount,
+          javascript: javascriptCount,
+          html: htmlCount,
+          yaml: yamlCount,
+          css: cssCount,
+          sql: sqlCount,
         },
         byOperation: {
           format: formatCount,
@@ -347,10 +352,18 @@ export class FormatterService {
         },
       };
     } catch {
-      
       return {
         total: 0,
-        byType: { json: 0, csv: 0, xml: 0 },
+        byType: {
+          json: 0,
+          csv: 0,
+          xml: 0,
+          javascript: 0,
+          html: 0,
+          yaml: 0,
+          css: 0,
+          sql: 0,
+        },
         byOperation: { format: 0, validate: 0, minify: 0 },
       };
     }

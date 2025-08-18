@@ -48,11 +48,15 @@ export const DragDropOverlay: React.FC<DragDropOverlayProps> = ({
                   isDragOver ? "text-primary" : "text-white"
                 }`}
               >
-                {isDragOver ? "Drop your image!" : "Drop image to extract colors"}
+                {isDragOver
+                  ? "Drop your image!"
+                  : "Drop image to extract colors"}
               </h3>
-              <p className={`text-sm transition-colors duration-300 ${
-                isDragOver ? "text-primary/80" : "text-white/80"
-              }`}>
+              <p
+                className={`text-sm transition-colors duration-300 ${
+                  isDragOver ? "text-primary/80" : "text-white/80"
+                }`}
+              >
                 {isDragOver
                   ? "Release to upload and start picking colors"
                   : "Drag and drop an image file anywhere on the page"}
@@ -61,10 +65,18 @@ export const DragDropOverlay: React.FC<DragDropOverlayProps> = ({
 
             <div className="flex items-center justify-center space-x-2 text-xs text-white/70">
               <span>Supports:</span>
-              <span className="px-2 py-1 bg-white/20 rounded text-white">JPG</span>
-              <span className="px-2 py-1 bg-white/20 rounded text-white">PNG</span>
-              <span className="px-2 py-1 bg-white/20 rounded text-white">GIF</span>
-              <span className="px-2 py-1 bg-white/20 rounded text-white">WebP</span>
+              <span className="px-2 py-1 bg-white/20 rounded text-white">
+                JPG
+              </span>
+              <span className="px-2 py-1 bg-white/20 rounded text-white">
+                PNG
+              </span>
+              <span className="px-2 py-1 bg-white/20 rounded text-white">
+                GIF
+              </span>
+              <span className="px-2 py-1 bg-white/20 rounded text-white">
+                WebP
+              </span>
             </div>
           </div>
         </GlassSurface>

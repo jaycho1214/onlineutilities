@@ -83,7 +83,20 @@ export const utilities: Utility[] = [
     icon: Code2,
     href: "/formatter",
     category: "Text",
-    keywords: ["format", "json", "csv", "xml", "validate", "prettify", "minify", "detect", "auto-format", "javascript", "html", "yaml"],
+    keywords: [
+      "format",
+      "json",
+      "csv",
+      "xml",
+      "validate",
+      "prettify",
+      "minify",
+      "detect",
+      "auto-format",
+      "javascript",
+      "html",
+      "yaml",
+    ],
   },
 ];
 
@@ -101,7 +114,7 @@ export const searchUtilities = (query: string): Utility[] => {
     (utility) =>
       utility.name.toLowerCase().includes(lowercaseQuery) ||
       utility.description.toLowerCase().includes(lowercaseQuery) ||
-      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery))
+      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery)),
   );
 };
 

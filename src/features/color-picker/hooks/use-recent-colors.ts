@@ -17,23 +17,26 @@ export const useRecentColors = () => {
     }
   }, []);
 
-  const addRecentColor = useCallback(async (color: string) => {
-    // Clear existing timeout
-    if (debouncedTimeoutRef.current) {
-      clearTimeout(debouncedTimeoutRef.current);
-    }
-
-    // Debounce the addition of colors to avoid excessive DB calls
-    debouncedTimeoutRef.current = setTimeout(async () => {
-      try {
-        await ColorDB.addRecentColor(color);
-        // Refresh the list after adding
-        await loadRecentColors();
-      } catch (error) {
-        console.error("Failed to add recent color:", error);
+  const addRecentColor = useCallback(
+    async (color: string) => {
+      // Clear existing timeout
+      if (debouncedTimeoutRef.current) {
+        clearTimeout(debouncedTimeoutRef.current);
       }
-    }, 500); // 500ms debounce
-  }, [loadRecentColors]);
+
+      // Debounce the addition of colors to avoid excessive DB calls
+      debouncedTimeoutRef.current = setTimeout(async () => {
+        try {
+          await ColorDB.addRecentColor(color);
+          // Refresh the list after adding
+          await loadRecentColors();
+        } catch (error) {
+          console.error("Failed to add recent color:", error);
+        }
+      }, 500); // 500ms debounce
+    },
+    [loadRecentColors],
+  );
 
   const clearRecentColors = useCallback(async () => {
     try {

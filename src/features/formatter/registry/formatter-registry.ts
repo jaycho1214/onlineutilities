@@ -6,10 +6,7 @@
  */
 
 import type { LucideIcon } from "lucide-react";
-import type {
-  ValidationResult,
-  FormatResult,
-} from "../types";
+import type { ValidationResult, FormatResult } from "../types";
 
 // ============================================================================
 // CORE INTERFACES
@@ -72,7 +69,7 @@ export interface FormatOptions {
   /** Indentation size */
   indent?: number;
   /** Line ending style */
-  lineEndings?: 'LF' | 'CRLF';
+  lineEndings?: "LF" | "CRLF";
   /** Format-specific options */
   [key: string]: unknown;
 }
@@ -80,12 +77,12 @@ export interface FormatOptions {
 /**
  * Formatter Categories
  */
-export type FormatterCategory = 
-  | 'data' 
-  | 'markup' 
-  | 'programming' 
-  | 'config' 
-  | 'stylesheet';
+export type FormatterCategory =
+  | "data"
+  | "markup"
+  | "programming"
+  | "config"
+  | "stylesheet";
 
 /**
  * Formatter Configuration
@@ -141,14 +138,14 @@ export class FormatterRegistry {
     this.formatters.set(formatter.id, formatter);
 
     // Update extension mapping
-    formatter.extensions.forEach(ext => {
+    formatter.extensions.forEach((ext) => {
       const existing = this.extensionMap.get(ext) || [];
       existing.push(formatter);
       this.extensionMap.set(ext, existing);
     });
 
     // Update MIME type mapping
-    formatter.mimeTypes.forEach(mimeType => {
+    formatter.mimeTypes.forEach((mimeType) => {
       const existing = this.mimeTypeMap.get(mimeType) || [];
       existing.push(formatter);
       this.mimeTypeMap.set(mimeType, existing);
@@ -174,7 +171,7 @@ export class FormatterRegistry {
    */
   getFormattersByCategory(category: FormatterCategory): FormatterDefinition[] {
     return Array.from(this.formatters.values()).filter(
-      formatter => formatter.category === category
+      (formatter) => formatter.category === category,
     );
   }
 
@@ -214,9 +211,7 @@ export class FormatterRegistry {
             detectedOptions: detection.detectedOptions,
           });
         }
-      } catch {
-        
-      }
+      } catch {}
     }
 
     // Sort by confidence (highest first)
@@ -239,23 +234,23 @@ export class FormatterRegistry {
   detectFormat(
     content: string,
     filename?: string,
-    mimeType?: string
+    mimeType?: string,
   ): FormatDetectionResult {
     const candidates: Array<{
       formatter: FormatterDefinition;
       confidence: number;
-      source: 'extension' | 'mimeType' | 'content';
+      source: "extension" | "mimeType" | "content";
       detectedOptions?: Record<string, unknown>;
     }> = [];
 
     // 1. Try extension-based detection
     if (filename) {
       const extensionMatches = this.detectFromExtension(filename);
-      extensionMatches.forEach(formatter => {
+      extensionMatches.forEach((formatter) => {
         candidates.push({
           formatter,
           confidence: 0.7, // Medium confidence for extension matches
-          source: 'extension',
+          source: "extension",
         });
       });
     }
@@ -263,11 +258,11 @@ export class FormatterRegistry {
     // 2. Try MIME type detection
     if (mimeType) {
       const mimeMatches = this.detectFromMimeType(mimeType);
-      mimeMatches.forEach(formatter => {
+      mimeMatches.forEach((formatter) => {
         candidates.push({
           formatter,
           confidence: 0.8, // Higher confidence for MIME type matches
-          source: 'mimeType',
+          source: "mimeType",
         });
       });
     }
@@ -278,19 +273,22 @@ export class FormatterRegistry {
       candidates.push({
         formatter: contentDetection.formatter,
         confidence: contentDetection.confidence,
-        source: 'content',
+        source: "content",
         detectedOptions: contentDetection.detectedOptions,
       });
     }
 
     // Merge and prioritize results
-    const formatterConfidence = new Map<string, {
-      formatter: FormatterDefinition;
-      maxConfidence: number;
-      detectedOptions?: Record<string, unknown>;
-    }>();
+    const formatterConfidence = new Map<
+      string,
+      {
+        formatter: FormatterDefinition;
+        maxConfidence: number;
+        detectedOptions?: Record<string, unknown>;
+      }
+    >();
 
-    candidates.forEach(candidate => {
+    candidates.forEach((candidate) => {
       const existing = formatterConfidence.get(candidate.formatter.id);
       if (!existing || candidate.confidence > existing.maxConfidence) {
         formatterConfidence.set(candidate.formatter.id, {
@@ -301,11 +299,12 @@ export class FormatterRegistry {
       }
     });
 
-    const sortedResults = Array.from(formatterConfidence.values())
-      .sort((a, b) => b.maxConfidence - a.maxConfidence);
+    const sortedResults = Array.from(formatterConfidence.values()).sort(
+      (a, b) => b.maxConfidence - a.maxConfidence,
+    );
 
     const bestMatch = sortedResults[0];
-    const alternatives = sortedResults.slice(1, 4).map(result => ({
+    const alternatives = sortedResults.slice(1, 4).map((result) => ({
       formatter: result.formatter,
       confidence: result.maxConfidence,
     }));
@@ -347,9 +346,9 @@ export class FormatterRegistry {
    * Helper method to extract file extension
    */
   private getFileExtension(filename: string): string {
-    const lastDotIndex = filename.lastIndexOf('.');
+    const lastDotIndex = filename.lastIndexOf(".");
     if (lastDotIndex === -1 || lastDotIndex === filename.length - 1) {
-      return '';
+      return "";
     }
     return filename.substring(lastDotIndex).toLowerCase();
   }

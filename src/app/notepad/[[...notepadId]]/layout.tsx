@@ -9,10 +9,13 @@ interface NotepadLayoutProps {
   }>;
 }
 
-export default async function NotepadLayout({ children, params }: NotepadLayoutProps) {
+export default async function NotepadLayout({
+  children,
+  params,
+}: NotepadLayoutProps) {
   const { notepadId } = await params;
   const id = notepadId?.[0];
-  
+
   return (
     <NotepadProvider initialNoteId={id}>
       <div className="flex flex-row h-[calc(100vh-3rem)] pt-2">

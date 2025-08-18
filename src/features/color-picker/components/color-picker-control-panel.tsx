@@ -22,7 +22,9 @@ interface ColorPickerControlPanelProps {
   onSliderChange: (component: string, value: number[]) => void;
 }
 
-export const ColorPickerControlPanel: React.FC<ColorPickerControlPanelProps> = ({
+export const ColorPickerControlPanel: React.FC<
+  ColorPickerControlPanelProps
+> = ({
   selectedColor,
   colorFormat,
   colorFormats,
@@ -66,17 +68,13 @@ export const ColorPickerControlPanel: React.FC<ColorPickerControlPanelProps> = (
         {getSliderConfig(colorFormat, colorFormats).map((slider) => (
           <div key={slider.key} className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">
-                {slider.label}
-              </label>
+              <label className="text-sm font-medium">{slider.label}</label>
               <div className="flex items-center gap-2">
                 <Input
                   type="number"
                   value={slider.value}
                   onChange={(e) =>
-                    onSliderChange(slider.key, [
-                      parseInt(e.target.value) || 0,
-                    ])
+                    onSliderChange(slider.key, [parseInt(e.target.value) || 0])
                   }
                   min={0}
                   max={slider.max}
@@ -86,9 +84,7 @@ export const ColorPickerControlPanel: React.FC<ColorPickerControlPanelProps> = (
             </div>
             <Slider
               value={[slider.value]}
-              onValueChange={(value) =>
-                onSliderChange(slider.key, value)
-              }
+              onValueChange={(value) => onSliderChange(slider.key, value)}
               max={slider.max}
               min={0}
               step={1}

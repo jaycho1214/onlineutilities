@@ -54,12 +54,12 @@ export function NotepadProvider({
 }: NotepadProviderProps) {
   const t = useTranslations("Notepad");
   const [currentNoteId, setCurrentNoteId] = useState<string | null>(
-    initialNoteId || null
+    initialNoteId || null,
   );
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
-    "idle"
+    "idle",
   );
   const [hasInitialized, setHasInitialized] = useState(false);
   const [, startTransition] = useTransition();
@@ -253,7 +253,7 @@ export function NotepadProvider({
         }
       }
     },
-    [currentNoteId, content, hasInitialized, startTransition]
+    [currentNoteId, content, hasInitialized, startTransition],
   );
 
   const updateContent = useCallback(
@@ -349,7 +349,7 @@ export function NotepadProvider({
         }
       }
     },
-    [currentNoteId, title, hasInitialized, startTransition, t]
+    [currentNoteId, title, hasInitialized, startTransition, t],
   );
 
   const deleteNote = useCallback(
@@ -370,14 +370,14 @@ export function NotepadProvider({
         handleNotepadError(error, "Delete note");
       }
     },
-    [currentNoteId, t]
+    [currentNoteId, t],
   );
 
   const deleteAllNotes = useCallback(async () => {
     if (notes.length === 0) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete all ${notes.length} notes? This action cannot be undone.`
+      `Are you sure you want to delete all ${notes.length} notes? This action cannot be undone.`,
     );
 
     if (confirmed) {

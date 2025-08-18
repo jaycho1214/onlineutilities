@@ -1,6 +1,6 @@
 const STORAGE_KEYS = {
-  RECENT_COLORS: 'color-picker-recent-colors',
-  LAST_COLOR_FORMAT: 'color-picker-last-format',
+  RECENT_COLORS: "color-picker-recent-colors",
+  LAST_COLOR_FORMAT: "color-picker-last-format",
 } as const;
 
 export const storage = {

@@ -35,7 +35,7 @@ function CalculatorPageComponent() {
     (
       firstOperand: string,
       secondOperand: string,
-      operation: string
+      operation: string,
     ): string => {
       const first = parseFloat(firstOperand);
       const second = parseFloat(secondOperand);
@@ -53,7 +53,7 @@ function CalculatorPageComponent() {
           return secondOperand;
       }
     },
-    []
+    [],
   );
 
   const inputNumber = useCallback((num: string) => {
@@ -173,7 +173,7 @@ function CalculatorPageComponent() {
           const newValue = calculate(
             prevState.previousValue,
             prevState.display,
-            prevState.operation
+            prevState.operation,
           );
           const operationSymbol = getOperationSymbol(nextOperation);
 
@@ -197,19 +197,19 @@ function CalculatorPageComponent() {
         };
       });
     },
-    [getOperationSymbol, calculate]
+    [getOperationSymbol, calculate],
   );
 
   const performCalculation = useCallback(() => {
     setState((prevState) => {
       if (prevState.operation && prevState.previousValue !== "") {
         const expression = `${prevState.previousValue} ${getOperationSymbol(
-          prevState.operation
+          prevState.operation,
         )} ${prevState.display}`;
         const newValue = calculate(
           prevState.previousValue,
           prevState.display,
-          prevState.operation
+          prevState.operation,
         );
 
         // Save to history only once using ref to prevent duplicates from StrictMode
@@ -447,7 +447,7 @@ function CalculatorPageComponent() {
               onClick={performCalculation}
               innerClassName={cn(
                 buttonTextClassName,
-                "text-white dark:text-black"
+                "text-white dark:text-black",
               )}
               variant="solid"
             >

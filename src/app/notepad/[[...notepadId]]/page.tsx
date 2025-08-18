@@ -6,7 +6,8 @@ export default function Page() {
 
 export const metadata = {
   title: "Notepad",
-  description: "Free online notepad and text editor with automatic browser storage. Create, edit, and organize notes with markdown support. No registration required.",
+  description:
+    "Free online notepad and text editor with automatic browser storage. Create, edit, and organize notes with markdown support. No registration required.",
   keywords: [
     "notepad",
     "online notepad",
@@ -19,7 +20,8 @@ export const metadata = {
   ],
   openGraph: {
     title: "Notepad",
-    description: "Free online notepad and text editor with automatic browser storage and markdown support.",
+    description:
+      "Free online notepad and text editor with automatic browser storage and markdown support.",
     type: "website",
   },
   alternates: {

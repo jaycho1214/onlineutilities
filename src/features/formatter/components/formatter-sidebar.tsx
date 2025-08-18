@@ -34,11 +34,10 @@ function FormatterSidebarComponent() {
           toast.success(t("notifications.outputCopied"));
         }
       } catch {
-        
         toast.error(t("notifications.copyError"));
       }
     },
-    [t]
+    [t],
   );
 
   const handleClearHistory = useCallback(async () => {
@@ -50,7 +49,7 @@ function FormatterSidebarComponent() {
       loadHistoryItem(entry);
       toast.success("Loaded from history");
     },
-    [loadHistoryItem]
+    [loadHistoryItem],
   );
 
   const formatTimestamp = useCallback((timestamp: string) => {
@@ -143,7 +142,7 @@ function FormatterSidebarComponent() {
                     <span
                       className={cn(
                         "text-xs font-semibold uppercase",
-                        getTypeColor(entry.type)
+                        getTypeColor(entry.type),
                       )}
                     >
                       {entry.type}

@@ -3,7 +3,7 @@
  *
  * This module provides JavaScript formatting, validation, and minification functionality
  * using the modular formatter system architecture.
- * 
+ *
  * Note: This is a preparatory implementation for future expansion.
  * Full functionality will be implemented when JavaScript formatting is officially added.
  */
@@ -15,10 +15,10 @@ import type {
   FormatOptions,
 } from "../registry/formatter-registry";
 import type { ValidationResult, FormatResult } from "../types";
-import { 
-  checkEmptyInput, 
-  createEmptyInputFormatResult, 
-  createEmptyInputValidationResult 
+import {
+  checkEmptyInput,
+  createEmptyInputFormatResult,
+  createEmptyInputValidationResult,
 } from "../lib/common-constants";
 
 // ============================================================================
@@ -41,7 +41,7 @@ interface JavaScriptFormatOptions extends FormatOptions {
  */
 function detectJavaScriptContent(content: string): ContentDetectionResult {
   const trimmedContent = content.trim();
-  
+
   if (!trimmedContent) {
     return { confidence: 0 };
   }
@@ -67,7 +67,7 @@ function detectJavaScriptContent(content: string): ContentDetectionResult {
   ];
 
   let patternMatches = 0;
-  jsPatterns.forEach(pattern => {
+  jsPatterns.forEach((pattern) => {
     if (pattern.test(trimmedContent)) {
       patternMatches++;
     }
@@ -75,9 +75,9 @@ function detectJavaScriptContent(content: string): ContentDetectionResult {
 
   // Calculate confidence based on pattern matches
   if (patternMatches >= 3) {
-    confidence = Math.min(0.9, 0.3 + (patternMatches * 0.1));
+    confidence = Math.min(0.9, 0.3 + patternMatches * 0.1);
   } else if (patternMatches >= 1) {
-    confidence = Math.min(0.6, 0.2 + (patternMatches * 0.1));
+    confidence = Math.min(0.6, 0.2 + patternMatches * 0.1);
   }
 
   // Check for JSX (if React code)
@@ -87,7 +87,7 @@ function detectJavaScriptContent(content: string): ContentDetectionResult {
   }
 
   // Additional heuristics
-  const lines = trimmedContent.split('\n');
+  const lines = trimmedContent.split("\n");
   metadata.lineCount = lines.length;
   metadata.avgLineLength = trimmedContent.length / lines.length;
   metadata.hasModules = /^(import|export)/m.test(trimmedContent);
@@ -105,46 +105,52 @@ function detectJavaScriptContent(content: string): ContentDetectionResult {
 
 /**
  * Format JavaScript code
- * 
+ *
  * Note: This is a basic placeholder implementation.
  * In production, you would use a proper JavaScript formatter like Prettier.
  */
-function formatJavaScript(content: string, options: JavaScriptFormatOptions = {}): FormatResult {
+function formatJavaScript(
+  content: string,
+  options: JavaScriptFormatOptions = {},
+): FormatResult {
   try {
     if (checkEmptyInput(content)) {
       return createEmptyInputFormatResult();
     }
 
     // Basic formatting - normalize whitespace and indentation
-    const lines = content.split('\n');
+    const lines = content.split("\n");
     let indentLevel = 0;
-    const indent = ' '.repeat(options.indent ?? 2);
-    
-    const formatted = lines.map(line => {
-      const trimmed = line.trim();
-      if (!trimmed) return '';
-      
-      // Decrease indent for closing braces
-      if (trimmed.startsWith('}')) {
-        indentLevel = Math.max(0, indentLevel - 1);
-      }
-      
-      const formattedLine = indent.repeat(indentLevel) + trimmed;
-      
-      // Increase indent for opening braces
-      if (trimmed.endsWith('{')) {
-        indentLevel++;
-      }
-      
-      return formattedLine;
-    }).join('\n');
+    const indent = " ".repeat(options.indent ?? 2);
+
+    const formatted = lines
+      .map((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return "";
+
+        // Decrease indent for closing braces
+        if (trimmed.startsWith("}")) {
+          indentLevel = Math.max(0, indentLevel - 1);
+        }
+
+        const formattedLine = indent.repeat(indentLevel) + trimmed;
+
+        // Increase indent for opening braces
+        if (trimmed.endsWith("{")) {
+          indentLevel++;
+        }
+
+        return formattedLine;
+      })
+      .join("\n");
 
     return {
       success: true,
       output: formatted,
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       error: `JavaScript formatting error: ${errorMessage}`,
@@ -154,7 +160,7 @@ function formatJavaScript(content: string, options: JavaScriptFormatOptions = {}
 
 /**
  * Validate JavaScript syntax
- * 
+ *
  * Note: This is a basic placeholder implementation.
  * In production, you would use a proper JavaScript parser like @babel/parser.
  */
@@ -203,7 +209,8 @@ function validateJavaScript(content: string): ValidationResult {
     // Real implementation would use a proper JavaScript parser
     return { isValid: true };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Invalid JavaScript";
+    const errorMessage =
+      error instanceof Error ? error.message : "Invalid JavaScript";
     return {
       isValid: false,
       error: {
@@ -215,7 +222,7 @@ function validateJavaScript(content: string): ValidationResult {
 
 /**
  * Minify JavaScript code
- * 
+ *
  * Note: This is a basic placeholder implementation.
  * In production, you would use a proper JavaScript minifier like Terser.
  */
@@ -228,13 +235,13 @@ function minifyJavaScript(content: string): FormatResult {
     // Basic minification - remove comments and unnecessary whitespace
     const minified = content
       // Remove single-line comments
-      .replace(/\/\/.*$/gm, '')
+      .replace(/\/\/.*$/gm, "")
       // Remove multi-line comments (basic pattern)
-      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, "")
       // Remove extra whitespace
-      .replace(/\s+/g, ' ')
+      .replace(/\s+/g, " ")
       // Remove whitespace around operators and punctuation
-      .replace(/\s*([{}();,])\s*/g, '$1')
+      .replace(/\s*([{}();,])\s*/g, "$1")
       .trim();
 
     return {
@@ -242,7 +249,8 @@ function minifyJavaScript(content: string): FormatResult {
       output: minified,
     };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return {
       success: false,
       error: `JavaScript minification error: ${errorMessage}`,
@@ -256,7 +264,7 @@ function minifyJavaScript(content: string): FormatResult {
 
 /**
  * JavaScript Formatter Definition
- * 
+ *
  * Note: This is prepared for future implementation.
  * To enable, add this formatter to the registry in the main formatter module.
  */

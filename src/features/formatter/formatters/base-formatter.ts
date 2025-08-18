@@ -1,6 +1,6 @@
 /**
  * Base Formatter Abstract Class
- * 
+ *
  * This abstract class provides a common foundation for all formatter implementations,
  * reducing code duplication and ensuring consistent behavior across formatters.
  */
@@ -14,10 +14,10 @@ import type {
   FormatterConfig,
 } from "../registry/formatter-registry";
 import type { ValidationResult, FormatResult } from "../types";
-import { 
-  checkEmptyInput, 
-  createEmptyInputFormatResult, 
-  createEmptyInputValidationResult 
+import {
+  checkEmptyInput,
+  createEmptyInputFormatResult,
+  createEmptyInputValidationResult,
 } from "../lib/common-constants";
 
 /**
@@ -32,7 +32,7 @@ export abstract class BaseFormatter implements FormatterDefinition {
   abstract readonly category: FormatterCategory;
   abstract readonly supportsMinify: boolean;
   abstract readonly supportsTableView: boolean;
-  
+
   readonly config?: FormatterConfig;
 
   /**
@@ -51,7 +51,8 @@ export abstract class BaseFormatter implements FormatterDefinition {
 
       return this.doFormat(content, options);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       return {
         success: false,
         error: `${this.name} formatting error: ${errorMessage}`,
@@ -70,7 +71,8 @@ export abstract class BaseFormatter implements FormatterDefinition {
 
       return this.doValidate(content);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : `Invalid ${this.name}`;
+      const errorMessage =
+        error instanceof Error ? error.message : `Invalid ${this.name}`;
       return {
         isValid: false,
         error: {
@@ -96,7 +98,8 @@ export abstract class BaseFormatter implements FormatterDefinition {
       // Default to format if minify is not implemented
       return this.format(content);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       return {
         success: false,
         error: `${this.name} minification error: ${errorMessage}`,
@@ -107,7 +110,10 @@ export abstract class BaseFormatter implements FormatterDefinition {
   /**
    * Abstract method for format implementation
    */
-  protected abstract doFormat(content: string, options: FormatOptions): FormatResult;
+  protected abstract doFormat(
+    content: string,
+    options: FormatOptions,
+  ): FormatResult;
 
   /**
    * Abstract method for validation implementation
@@ -122,8 +128,11 @@ export abstract class BaseFormatter implements FormatterDefinition {
   /**
    * Helper method to extract line and column from position
    */
-  protected getLineAndColumn(content: string, position: number): { line: number; column: number } {
-    const lines = content.substring(0, position).split('\n');
+  protected getLineAndColumn(
+    content: string,
+    position: number,
+  ): { line: number; column: number } {
+    const lines = content.substring(0, position).split("\n");
     const line = lines.length;
     const column = lines[lines.length - 1].length + 1;
     return { line, column };
@@ -134,7 +143,7 @@ export abstract class BaseFormatter implements FormatterDefinition {
    */
   protected countPatternMatches(content: string, patterns: RegExp[]): number {
     let count = 0;
-    patterns.forEach(pattern => {
+    patterns.forEach((pattern) => {
       if (pattern.test(content)) {
         count++;
       }
@@ -150,7 +159,7 @@ export abstract class BaseFormatter implements FormatterDefinition {
     avgLineLength: number;
     trimmedLength: number;
   } {
-    const lines = content.split('\n');
+    const lines = content.split("\n");
     const lineCount = lines.length;
     const avgLineLength = content.length / lineCount;
     const trimmedLength = content.trim().length;

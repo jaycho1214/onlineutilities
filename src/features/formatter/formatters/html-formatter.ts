@@ -3,7 +3,7 @@
  *
  * This module provides HTML formatting, validation, and minification functionality
  * using the modular formatter system architecture.
- * 
+ *
  * Note: This is a preparatory implementation for future expansion.
  */
 
@@ -14,10 +14,10 @@ import type {
   FormatOptions,
 } from "../registry/formatter-registry";
 import type { ValidationResult, FormatResult } from "../types";
-import { 
-  checkEmptyInput, 
-  createEmptyInputFormatResult, 
-  createEmptyInputValidationResult 
+import {
+  checkEmptyInput,
+  createEmptyInputFormatResult,
+  createEmptyInputValidationResult,
 } from "../lib/common-constants";
 
 // ============================================================================
@@ -40,7 +40,7 @@ interface HtmlFormatOptions extends FormatOptions {
  */
 function detectHtmlContent(content: string): ContentDetectionResult {
   const trimmedContent = content.trim();
-  
+
   if (!trimmedContent) {
     return { confidence: 0 };
   }
@@ -68,7 +68,7 @@ function detectHtmlContent(content: string): ContentDetectionResult {
   ];
 
   let patternMatches = 0;
-  htmlPatterns.forEach(pattern => {
+  htmlPatterns.forEach((pattern) => {
     if (pattern.test(trimmedContent)) {
       patternMatches++;
     }
@@ -87,7 +87,10 @@ function detectHtmlContent(content: string): ContentDetectionResult {
   }
 
   // Check for head and body
-  if (/<head[^>]*>/i.test(trimmedContent) && /<body[^>]*>/i.test(trimmedContent)) {
+  if (
+    /<head[^>]*>/i.test(trimmedContent) &&
+    /<body[^>]*>/i.test(trimmedContent)
+  ) {
     confidence += 0.3;
     metadata.hasStructure = true;
   }
@@ -104,9 +107,9 @@ function detectHtmlContent(content: string): ContentDetectionResult {
   // Basic HTML validation
   try {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(trimmedContent, 'text/html');
-    const parseError = doc.querySelector('parsererror');
-    
+    const doc = parser.parseFromString(trimmedContent, "text/html");
+    const parseError = doc.querySelector("parsererror");
+
     if (!parseError) {
       confidence = Math.max(confidence, 0.8);
     }
@@ -115,7 +118,7 @@ function detectHtmlContent(content: string): ContentDetectionResult {
   }
 
   // Additional metadata
-  const lines = trimmedContent.split('\n');
+  const lines = trimmedContent.split("\n");
   metadata.lineCount = lines.length;
   metadata.avgLineLength = trimmedContent.length / lines.length;
   metadata.hasComments = /<!--[\s\S]*?-->/.test(trimmedContent);
@@ -133,18 +136,21 @@ function detectHtmlContent(content: string): ContentDetectionResult {
 /**
  * Format HTML with proper indentation
  */
-function formatHtml(content: string, options: HtmlFormatOptions = {}): FormatResult {
+function formatHtml(
+  content: string,
+  options: HtmlFormatOptions = {},
+): FormatResult {
   try {
     if (checkEmptyInput(content)) {
       return createEmptyInputFormatResult();
     }
 
     // Basic HTML formatting
-    const indent = ' '.repeat(options.indent ?? 2);
+    const indent = " ".repeat(options.indent ?? 2);
     let formatted = content;
 
     // Normalize whitespace
-    formatted = formatted.replace(/>\s+</g, '><');
+    formatted = formatted.replace(/>\s+</g, "><");
 
     // Add line breaks and indentation
     let indentLevel = 0;
@@ -155,17 +161,21 @@ function formatHtml(content: string, options: HtmlFormatOptions = {}): FormatRes
       const token = tokens[i].trim();
       if (!token) continue;
 
-      if (token.startsWith('</')) {
+      if (token.startsWith("</")) {
         // Closing tag
         indentLevel = Math.max(0, indentLevel - 1);
         lines.push(indent.repeat(indentLevel) + token);
-      } else if (token.startsWith('<') && !token.endsWith('/>') && !isSelfClosingTag(token)) {
+      } else if (
+        token.startsWith("<") &&
+        !token.endsWith("/>") &&
+        !isSelfClosingTag(token)
+      ) {
         // Opening tag
         lines.push(indent.repeat(indentLevel) + token);
         if (!isInlineTag(token)) {
           indentLevel++;
         }
-      } else if (token.startsWith('<')) {
+      } else if (token.startsWith("<")) {
         // Self-closing or inline tag
         lines.push(indent.repeat(indentLevel) + token);
       } else {
@@ -178,10 +188,11 @@ function formatHtml(content: string, options: HtmlFormatOptions = {}): FormatRes
 
     return {
       success: true,
-      output: lines.join('\n'),
+      output: lines.join("\n"),
     };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "errors.unknown";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "errors.unknown";
     return {
       success: false,
       error: `HTML formatting error: ${errorMessage}`,
@@ -200,8 +211,8 @@ function validateHtml(content: string): ValidationResult {
 
     // Use DOMParser to validate HTML
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    const parseError = doc.querySelector('parsererror');
+    const doc = parser.parseFromString(content, "text/html");
+    const parseError = doc.querySelector("parsererror");
 
     if (parseError) {
       return {
@@ -218,7 +229,8 @@ function validateHtml(content: string): ValidationResult {
     const selfClosingTags = (content.match(/<[^>]+\/>/g) || []).length;
 
     // Basic balance check (simplified)
-    if (openTags > closeTags + selfClosingTags + 10) { // Allow some leeway for void elements
+    if (openTags > closeTags + selfClosingTags + 10) {
+      // Allow some leeway for void elements
       return {
         isValid: false,
         error: {
@@ -228,8 +240,9 @@ function validateHtml(content: string): ValidationResult {
     }
 
     return { isValid: true };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "Invalid HTML";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Invalid HTML";
     return {
       isValid: false,
       error: {
@@ -251,23 +264,24 @@ function minifyHtml(content: string): FormatResult {
     let minified = content;
 
     // Remove comments
-    minified = minified.replace(/<!--[\s\S]*?-->/g, '');
+    minified = minified.replace(/<!--[\s\S]*?-->/g, "");
 
     // Remove extra whitespace between tags
-    minified = minified.replace(/>\s+</g, '><');
+    minified = minified.replace(/>\s+</g, "><");
 
     // Remove leading/trailing whitespace
-    minified = minified.replace(/^\s+|\s+$/g, '');
+    minified = minified.replace(/^\s+|\s+$/g, "");
 
     // Normalize line breaks
-    minified = minified.replace(/\n\s*/g, '');
+    minified = minified.replace(/\n\s*/g, "");
 
     return {
       success: true,
       output: minified,
     };
-  } catch {
-    const errorMessage = error instanceof Error ? error.message : "errors.unknown";
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "errors.unknown";
     return {
       success: false,
       error: `HTML minification error: ${errorMessage}`,
@@ -284,10 +298,22 @@ function minifyHtml(content: string): FormatResult {
  */
 function isSelfClosingTag(tag: string): boolean {
   const selfClosingTags = [
-    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
-    'link', 'meta', 'param', 'source', 'track', 'wbr'
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
   ];
-  
+
   const tagName = tag.match(/<(\w+)/)?.[1]?.toLowerCase();
   return tagName ? selfClosingTags.includes(tagName) : false;
 }
@@ -297,13 +323,50 @@ function isSelfClosingTag(tag: string): boolean {
  */
 function isInlineTag(tag: string): boolean {
   const inlineTags = [
-    'a', 'abbr', 'acronym', 'b', 'bdi', 'bdo', 'big', 'br', 'button',
-    'cite', 'code', 'dfn', 'em', 'i', 'img', 'input', 'kbd', 'label',
-    'map', 'mark', 'meter', 'noscript', 'object', 'output', 'progress',
-    'q', 'ruby', 's', 'samp', 'script', 'select', 'small', 'span',
-    'strong', 'sub', 'sup', 'textarea', 'time', 'tt', 'u', 'var', 'wbr'
+    "a",
+    "abbr",
+    "acronym",
+    "b",
+    "bdi",
+    "bdo",
+    "big",
+    "br",
+    "button",
+    "cite",
+    "code",
+    "dfn",
+    "em",
+    "i",
+    "img",
+    "input",
+    "kbd",
+    "label",
+    "map",
+    "mark",
+    "meter",
+    "noscript",
+    "object",
+    "output",
+    "progress",
+    "q",
+    "ruby",
+    "s",
+    "samp",
+    "script",
+    "select",
+    "small",
+    "span",
+    "strong",
+    "sub",
+    "sup",
+    "textarea",
+    "time",
+    "tt",
+    "u",
+    "var",
+    "wbr",
   ];
-  
+
   const tagName = tag.match(/<(\w+)/)?.[1]?.toLowerCase();
   return tagName ? inlineTags.includes(tagName) : false;
 }
@@ -319,10 +382,7 @@ export const htmlFormatter: FormatterDefinition = {
   id: "html",
   name: "HTML",
   extensions: [".html", ".htm", ".xhtml"],
-  mimeTypes: [
-    "text/html",
-    "application/xhtml+xml",
-  ],
+  mimeTypes: ["text/html", "application/xhtml+xml"],
   detectContent: detectHtmlContent,
   format: formatHtml,
   validate: validateHtml,

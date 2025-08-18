@@ -48,12 +48,12 @@ class FeedbackDatabase extends Dexie {
     });
 
     this.feedback.mapToClass(FeedbackModel);
-    
+
     // Handle database errors
     this.on("blocked", () => {
       console.warn("Database upgrade blocked by another connection");
     });
-    
+
     this.on("versionchange", () => {
       console.log("Database version changed in another tab");
     });
@@ -168,9 +168,11 @@ export class FeedbackService {
 
       // Dispatch custom event to notify other parts of the app
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("feedbackCreated", { detail: newFeedback }));
+        window.dispatchEvent(
+          new CustomEvent("feedbackCreated", { detail: newFeedback }),
+        );
       }
-      
+
       return newFeedback;
     } catch (error) {
       console.error("Failed to create feedback:", error);
@@ -185,25 +187,31 @@ export class FeedbackService {
    */
   async markAsSubmitted(id: string): Promise<FeedbackDocument | null> {
     try {
-      return await feedbackDb.transaction("rw", feedbackDb.feedback, async () => {
-        const feedback = await feedbackDb.feedback.get(id);
+      return await feedbackDb.transaction(
+        "rw",
+        feedbackDb.feedback,
+        async () => {
+          const feedback = await feedbackDb.feedback.get(id);
 
-        if (!feedback) return null;
+          if (!feedback) return null;
 
-        const updatedFeedback: FeedbackDocument = {
-          ...feedback,
-          submittedAt: new Date().toISOString(),
-        };
+          const updatedFeedback: FeedbackDocument = {
+            ...feedback,
+            submittedAt: new Date().toISOString(),
+          };
 
-        await feedbackDb.feedback.put(updatedFeedback);
-        
-        // Dispatch custom event
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new CustomEvent("feedbackSubmitted", { detail: updatedFeedback }));
-        }
+          await feedbackDb.feedback.put(updatedFeedback);
 
-        return updatedFeedback;
-      });
+          // Dispatch custom event
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("feedbackSubmitted", { detail: updatedFeedback }),
+            );
+          }
+
+          return updatedFeedback;
+        },
+      );
     } catch (error) {
       console.error(`Failed to mark feedback ${id} as submitted:`, error);
       return null;
@@ -222,10 +230,12 @@ export class FeedbackService {
       if (!feedback) return false;
 
       await feedbackDb.feedback.delete(id);
-      
+
       // Dispatch custom event
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("feedbackDeleted", { detail: { id } }));
+        window.dispatchEvent(
+          new CustomEvent("feedbackDeleted", { detail: { id } }),
+        );
       }
 
       return true;
@@ -243,12 +253,14 @@ export class FeedbackService {
     try {
       const count = await feedbackDb.feedback.count();
       await feedbackDb.feedback.clear();
-      
+
       // Dispatch custom event
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("allFeedbackDeleted", { detail: { count } }));
+        window.dispatchEvent(
+          new CustomEvent("allFeedbackDeleted", { detail: { count } }),
+        );
       }
-      
+
       return count;
     } catch (error) {
       console.error("Failed to delete all feedback:", error);
@@ -264,11 +276,14 @@ export class FeedbackService {
    * Get feedback statistics
    * @returns Promise<{ total: number; byType: Record<FeedbackType, number> }>
    */
-  async getStats(): Promise<{ total: number; byType: Record<FeedbackType, number> }> {
+  async getStats(): Promise<{
+    total: number;
+    byType: Record<FeedbackType, number>;
+  }> {
     try {
       const allFeedback = await this.getAllFeedback();
       const total = allFeedback.length;
-      
+
       const byType: Record<FeedbackType, number> = {
         bug: 0,
         feature: 0,
@@ -276,7 +291,7 @@ export class FeedbackService {
         general: 0,
       };
 
-      allFeedback.forEach(feedback => {
+      allFeedback.forEach((feedback) => {
         byType[feedback.type]++;
       });
 

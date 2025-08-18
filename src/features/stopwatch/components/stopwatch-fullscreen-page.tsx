@@ -28,10 +28,10 @@ export function StopwatchFullscreenPage({
 
   const stopwatch = useMemo(
     () => stopwatches.find((s) => s.id === stopwatchId),
-    [stopwatches, stopwatchId]
+    [stopwatches, stopwatchId],
   );
   const [currentTime, setCurrentTime] = useState(
-    stopwatch ? getCurrentTime(stopwatch) : 0
+    stopwatch ? getCurrentTime(stopwatch) : 0,
   );
 
   const { now } = useStopwatch();
@@ -69,7 +69,7 @@ export function StopwatchFullscreenPage({
   // Get last 5 laps for display
   const recentLaps = useMemo(
     () => stopwatch?.laps.slice(-5).reverse() || [],
-    [stopwatch?.laps]
+    [stopwatch?.laps],
   );
 
   if (!stopwatch) {
@@ -142,7 +142,7 @@ export function StopwatchFullscreenPage({
               "w-16 h-16 rounded-full flex items-center justify-center p-0",
               stopwatch.isRunning
                 ? "bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
-                : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30"
+                : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30",
             )}
             variant="outline"
           >

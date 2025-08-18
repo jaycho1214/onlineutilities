@@ -61,7 +61,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
   // Memoize expensive color format calculations
   const colorFormats = useMemo(
     () => getColorFormats(selectedColor),
-    [selectedColor]
+    [selectedColor],
   );
 
   // Debounced color name fetching
@@ -110,7 +110,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
       addToRecentColors(color);
       debouncedFetchColorName(color);
     },
-    [addToRecentColors, debouncedFetchColorName]
+    [addToRecentColors, debouncedFetchColorName],
   );
 
   // Input change handler with validation
@@ -123,7 +123,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
         setSelectedColor(input); // For real-time feedback
       }
     },
-    [handleColorChange]
+    [handleColorChange],
   );
 
   // Slider change handler
@@ -163,7 +163,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
 
       handleColorChange(newHex);
     },
-    [colorFormat, colorFormats, handleColorChange]
+    [colorFormat, colorFormats, handleColorChange],
   );
 
   // Screen color picker
@@ -200,7 +200,7 @@ export const useColorPicker = (): UseColorPickerReturn => {
       };
       reader.readAsDataURL(file);
     },
-    []
+    [],
   );
 
   // Initialize client-side only data

@@ -28,7 +28,7 @@ export const NavbarTips: React.FC = () => {
   // Get tips from translations based on the current feature
   const tips = React.useMemo(() => {
     if (!featureKey) return [];
-    
+
     try {
       const tipsArray = navbarTipsT.raw(featureKey);
       return Array.isArray(tipsArray) ? tipsArray : [];
