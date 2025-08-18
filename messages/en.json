@@ -219,6 +219,9 @@
       "Switch between raw and table view for CSV data visualization",
       "Enhanced error handling shows exact line and column information for syntax errors",
       "All processing happens locally in your browser for privacy"
+    ],
+    "random-generator": [
+      "All generation happens locally in your browser for maximum security"
     ]
   },
   "ColorPicker": {
@@ -288,7 +291,8 @@
     "hash-generator": "Hash Generator",
     "qr-code": "QR Code",
     "calculator": "Calculator",
-    "formatter": "Formatter"
+    "formatter": "Formatter",
+    "random-generator": "Random Generator"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -472,6 +476,236 @@
       "indent": "Indent",
       "tabs": "Tabs",
       "spaces": "Spaces"
+    }
+  },
+  "RandomGenerator": {
+    "title": "Random Generator",
+    "description": "Generate secure passwords, UUIDs, random numbers, strings and more with customizable options",
+    "types": {
+      "password": "Password",
+      "number": "Number",
+      "uuid": "UUID",
+      "nanoid": "Nanoid",
+      "cuid": "CUID",
+      "string": "String",
+      "boolean": "Boolean",
+      "color": "Color",
+      "date": "Date"
+    },
+    "password": {
+      "title": "Password Generator",
+      "description": "Generate secure passwords with customizable character sets and length",
+      "length": "Length",
+      "count": "Count",
+      "characterTypes": "Character Types",
+      "exclusions": "Exclusions",
+      "includeUppercase": "Include Uppercase (A-Z)",
+      "includeLowercase": "Include Lowercase (a-z)",
+      "includeNumbers": "Include Numbers (0-9)",
+      "includeSymbols": "Include Symbols (!@#$...)",
+      "excludeSimilar": "Exclude Similar Characters (0, O, l, I)",
+      "excludeAmbiguous": "Exclude Ambiguous Characters ({}, [], (), /\\, ~, `, ', \")",
+      "customCharacters": "Custom Characters",
+      "customCharactersPlaceholder": "Enter custom characters to include",
+      "customCharactersInfo": "When provided, only these characters will be used (overrides other selections)",
+      "noCharacters": "Please select at least one character type or provide custom characters",
+      "collisionRisk": "Real-world Collision Risk",
+      "collisionInfo": "Probability of password collisions in different organization sizes",
+      "strength": {
+        "weak": "Weak",
+        "fair": "Fair", 
+        "good": "Good",
+        "strong": "Strong",
+        "veryStrong": "Very Strong"
+      }
+    },
+    "number": {
+      "title": "Number Generator",
+      "description": "Generate random integers, floats, or numbers within specific ranges",
+      "type": "Number Type",
+      "types": {
+        "integer": "Integer",
+        "float": "Float"
+      },
+      "min": "Minimum",
+      "max": "Maximum",
+      "count": "Count",
+      "decimalPlaces": "Decimal Places",
+      "unique": "Unique Numbers Only",
+      "sorted": "Sort Results"
+    },
+    "uuid": {
+      "title": "UUID Generator",
+      "description": "Generate universally unique identifiers (UUID v4)",
+      "version": "Version",
+      "count": "Count",
+      "uppercase": "Uppercase",
+      "hyphenated": "Include Hyphens"
+    },
+    "nanoid": {
+      "title": "Nanoid Generator", 
+      "description": "Generate URL-safe unique IDs with customizable length and alphabet",
+      "length": "Length",
+      "count": "Count",
+      "alphabet": "Custom Alphabet",
+      "alphabetPlaceholder": "Leave empty for default alphabet",
+      "presets": {
+        "default": "Default (A-Za-z0-9_-)",
+        "alphanumeric": "Alphanumeric (A-Za-z0-9)",
+        "numbers": "Numbers Only (0-9)",
+        "lowercase": "Lowercase (a-z0-9)",
+        "uppercase": "Uppercase (A-Z0-9)"
+      }
+    },
+    "cuid": {
+      "title": "CUID Generator",
+      "description": "Generate collision-resistant unique identifiers with timestamps",
+      "count": "Count",
+      "version": "Version",
+      "versions": {
+        "cuid2": "CUID2 (Recommended)",
+        "cuid": "CUID Legacy"
+      },
+      "versionInfo": {
+        "cuid2": "Modern version with better security and collision resistance",
+        "cuid": "Legacy version, less secure than CUID2"
+      },
+      "fingerprint": "Custom Fingerprint",
+      "fingerprintPlaceholder": "Leave empty for auto-generated",
+      "fingerprintInfo": "Optional machine/environment identifier (2-4 characters)"
+    },
+    "string": {
+      "title": "String Generator",
+      "description": "Generate random strings with various character sets and patterns",
+      "length": "Length",
+      "count": "Count",
+      "charset": "Character Set",
+      "charsets": {
+        "alphanumeric": "Alphanumeric",
+        "alphabetic": "Alphabetic Only",
+        "numeric": "Numeric Only",
+        "lowercase": "Lowercase Only",
+        "uppercase": "Uppercase Only",
+        "symbols": "Symbols Only",
+        "custom": "Custom"
+      },
+      "customCharset": "Custom Character Set",
+      "customCharsetPlaceholder": "Enter characters to use",
+      "pattern": "Pattern",
+      "patternPlaceholder": "Use X for random char, 9 for digit, A for letter",
+      "usePattern": "Use Pattern"
+    },
+    "boolean": {
+      "title": "Boolean Generator",
+      "description": "Generate random true/false values",
+      "count": "Count",
+      "probability": "True Probability (%)",
+      "format": "Output Format",
+      "formats": {
+        "boolean": "Boolean (true/false)",
+        "binary": "Binary (1/0)",
+        "yesno": "Yes/No"
+      }
+    },
+    "color": {
+      "title": "Color Generator",
+      "description": "Generate random colors in various formats",
+      "count": "Count",
+      "format": "Color Format",
+      "formats": {
+        "hex": "HEX (#RRGGBB)",
+        "rgb": "RGB (rgb(r,g,b))",
+        "hsl": "HSL (hsl(h,s%,l%))",
+        "hsv": "HSV (hsv(h,s%,v%))"
+      },
+      "hueRange": "Hue Range",
+      "saturationRange": "Saturation Range",
+      "lightnessRange": "Lightness Range"
+    },
+    "date": {
+      "title": "Date Generator",
+      "description": "Generate random dates within specified ranges",
+      "count": "Count",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "format": "Date Format",
+      "formats": {
+        "iso": "ISO 8601 (YYYY-MM-DD)",
+        "us": "US Format (MM/DD/YYYY)",
+        "european": "European (DD/MM/YYYY)",
+        "timestamp": "Unix Timestamp",
+        "custom": "Custom Format"
+      },
+      "customFormat": "Custom Format",
+      "customFormatPlaceholder": "YYYY-MM-DD HH:mm:ss"
+    },
+    "actions": {
+      "generate": "Generate",
+      "generating": "Generating...",
+      "regenerate": "Regenerate",
+      "copy": "Copy",
+      "copyAll": "Copy All",
+      "clear": "Clear",
+      "savePreset": "Save Preset",
+      "loadPreset": "Load Preset"
+    },
+    "output": {
+      "title": "Generated Results",
+      "empty": "Click generate to create random values",
+      "copied": "Copied to clipboard",
+      "copyResult": "Copy result",
+      "copyAllResults": "Copy all results"
+    },
+    "history": {
+      "title": "Generation History",
+      "empty": "No generation history yet",
+      "noHistory": "Your generation history will appear here",
+      "clearAll": "Clear All",
+      "itemTitle": "{type} generated",
+      "regenerate": "Regenerate with same settings"
+    },
+    "presets": {
+      "title": "Saved Presets",
+      "empty": "No saved presets",
+      "noPresets": "Save your frequently used configurations as presets",
+      "save": "Save Current Settings",
+      "load": "Load Preset",
+      "delete": "Delete Preset",
+      "name": "Preset Name",
+      "namePlaceholder": "Enter preset name"
+    },
+    "settings": {
+      "title": "Settings",
+      "autoCopy": "Auto-copy results",
+      "autoCopyDescription": "Automatically copy generated results to clipboard",
+      "showStrength": "Show password strength",
+      "showStrengthDescription": "Display password strength indicator",
+      "saveHistory": "Save generation history",
+      "saveHistoryDescription": "Keep a history of generated values"
+    },
+    "notifications": {
+      "generated": "{count, plural, one {# value} other {# values}} generated",
+      "copied": "Copied to clipboard",
+      "copyError": "Failed to copy to clipboard",
+      "presetSaved": "Preset saved successfully",
+      "presetLoaded": "Preset loaded successfully",
+      "presetDeleted": "Preset deleted successfully",
+      "historyCleared": "History cleared",
+      "settingsUpdated": "Settings updated",
+      "invalidRange": "Invalid range: minimum must be less than maximum",
+      "invalidLength": "Invalid length: must be between 1 and 1000",
+      "invalidCount": "Invalid count: must be between 1 and 100",
+      "noCharacters": "Please select at least one character type",
+      "presetNameRequired": "Preset name is required",
+      "presetNameExists": "A preset with this name already exists"
+    },
+    "validation": {
+      "required": "This field is required",
+      "min": "Minimum value is {min}",
+      "max": "Maximum value is {max}",
+      "range": "Value must be between {min} and {max}",
+      "invalidDate": "Invalid date format",
+      "dateRange": "End date must be after start date"
     }
   }
 }

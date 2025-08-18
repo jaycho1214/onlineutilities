@@ -6,6 +6,7 @@ import {
   QrCode,
   Calculator,
   Code2,
+  Dices,
   type LucideIcon,
 } from "lucide-react";
 
@@ -98,6 +99,25 @@ export const utilities: Utility[] = [
       "yaml",
     ],
   },
+  {
+    id: "random-generator",
+    name: "Random Generator",
+    description: "Generate passwords, UUIDs, random numbers, strings and more",
+    icon: Dices,
+    href: "/random-generator",
+    category: "Generator",
+    keywords: [
+      "password",
+      "uuid",
+      "nanoid",
+      "random",
+      "generator",
+      "string",
+      "number",
+      "security",
+      "entropy",
+    ],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -123,6 +143,7 @@ export const SIDEBAR_SUPPORTED_PAGES = [
   "/notepad",
   "/calculator",
   "/formatter",
+  "/random-generator",
   // Add more pages here as needed
 ];
 
