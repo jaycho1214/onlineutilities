@@ -47,8 +47,10 @@ export function TextDiffHistorySidebar() {
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "short",
-      timeStyle: "short",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
@@ -83,22 +85,21 @@ export function TextDiffHistorySidebar() {
                 <SidebarMenuButton
                   onClick={() => handleLoad(entry.id)}
                   isActive={selectedEntry === entry.id}
-                  className="flex flex-col items-start h-auto py-2 transition-all duration-150 cursor-pointer hover:bg-accent/50"
+                  className="flex flex-col items-start h-auto py-2 px-3 transition-all duration-150 cursor-pointer hover:bg-accent/50"
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="font-medium text-sm truncate">
-                      {entry.title || t("history.itemTitle")}
+                      {t("history.itemTitle")}
+                    </span>
+                    <span className="text-xs text-muted-foreground shrink-0 ml-2">
+                      {formatDate(entry.timestamp)}
                     </span>
                   </div>
-                  <div className="flex flex-col items-start w-full mt-1">
-                    <p className="text-xs text-muted-foreground line-clamp-2 text-left">
-                      {entry.originalText.split("\n").length} →{" "}
-                      {entry.modifiedText.split("\n").length} lines
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formatDate(entry.timestamp)}
-                    </p>
-                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {entry.originalText.split("\n").length} →{" "}
+                    {entry.modifiedText.split("\n").length} lines •{" "}
+                    {entry.viewMode}
+                  </p>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
