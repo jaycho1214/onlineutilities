@@ -13,7 +13,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]",
         action:
-          "bg-gradient-to-r from-blue-700! to-purple-700! hover:from-blue-800 hover:to-purple-800 text-white shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:from-gray-400! disabled:to-gray-500! disabled:text-gray-200!",
+          "bg-gradient-to-r from-blue-700! to-purple-700! hover:from-blue-800 hover:to-purple-800 text-white shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:bg-gray-400! disabled:from-gray-400! disabled:to-gray-400! disabled:text-gray-200!",
         destructive:
           "bg-red-500 text-white hover:bg-red-600 hover:scale-[1.02] active:scale-[0.98]",
         outline: "text-foreground hover:scale-[1.01] active:scale-[0.98]",
