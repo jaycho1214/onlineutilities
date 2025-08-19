@@ -1,6 +1,6 @@
 import { TextDiffPage } from "@/features/text-diff/pages/text-diff-page";
-import { TextDiffProvider } from "@/features/text-diff/lib/text-diff-context";
-import { Metadata } from "next";
+import { GradientBackground } from "@/features/shared/ui/gradient-background";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Text Diff",
@@ -8,20 +8,28 @@ export const metadata: Metadata = {
     "Compare two texts and visualize differences with git-like formatting. Interactive merge capabilities and export options.",
   keywords: [
     "text diff",
-    "compare text",
+    "compare text", 
     "merge text",
     "git diff",
     "text comparison",
     "difference viewer",
   ],
+  openGraph: {
+    title: "Text Diff",
+    description:
+      "Compare two texts and visualize differences with git-like formatting and interactive merge capabilities.",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://onlineutilities.org/text-diff",
+  },
 };
 
-// This component doesn't need to be a client component
-// as it only wraps other components
-export default function Page() {
+export default function TextDiff() {
   return (
-    <TextDiffProvider>
+    <>
+      <GradientBackground />
       <TextDiffPage />
-    </TextDiffProvider>
+    </>
   );
 }

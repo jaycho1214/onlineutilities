@@ -164,6 +164,7 @@ export const SIDEBAR_SUPPORTED_PAGES = [
   "/calculator",
   "/formatter",
   "/random-generator",
+  "/text-diff",
 ];
 
 export const isSidebarSupported = (pathname: string): boolean => {

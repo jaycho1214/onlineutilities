@@ -10,7 +10,6 @@ import {
   FileText,
   Settings,
   Download,
-  History,
   FilePlay,
 } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
@@ -18,13 +17,11 @@ import { useTextDiff } from "../lib/text-diff-context";
 interface TextDiffControlsProps {
   onSettingsClick?: () => void;
   onExportClick?: () => void;
-  onHistoryClick?: () => void;
 }
 
 export function TextDiffControls({
   onSettingsClick,
   onExportClick,
-  onHistoryClick,
 }: TextDiffControlsProps) {
   const t = useTranslations("TextDiff");
   const { state, setViewMode, computeDiff } = useTextDiff();
@@ -73,14 +70,6 @@ export function TextDiffControls({
             variant="outline"
             size="lg"
             tooltip={t("actions.export")}
-          />
-
-          <ActionButton
-            icon={<History className="size-4" />}
-            onClick={onHistoryClick}
-            variant="outline"
-            size="lg"
-            tooltip={t("history.title")}
           />
 
           <ActionButton
