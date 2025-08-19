@@ -3,8 +3,8 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import { Checkbox } from "@/features/shared/ui/checkbox";
 import type { StringConfig, CharsetType } from "../../types";
 
 interface StringControlsProps {

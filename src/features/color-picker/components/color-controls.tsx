@@ -1,14 +1,14 @@
 import React from "react";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "@/features/shared/ui/input";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@/features/shared/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/features/shared/ui/select";
 import { getSliderConfig } from "../lib/color-slider-config";
 import type { ColorFormats } from "../lib/color-conversions";
 import type { ColorFormat } from "../hooks/use-color-picker";

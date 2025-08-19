@@ -3,8 +3,8 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/features/shared/ui/slider";
+import { Checkbox } from "@/features/shared/ui/checkbox";
 import type { PasswordConfig } from "../../types";
 
 interface PasswordControlsProps {

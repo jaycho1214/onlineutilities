@@ -24,7 +24,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/features/shared/ui/select";
 import { CheckCircle, AlertCircle, FileText } from "lucide-react";
 import type { FormatterType } from "../types";
 import { getAvailableFormatters } from "../lib/enhanced-formatter-utils";

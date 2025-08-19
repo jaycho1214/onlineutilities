@@ -13,9 +13,9 @@ import {
 import { Button } from "@/features/shared/ui/button";
 import { Settings, GitBranch, Eye, Type, Code, FileText } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
+import { Switch } from "@/features/shared/ui/switch";
+import { Slider } from "@/features/shared/ui/slider";
+import { Label } from "@/features/shared/ui/label";
 
 interface TextDiffSettingsDialogProps {
   open: boolean;

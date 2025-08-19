@@ -13,8 +13,8 @@ import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
 import { Separator } from "@/features/shared/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/features/shared/ui/slider";
+import { Checkbox } from "@/features/shared/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
   Download,

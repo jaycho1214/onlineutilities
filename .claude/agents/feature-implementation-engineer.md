@@ -84,8 +84,8 @@ You are an expert software engineer specializing in feature implementation with 
 - ALWAYS match the existing glassmorphism design exactly
 - NEVER create documentation files unless explicitly requested
 - ALWAYS use size-* classes (e.g., size-4, size-5, size-6) for adjusting Lucide React icons
-- ALWAYS read and understand any @/components/ui/* component implementation before using it
-- Try to use @/components/ui components as-is without modifications when possible, but can be customized if necessary
+- ALWAYS read and understand any @/features/shared/ui/* component implementation before using it
+- Try to use @/features/shared/ui components as-is without modifications when possible, but can be customized if necessary
 - If you specify height and width on Button, do NOT use size props - these are mutually exclusive
 - For metadata, use title as simply as possible (e.g., "Text Diff") since Next.js template literals automatically append "| OnlineUtilities". Keep Open Graph title simple too, but other metadata can be detailed
 

@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/features/shared/ui/checkbox";
 import type { UuidConfig } from "../../types";
 
 interface UuidControlsProps {

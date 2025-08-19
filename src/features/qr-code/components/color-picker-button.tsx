@@ -8,7 +8,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/features/shared/ui/popover";
 
 interface ColorPickerButtonProps {
   color: string;

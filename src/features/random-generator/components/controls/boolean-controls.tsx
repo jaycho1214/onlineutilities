@@ -3,8 +3,8 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import { Slider } from "@/features/shared/ui/slider";
 import type { BooleanConfig, BooleanFormat } from "../../types";
 
 interface BooleanControlsProps {

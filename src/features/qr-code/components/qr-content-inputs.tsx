@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import { Input } from "@/features/shared/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/features/shared/ui/checkbox";
 
 interface EmailDataProps {
   emailData: { to: string; subject: string; body: string };
