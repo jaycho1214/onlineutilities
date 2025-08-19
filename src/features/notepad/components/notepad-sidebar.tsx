@@ -31,12 +31,13 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/features/shared/ui/context-menu-glass";
+import { Input } from "@/features/shared/ui/input";
 
 function NotepadSidebarComponent() {
   const pathname = usePathname();
   const currentNoteIdFromUrl = useMemo(
     () => pathname.split("/").pop(),
-    [pathname],
+    [pathname]
   );
   const [search, setSearch] = useState("");
   const [, startTransition] = useTransition();
@@ -71,7 +72,7 @@ function NotepadSidebarComponent() {
 
       // Match all search terms
       return searchTerms.every(
-        (term) => titleLower.includes(term) || contentLower.includes(term),
+        (term) => titleLower.includes(term) || contentLower.includes(term)
       );
     });
   }, [notes, search]);
@@ -90,7 +91,7 @@ function NotepadSidebarComponent() {
           />
         </div>
         <div className="mb-2">
-          <input
+          <Input
             value={search}
             onChange={(e) => {
               startTransition(() => {
@@ -98,7 +99,6 @@ function NotepadSidebarComponent() {
               });
             }}
             placeholder="Search notes..."
-            className="w-full p-2 rounded-md bg-white/5 border border-white/10 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/40 backdrop-blur-sm transition-all duration-200"
             autoComplete="off"
             spellCheck="false"
           />
@@ -174,7 +174,7 @@ function NotepadSidebarComponent() {
                     className="text-red-400 focus:text-red-300"
                     onClick={() => {
                       const confirmDelete = window.confirm(
-                        `Delete "${note.title || "Untitled"}"?`,
+                        `Delete "${note.title || "Untitled"}"?`
                       );
                       if (confirmDelete) {
                         deleteNote(note.id);

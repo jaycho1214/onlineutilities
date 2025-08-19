@@ -16,6 +16,7 @@ import { Send, MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import posthog from "posthog-js";
+import { Input } from "@/features/shared/ui/input";
 
 interface FeedbackDialogProps {
   open: boolean;
@@ -193,7 +194,8 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                     rows={4}
                     className={cn(
                       "py-2.5 text-sm",
-                      errors.message && "border-red-500/50 focus-visible:ring-red-500/50"
+                      errors.message &&
+                        "border-red-500/50 focus-visible:ring-red-500/50"
                     )}
                     maxLength={1000}
                   />
@@ -216,16 +218,13 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                   <label htmlFor="email" className="text-sm font-medium">
                     {t("form.email")}
                   </label>
-                  <input
+                  <Input
                     id="email"
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder={t("form.emailPlaceholder")}
                     className={cn(
-                      "w-full px-3 py-2.5 text-sm bg-white/5 border rounded-lg",
-                      "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50",
-                      "backdrop-blur-sm transition-colors",
                       errors.email
                         ? "border-red-500/50 focus:ring-red-500/50"
                         : "border-white/20"

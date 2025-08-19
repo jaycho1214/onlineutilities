@@ -3,14 +3,20 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/features/shared/ui/action-button";
-import { History, Trash2, Copy, X } from "lucide-react";
+import { History, Trash2, X } from "lucide-react";
 import { useRandomGenerator } from "../lib/random-generator-context";
-import type { GenerationEntry } from "../types";
+import {
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/features/shared/ui/sidebar";
 
 export function RandomGeneratorSidebar() {
   const t = useTranslations("RandomGenerator");
-  const { state, clearHistory, deleteHistoryEntry, copyToClipboard } =
-    useRandomGenerator();
+  const { state, clearHistory, deleteHistoryEntry } = useRandomGenerator();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -22,141 +28,76 @@ export function RandomGeneratorSidebar() {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-black/10 dark:border-white/10">
-        <div className="flex items-center gap-2">
-          <History className="size-5" />
-          <h2 className="font-medium text-gray-900 dark:text-white">
-            {t("history.title")}
-          </h2>
-        </div>
-      </div>
-
-      {/* History Content */}
-      <div className="flex-1 overflow-hidden">
-        <HistoryTab
-          history={state.history}
-          isLoading={state.isLoadingHistory}
-          onClear={clearHistory}
-          onDelete={deleteHistoryEntry}
-          onCopy={copyToClipboard}
-          formatDate={formatDate}
-          t={t}
-        />
-      </div>
-    </div>
-  );
-}
-
-// History Tab Component
-interface HistoryTabProps {
-  history: GenerationEntry[];
-  isLoading: boolean;
-  onClear: () => void;
-  onDelete: (id: string) => void;
-  onCopy: (text: string) => void;
-  formatDate: (date: string) => string;
-  t: ReturnType<typeof useTranslations>;
-}
-
-function HistoryTab({
-  history,
-  isLoading,
-  onClear,
-  onDelete,
-  onCopy,
-  formatDate,
-  t,
-}: HistoryTabProps) {
-  if (isLoading) {
-    return (
-      <div className="p-4">
-        <div className="animate-pulse space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-16 bg-black/5 dark:bg-white/5 rounded-lg backdrop-blur-sm"
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (history.length === 0) {
-    return (
-      <div className="p-4 text-center">
-        <History className="size-12 text-gray-400 mx-auto mb-2" />
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
-          {t("history.noHistory")}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-black/10 dark:border-white/10">
+    <Sidebar className="!h-[calc(100vh-2.25rem)] !top-9 flex flex-col">
+      <SidebarHeader className="flex-shrink-0">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {history.length} {history.length === 1 ? "entry" : "entries"}
-          </span>
-          <ActionButton
-            icon={<Trash2 className="size-4" />}
-            onClick={onClear}
-            variant="destructive"
-            size="default"
-            tooltip={t("history.clearAll")}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-          />
+          <h2 className="text-lg font-semibold">{t("history.title")}</h2>
+          {state.history.length > 0 && (
+            <ActionButton
+              icon={<Trash2 />}
+              onClick={clearHistory}
+              variant="destructive"
+              size="default"
+              tooltip={t("history.clearAll")}
+            />
+          )}
         </div>
-      </div>
+      </SidebarHeader>
 
-      {/* History List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {history.map((entry) => (
-          <div
-            key={entry.id}
-            className="p-3 border border-black/10 dark:border-white/10 rounded-lg bg-white/30 dark:bg-white/5 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-white/10 transition-all duration-200 shadow-sm"
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
-                  {entry.type}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                  {formatDate(entry.createdAt)}
-                </span>
-              </div>
-              <ActionButton
-                icon={<X className="size-3" />}
-                onClick={() => onDelete(entry.id)}
-                variant="ghost"
-                size="sm"
-                tooltip="Delete entry"
-                className="text-gray-400 hover:text-red-600"
-              />
-            </div>
-
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-              {entry.results.length}{" "}
-              {entry.results.length === 1 ? "result" : "results"}
-            </div>
-
-            <div>
-              <ActionButton
-                icon={<Copy className="size-3" />}
-                onClick={() => onCopy(entry.results.join("\n"))}
-                variant="ghost"
-                size="default"
-                tooltip="Copy results"
-              />
+      <SidebarContent className="flex-1 overflow-y-auto min-h-0">
+        {state.isLoadingHistory ? (
+          <div className="p-4 text-center text-muted-foreground">
+            <div className="animate-pulse space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="h-16 bg-black/5 dark:bg-white/5 rounded-lg backdrop-blur-sm"
+                />
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
+        ) : state.history.length === 0 ? (
+          <div className="p-4 text-center text-muted-foreground">
+            <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">{t("history.noHistory")}</p>
+            <p className="text-xs">Generate random data to see history</p>
+          </div>
+        ) : (
+          <SidebarMenu>
+            {state.history.map((entry) => (
+              <SidebarMenuItem key={entry.id}>
+                <SidebarMenuButton asChild>
+                  <div className="flex flex-col items-start h-auto py-2 transition-all duration-150 cursor-pointer hover:bg-accent/50">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium text-sm truncate capitalize">
+                        {entry.type}
+                      </span>
+                      <ActionButton
+                        icon={<X className="w-3 h-3" />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteHistoryEntry(entry.id);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                        tooltip="Delete entry"
+                      />
+                    </div>
+                    <div className="flex flex-col items-start w-full mt-1">
+                      <p className="text-xs text-muted-foreground line-clamp-1 text-left">
+                        {entry.results.length} {entry.results.length === 1 ? "result" : "results"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {formatDate(entry.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        )}
+      </SidebarContent>
+    </Sidebar>
   );
 }
