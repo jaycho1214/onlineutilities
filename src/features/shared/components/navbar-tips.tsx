@@ -4,18 +4,12 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatedTips } from "@/features/shared/ui/animated-tips";
+import { utilities } from "@/constants";
 
-// Helper function to get feature key from pathname
+// Helper function to get feature key from pathname using utilities constant
 const getFeatureKeyFromPathname = (pathname: string): string | null => {
-  if (pathname.startsWith("/notepad")) return "notepad";
-  if (pathname.startsWith("/timer")) return "timer";
-  if (pathname.startsWith("/stopwatch")) return "stopwatch";
-  if (pathname.startsWith("/qr-code")) return "qr-code";
-  if (pathname.startsWith("/color-picker")) return "color-picker";
-  if (pathname.startsWith("/formatter")) return "formatter";
-  if (pathname.startsWith("/random-generator")) return "random-generator";
-  if (pathname.startsWith("/text-diff")) return "text-diff";
-  return null;
+  const utility = utilities.find((util) => pathname.startsWith(util.href));
+  return utility?.id || null;
 };
 
 export const NavbarTips: React.FC = () => {
