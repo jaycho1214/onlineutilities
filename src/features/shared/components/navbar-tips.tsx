@@ -14,6 +14,7 @@ const getFeatureKeyFromPathname = (pathname: string): string | null => {
   if (pathname.startsWith("/color-picker")) return "color-picker";
   if (pathname.startsWith("/formatter")) return "formatter";
   if (pathname.startsWith("/random-generator")) return "random-generator";
+  if (pathname.startsWith("/text-diff")) return "text-diff";
   return null;
 };
 

@@ -6,16 +6,16 @@ import { cn } from "@/lib/utils";
 import { GlassSurface } from "./glass-surface";
 
 const buttonVariants = cva(
-  "size-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
+  "size-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-60 disabled:text-foreground/70 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
   {
     variants: {
       variant: {
         default:
-          "text-primary-foreground hover:scale-[1.02] active:scale-[0.98]",
+          "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-[1.02] active:scale-[0.98]",
         outline: "text-foreground hover:scale-[1.01] active:scale-[0.98]",
         secondary:
-          "text-secondary-foreground hover:scale-[1.02] active:scale-[0.98]",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-[1.02] active:scale-[0.98]",
         ghost:
           "text-foreground hover:scale-[1.02] transition-transform duration-200",
         link: "text-primary underline-offset-4 decoration-transparent hover:decoration-current transition-colors duration-300 underline",

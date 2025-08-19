@@ -222,6 +222,14 @@
     ],
     "random-generator": [
       "All generation happens locally in your browser for maximum security"
+    ],
+    "text-diff": [
+      "Use Ctrl/Cmd + Enter to quickly compare texts after entering content",
+      "Switch between side-by-side and unified view modes for different perspectives",
+      "Enable merge mode for interactive conflict resolution when texts have overlapping changes",
+      "All comparisons are saved to history automatically for quick access later",
+      "Adjust diff settings to ignore whitespace, case, or blank lines for cleaner comparisons",
+      "Export your diff results in multiple formats: text, HTML, JSON, or standard patch format"
     ]
   },
   "ColorPicker": {
@@ -292,7 +300,8 @@
     "qr-code": "QR Code",
     "calculator": "Calculator",
     "formatter": "Formatter",
-    "random-generator": "Random Generator"
+    "random-generator": "Random Generator",
+    "text-diff": "Text Diff"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -706,6 +715,151 @@
       "range": "Value must be between {min} and {max}",
       "invalidDate": "Invalid date format",
       "dateRange": "End date must be after start date"
+    }
+  },
+  "TextDiff": {
+    "title": "Text Diff",
+    "description": "Compare two texts and visualize differences with git-like formatting and interactive merge capabilities",
+    "inputs": {
+      "originalText": "Original Text",
+      "modifiedText": "Modified Text",
+      "originalPlaceholder": "Enter or paste your original text here...",
+      "modifiedPlaceholder": "Enter or paste your modified text here...",
+      "lineNumbers": "Line Numbers"
+    },
+    "views": {
+      "sideBySide": "Side by Side",
+      "unified": "Unified",
+      "viewMode": "View Mode"
+    },
+    "diff": {
+      "added": "Added",
+      "removed": "Removed",
+      "modified": "Modified",
+      "unchanged": "Unchanged",
+      "noChanges": "No differences found",
+      "line": "Line {line}",
+      "insertions": "{count, plural, one {# insertion} other {# insertions}}",
+      "deletions": "{count, plural, one {# deletion} other {# deletions}}",
+      "modifications": "{count, plural, one {# modification} other {# modifications}}",
+      "conflictMarkers": "Conflict Markers",
+      "showConflictMarkers": "Show conflict markers",
+      "hideConflictMarkers": "Hide conflict markers"
+    },
+    "merge": {
+      "title": "Interactive Merge",
+      "exitMerge": "Exit Merge",
+      "enterMergeMode": "Enter interactive merge mode",
+      "exitMergeMode": "Exit interactive merge mode",
+      "selectOriginal": "Select Original",
+      "selectModified": "Select Modified",
+      "selectBoth": "Select Both",
+      "selectNeither": "Select Neither",
+      "autoMerge": "Auto Merge",
+      "acceptAll": "Accept All Changes",
+      "rejectAll": "Reject All Changes",
+      "mergedResult": "Merged Result",
+      "mergeConflict": "Merge Conflict",
+      "resolved": "Resolved",
+      "unresolved": "Unresolved"
+    },
+    "actions": {
+      "compare": "Compare",
+      "comparing": "Comparing...",
+      "clear": "Clear",
+      "swap": "Swap Texts",
+      "copy": "Copy",
+      "export": "Export",
+      "reset": "Reset Merge",
+      "download": "Download",
+      "share": "Share",
+      "fullscreen": "Fullscreen",
+      "close": "Close",
+      "editTexts": "Edit Texts",
+      "recompare": "Re-compare"
+    },
+    "export": {
+      "title": "Export Options",
+      "format": "Format",
+      "formats": {
+        "text": "Plain Text",
+        "diff": "Diff Patch",
+        "html": "HTML Report",
+        "json": "JSON Data"
+      },
+      "includeLineNumbers": "Include Line Numbers",
+      "includeStats": "Include Statistics",
+      "filename": "Filename",
+      "defaultFilename": "text-diff-result"
+    },
+    "stats": {
+      "title": "Comparison Statistics",
+      "totalLines": "Total Lines",
+      "addedLines": "Added Lines",
+      "removedLines": "Removed Lines",
+      "modifiedLines": "Modified Lines",
+      "unchangedLines": "Unchanged Lines",
+      "similarity": "Similarity",
+      "changes": "Changes"
+    },
+    "settings": {
+      "title": "Diff Settings",
+      "description": "Configure diff options and UI preferences",
+      "diffOptions": "Diff Algorithm",
+      "uiOptions": "Display Options",
+      "ignoreWhitespace": "Ignore Whitespace",
+      "ignoreWhitespaceDesc": "Ignore spaces, tabs, and other whitespace",
+      "ignoreCase": "Ignore Case",
+      "ignoreCaseDesc": "Treat uppercase and lowercase as identical",
+      "ignoreNewlineAtEof": "Ignore Newline at EOF",
+      "ignoreNewlineAtEofDesc": "Ignore final newline differences",
+      "newlineIsToken": "Newline as Token",
+      "newlineIsTokenDesc": "Treat newlines as separate tokens",
+      "contextLines": "Context Lines",
+      "contextLinesDesc": "Number of unchanged lines around changes",
+      "showLineNumbers": "Show Line Numbers",
+      "showLineNumbersDesc": "Display line numbers in diff view",
+      "wordWrap": "Word Wrap",
+      "wordWrapDesc": "Wrap long lines to fit in view",
+      "fontSize": "Font Size",
+      "fontSizeDesc": "Adjust text size in diff view"
+    },
+    "history": {
+      "title": "Comparison History",
+      "empty": "No comparison history yet",
+      "noHistory": "Your comparison history will appear here",
+      "clearAll": "Clear All",
+      "itemTitle": "Text comparison",
+      "restore": "Restore Comparison"
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "compare": "Ctrl/Cmd + Enter - Compare texts",
+      "swap": "Ctrl/Cmd + Shift + S - Swap texts",
+      "copy": "Ctrl/Cmd + C - Copy result",
+      "export": "Ctrl/Cmd + E - Export",
+      "fullscreen": "F11 - Toggle fullscreen"
+    },
+    "notifications": {
+      "compared": "Texts compared successfully",
+      "copied": "Result copied to clipboard",
+      "exported": "Diff exported successfully",
+      "cleared": "Texts cleared",
+      "swapped": "Texts swapped",
+      "merged": "Merge completed",
+      "resetMerge": "Merge reset",
+      "historyCleared": "History cleared",
+      "error": "Failed to compare texts",
+      "emptyTexts": "Please enter texts to compare",
+      "saveError": "Failed to save to history",
+      "exportError": "Failed to export diff",
+      "copyError": "Failed to copy to clipboard"
+    },
+    "errors": {
+      "invalidInput": "Invalid input text",
+      "diffFailed": "Diff comparison failed",
+      "mergeFailed": "Merge operation failed",
+      "exportFailed": "Export operation failed"
     }
   }
 }

@@ -7,6 +7,7 @@ import {
   Calculator,
   Code2,
   Dices,
+  FileDiff,
   type LucideIcon,
 } from "lucide-react";
 
@@ -118,6 +119,25 @@ export const utilities: Utility[] = [
       "entropy",
     ],
   },
+  {
+    id: "text-diff",
+    name: "Text Diff",
+    description:
+      "Compare two texts and visualize differences with git-like formatting",
+    icon: FileDiff,
+    href: "/text-diff",
+    category: "Text",
+    keywords: [
+      "diff",
+      "compare",
+      "text",
+      "merge",
+      "changes",
+      "git",
+      "differences",
+      "version",
+    ],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -134,7 +154,7 @@ export const searchUtilities = (query: string): Utility[] => {
     (utility) =>
       utility.name.toLowerCase().includes(lowercaseQuery) ||
       utility.description.toLowerCase().includes(lowercaseQuery) ||
-      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery)),
+      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery))
   );
 };
 
@@ -144,7 +164,6 @@ export const SIDEBAR_SUPPORTED_PAGES = [
   "/calculator",
   "/formatter",
   "/random-generator",
-  // Add more pages here as needed
 ];
 
 export const isSidebarSupported = (pathname: string): boolean => {
