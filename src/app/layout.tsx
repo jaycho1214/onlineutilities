@@ -102,14 +102,14 @@ export default async function RootLayout({
       <body
         className={`${poppins.variable} ${ebGaramond.variable} font-sans antialiased`}
       >
-        <ErrorBoundary>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <ErrorBoundary>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
               <SidebarProvider>
                 <CommandProvider>
                   <CommandPalette />
@@ -118,9 +118,9 @@ export default async function RootLayout({
                   <Toaster />
                 </CommandProvider>
               </SidebarProvider>
-            </NextIntlClientProvider>
-          </ThemeProvider>
-        </ErrorBoundary>
+            </ThemeProvider>
+          </ErrorBoundary>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
