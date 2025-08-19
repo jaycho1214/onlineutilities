@@ -49,7 +49,11 @@ export class ErrorBoundary extends Component<Props, State> {
               <p className="text-sm text-muted-foreground">
                 {this.state.error?.message || "An unexpected error occurred"}
               </p>
-              <Button onClick={this.handleReset} variant="default">
+              <Button
+                onClick={this.handleReset}
+                variant="default"
+                className="py-2 px-4"
+              >
                 Reload Page
               </Button>
             </div>

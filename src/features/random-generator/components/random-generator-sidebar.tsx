@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { History, Trash2, Copy, X } from "lucide-react";
 import { useRandomGenerator } from "../lib/random-generator-context";
 import type { GenerationEntry } from "../types";
@@ -103,14 +103,14 @@ function HistoryTab({
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {history.length} {history.length === 1 ? "entry" : "entries"}
           </span>
-          <Button
+          <ActionButton
+            icon={<Trash2 className="size-4" />}
             onClick={onClear}
-            variant="ghost"
-            size="icon"
+            variant="destructive"
+            size="default"
+            tooltip={t("history.clearAll")}
             className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-          >
-            <Trash2 className="size-4" />
-          </Button>
+          />
         </div>
       </div>
 
@@ -130,14 +130,14 @@ function HistoryTab({
                   {formatDate(entry.createdAt)}
                 </span>
               </div>
-              <Button
+              <ActionButton
+                icon={<X className="size-3" />}
                 onClick={() => onDelete(entry.id)}
                 variant="ghost"
-                size="icon"
-                className="size-6 text-gray-400 hover:text-red-600"
-              >
-                <X className="size-3" />
-              </Button>
+                size="sm"
+                tooltip="Delete entry"
+                className="text-gray-400 hover:text-red-600"
+              />
             </div>
 
             <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
@@ -146,14 +146,13 @@ function HistoryTab({
             </div>
 
             <div>
-              <Button
+              <ActionButton
+                icon={<Copy className="size-3" />}
                 onClick={() => onCopy(entry.results.join("\n"))}
                 variant="ghost"
-                size="icon"
-                className="size-7"
-              >
-                <Copy className="size-3" />
-              </Button>
+                size="default"
+                tooltip="Copy results"
+              />
             </div>
           </div>
         ))}

@@ -1,11 +1,6 @@
 import React from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { Button } from "@/features/shared/ui/button";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/features/shared/ui/tooltip";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Skeleton } from "@/features/shared/ui/skeleton";
 import { Pipette, Image as ImageIcon, X } from "lucide-react";
 import { CopyButton } from "./copy-button";
@@ -76,55 +71,34 @@ const ColorDisplayComponent: React.FC<ColorDisplayProps> = React.memo(
             />
 
             {hasImage && onImageRemove ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={onImageRemove}
-                    className="bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm text-red-300 border border-red-500/30"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{t("actions.removeImage")}</TooltipContent>
-              </Tooltip>
+              <ActionButton
+                icon={<X className="w-4 h-4" />}
+                variant="destructive"
+                size="default"
+                onClick={onImageRemove}
+                tooltip={t("actions.removeImage")}
+                className="bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm text-red-300 border border-red-500/30"
+              />
             ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={onImageUpload}
-                    className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20"
-                  >
-                    <ImageIcon className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{t("actions.uploadImage")}</TooltipContent>
-              </Tooltip>
+              <ActionButton
+                icon={<ImageIcon className="w-4 h-4" />}
+                variant="ghost"
+                size="default"
+                onClick={onImageUpload}
+                tooltip={t("actions.uploadImage")}
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20"
+              />
             )}
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={handleScreenPicker}
-                  disabled={isPickerLoading}
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 disabled:opacity-50"
-                >
-                  <Pipette
-                    className={`w-4 h-4 ${isPickerLoading ? "animate-pulse" : ""}`}
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {isPickerLoading
-                  ? t("actions.openingColorPicker")
-                  : t("actions.pickFromScreen")}
-              </TooltipContent>
-            </Tooltip>
+            <ActionButton
+              icon={<Pipette className={`w-4 h-4 ${isPickerLoading ? "animate-pulse" : ""}`} />}
+              variant="ghost"
+              size="default"
+              onClick={handleScreenPicker}
+              disabled={isPickerLoading}
+              tooltip={isPickerLoading ? t("actions.openingColorPicker") : t("actions.pickFromScreen")}
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 disabled:opacity-50"
+            />
           </div>
         </div>
       </GlassSurface>

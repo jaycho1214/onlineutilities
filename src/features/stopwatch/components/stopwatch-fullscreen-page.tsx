@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Play, Pause, RotateCcw, Minimize2, Flag } from "lucide-react";
 import { useStopwatch } from "../lib/stopwatch-context";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { formatElapsedTime, formatLapTime } from "@/lib/time";
 
 interface StopwatchFullscreenProps {
@@ -66,6 +65,21 @@ export function StopwatchFullscreenPage({
     router.push("/stopwatch");
   }, [router]);
 
+  // Keyboard event handler for space key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        handleStartPause();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleStartPause]);
+
   // Get last 5 laps for display
   const recentLaps = useMemo(
     () => stopwatch?.laps.slice(-5).reverse() || [],
@@ -82,15 +96,13 @@ export function StopwatchFullscreenPage({
 
       {/* Controls at top - positioned below navbar */}
       <div className="absolute top-20 right-8">
-        <Button
-          size="icon"
+        <ActionButton
+          icon={<Minimize2 className="size-6" />}
           variant="ghost"
+          size="lg"
           onClick={handleMinimize}
-          className="w-12 h-12"
-          title="Exit fullscreen"
-        >
-          <Minimize2 className="size-6" />
-        </Button>
+          tooltip="Exit fullscreen"
+        />
       </div>
 
       {/* Stopwatch Display */}
@@ -115,7 +127,7 @@ export function StopwatchFullscreenPage({
               {recentLaps.map((lap, index) => (
                 <div
                   key={lap.id}
-                  className="flex justify-between items-center bg-white/5 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/10"
+                  className="flex justify-between items-center bg-black/5 dark:bg-white/5 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/10"
                 >
                   <span className="text-muted-foreground">
                     Lap {stopwatch.laps.length - index}
@@ -136,39 +148,33 @@ export function StopwatchFullscreenPage({
 
         {/* Controls */}
         <div className="flex items-center gap-6">
-          <Button
+          <ActionButton
+            icon={stopwatch.isRunning ? <Pause className="size-6" /> : <Play className="size-6" />}
             onClick={handleStartPause}
-            className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center p-0",
-              stopwatch.isRunning
-                ? "bg-red-500/30 hover:bg-red-500/40 text-red-400 dark:text-red-300 border-red-500/50 dark:border-red-500/30"
-                : "bg-green-500/30 hover:bg-green-500/40 text-green-600 dark:text-green-300 border-green-500/50 dark:border-green-500/30",
-            )}
-            variant="outline"
-          >
-            {stopwatch.isRunning ? (
-              <Pause className="size-6" />
-            ) : (
-              <Play className="size-6" />
-            )}
-          </Button>
+            variant={stopwatch.isRunning ? "destructive" : "success"}
+            size="xl"
+            tooltip={stopwatch.isRunning ? "Pause" : "Start"}
+            className="rounded-full"
+          />
 
-          <Button
+          <ActionButton
+            icon={<Flag className="size-6" />}
             onClick={handleLap}
             disabled={!stopwatch.isRunning}
-            variant="outline"
-            className="w-16 h-16 rounded-full bg-blue-500/30 hover:bg-blue-500/40 text-blue-600 dark:text-blue-300 border-blue-500/50 dark:border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center p-0"
-          >
-            <Flag className="size-6" />
-          </Button>
+            variant="info"
+            size="xl"
+            tooltip="Lap"
+            className="rounded-full"
+          />
 
-          <Button
+          <ActionButton
+            icon={<RotateCcw className="size-6" />}
             onClick={handleReset}
-            variant="outline"
-            className="w-16 h-16 rounded-full bg-orange-500/30 hover:bg-orange-500/40 text-orange-600 dark:text-orange-300 border-orange-500/50 dark:border-orange-500/30 flex items-center justify-center p-0"
-          >
-            <RotateCcw className="size-6" />
-          </Button>
+            variant="warning"
+            size="xl"
+            tooltip="Reset"
+            className="rounded-full"
+          />
         </div>
       </div>
     </div>

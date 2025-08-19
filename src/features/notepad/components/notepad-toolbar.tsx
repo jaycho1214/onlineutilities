@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import {
   Bold,
   Italic,
@@ -14,12 +14,7 @@ import {
   Heading2,
   Table,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/features/shared/ui/tooltip";
+import { TooltipProvider } from "@/features/shared/ui/tooltip";
 
 interface NotepadToolbarProps {
   onFormat: (format: string) => void;
@@ -48,24 +43,21 @@ function NotepadToolbarComponent({ onFormat }: NotepadToolbarProps) {
     <TooltipProvider>
       <div className="flex items-center gap-1 p-2 border-b border-border/50 bg-background/50 backdrop-blur-sm">
         {tools.map((tool) => (
-          <Tooltip key={tool.format}>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onFormat(tool.format)}
-                aria-label={tool.label}
-              >
-                <tool.icon className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{tool.label}</p>
-              {tool.shortcut && (
-                <p className="text-xs text-muted-foreground">{tool.shortcut}</p>
-              )}
-            </TooltipContent>
-          </Tooltip>
+          <ActionButton
+            key={tool.format}
+            icon={<tool.icon className="h-4 w-4" />}
+            variant="ghost"
+            size="default"
+            onClick={() => onFormat(tool.format)}
+            tooltip={
+              <div>
+                <p>{tool.label}</p>
+                {tool.shortcut && (
+                  <p className="text-xs text-muted-foreground">{tool.shortcut}</p>
+                )}
+              </div>
+            }
+          />
         ))}
       </div>
     </TooltipProvider>

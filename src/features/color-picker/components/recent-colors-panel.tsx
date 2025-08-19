@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import {
   Tooltip,
   TooltipTrigger,
@@ -71,19 +71,14 @@ export const RecentColorsPanel: React.FC<RecentColorsPanelProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">{t("recent.title")}</h3>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearRecentColors}
-                className="h-10 w-10 text-muted-foreground hover:text-destructive"
-              >
-                <Trash2 />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{t("actions.clearRecentColors")}</TooltipContent>
-          </Tooltip>
+          <ActionButton
+            icon={<Trash2 />}
+            variant="ghost"
+            size="lg"
+            onClick={clearRecentColors}
+            tooltip={t("actions.clearRecentColors")}
+            className="text-muted-foreground hover:text-destructive"
+          />
         </div>
 
         <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2">

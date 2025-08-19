@@ -8,7 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Input } from "@/features/shared/ui/input";
 import {
   Play,
@@ -74,7 +74,7 @@ function StopwatchCardComponent({
   // Memoize reversed laps to avoid recreating on every render
   const reversedLaps = useMemo(
     () => stopwatch.laps.slice().reverse(),
-    [stopwatch.laps],
+    [stopwatch.laps]
   );
 
   useEffect(() => {
@@ -124,7 +124,7 @@ function StopwatchCardComponent({
         handleTitleCancel();
       }
     },
-    [handleTitleSubmit, handleTitleCancel],
+    [handleTitleSubmit, handleTitleCancel]
   );
 
   return (
@@ -134,7 +134,7 @@ function StopwatchCardComponent({
         "w-full transition-all duration-300 cursor-pointer",
         isActive
           ? "shadow-xl ring-2 ring-blue-500/20"
-          : "shadow-lg hover:shadow-xl",
+          : "shadow-lg hover:shadow-xl"
       )}
       onClick={onActivate}
     >
@@ -152,73 +152,67 @@ function StopwatchCardComponent({
                   className="h-8 text-lg font-medium bg-transparent border-white/20"
                   onClick={(e) => e.stopPropagation()}
                 />
-                <Button
-                  size="icon"
-                  variant="ghost"
+                <ActionButton
+                  icon={<Check className="size-4" />}
+                  variant="success"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleTitleSubmit();
                   }}
-                  className="w-8 h-8 flex items-center justify-center text-green-400 hover:text-green-300"
-                >
-                  <Check className="size-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
+                  tooltip={t("actions.save")}
+                />
+                <ActionButton
+                  icon={<X className="size-4" />}
+                  variant="destructive"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleTitleCancel();
                   }}
-                  className="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-300"
-                >
-                  <X className="size-4" />
-                </Button>
+                  tooltip={t("actions.cancel")}
+                />
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-medium text-foreground truncate">
                   {stopwatch.title}
                 </h3>
-                <Button
-                  size="icon"
+                <ActionButton
+                  icon={<Edit3 className="size-3" />}
                   variant="ghost"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditing(true);
                   }}
-                  className="w-8 h-8 flex items-center justify-center opacity-60 hover:opacity-100"
-                >
-                  <Edit3 className="size-3" />
-                </Button>
+                  tooltip={t("actions.editTitle")}
+                />
               </div>
             )}
           </div>
           {!isEditing && (
             <div className="flex items-center gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
+              <ActionButton
+                icon={<Maximize2 className="size-4" />}
+                variant="info"
+                size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   router.push(`/stopwatch/${stopwatch.id}`);
                 }}
-                className="w-8 h-8 flex items-center justify-center text-blue-400 hover:text-blue-300 opacity-60 hover:opacity-100"
-                title={t("actions.fullscreen")}
-              >
-                <Maximize2 className="size-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
+                tooltip={t("actions.fullscreen")}
+              />
+              <ActionButton
+                icon={<Trash2 className="size-4" />}
+                variant="destructive"
+                size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete();
                 }}
-                className="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-300 opacity-60 hover:opacity-100"
-              >
-                <Trash2 className="size-4" />
-              </Button>
+                tooltip={t("actions.delete")}
+              />
             </div>
           )}
         </div>
@@ -235,56 +229,42 @@ function StopwatchCardComponent({
 
         {/* Controls */}
         <div className="flex items-center justify-center gap-2">
-          <Button
+          <ActionButton
+            icon={stopwatch.isRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
             onClick={(e) => {
               e.stopPropagation();
               handleStartPause();
             }}
-            size="icon"
-            className={cn(
-              "w-10 h-10",
-              stopwatch.isRunning
-                ? "bg-red-500/30 hover:bg-red-500/40 text-red-400 dark:text-red-300 border-red-500/50 dark:border-red-500/30"
-                : "bg-green-500/30 hover:bg-green-500/40 text-green-600 dark:text-green-300 border-green-500/50 dark:border-green-500/30",
-            )}
-            variant="outline"
-            title={
-              stopwatch.isRunning ? t("actions.pause") : t("actions.start")
-            }
-          >
-            {stopwatch.isRunning ? (
-              <Pause className="size-4" />
-            ) : (
-              <Play className="size-4" />
-            )}
-          </Button>
+            variant={stopwatch.isRunning ? "destructive" : "success"}
+            size="lg"
+            tooltip={stopwatch.isRunning ? t("actions.pause") : t("actions.start")}
+            className="rounded-full"
+          />
 
-          <Button
+          <ActionButton
+            icon={<Flag className="size-4" />}
             onClick={(e) => {
               e.stopPropagation();
               handleLap();
             }}
             disabled={!stopwatch.isRunning}
-            size="icon"
-            variant="outline"
-            className="w-10 h-10 bg-blue-500/30 hover:bg-blue-500/40 text-blue-600 dark:text-blue-300 border-blue-500/50 dark:border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
-            title={t("actions.lap")}
-          >
-            <Flag className="size-4" />
-          </Button>
+            variant="info"
+            size="lg"
+            tooltip={t("actions.lap")}
+            className="rounded-full"
+          />
 
-          <Button
+          <ActionButton
+            icon={<RotateCcw className="size-4" />}
             onClick={(e) => {
               e.stopPropagation();
               handleReset();
             }}
-            size="icon"
-            variant="outline"
-            className="w-10 h-10 bg-orange-500/30 hover:bg-orange-500/40 text-orange-600 dark:text-orange-300 border-orange-500/50 dark:border-orange-500/30"
-            title={t("actions.reset")}
-          >
-            <RotateCcw className="size-4" />
-          </Button>
+            variant="warning"
+            size="lg"
+            tooltip={t("actions.reset")}
+            className="rounded-full"
+          />
         </div>
 
         {/* Laps */}
@@ -295,7 +275,7 @@ function StopwatchCardComponent({
               {reversedLaps.map((lap, index) => (
                 <div
                   key={lap.id}
-                  className="flex justify-between items-center text-sm bg-white/5 rounded px-3 py-2"
+                  className="flex justify-between items-center text-sm bg-black/5 dark:bg-white/5 rounded px-3 py-2"
                 >
                   <span className="text-muted-foreground">
                     Lap {stopwatch.laps.length - index}
@@ -323,7 +303,7 @@ export const StopwatchCard = React.memo(
   (prev, next) =>
     prev.stopwatch === next.stopwatch &&
     prev.isActive === next.isActive &&
-    prev.onActivate === next.onActivate,
+    prev.onActivate === next.onActivate
 );
 
 StopwatchCard.displayName = "StopwatchCard";

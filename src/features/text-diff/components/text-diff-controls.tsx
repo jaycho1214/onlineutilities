@@ -3,8 +3,8 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { Button } from "@/features/shared/ui/button";
 import { ButtonGroup, ButtonGroupItem } from "@/features/shared/ui/button-group";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import {
   Columns2,
   FileText,
@@ -14,8 +14,6 @@ import {
   FilePlay,
 } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
-import { DiffViewMode } from "../types";
-import { cn } from "@/lib/utils";
 
 interface TextDiffControlsProps {
   onSettingsClick?: () => void;
@@ -59,43 +57,39 @@ export function TextDiffControls({
 
         {/* Right side - Action buttons */}
         <div className="flex flex-wrap gap-2">
-          <Button
+          <ActionButton
+            icon={<FilePlay className="size-4" />}
             onClick={handleComputeDiff}
             disabled={!state.originalText && !state.modifiedText}
-            variant="action"
-            className="h-10 w-10 rounded-full p-0"
-            title={t("actions.compare")}
-          >
-            <FilePlay className="size-4" />
-          </Button>
+            variant="info"
+            size="lg"
+            tooltip={t("actions.compare")}
+          />
 
-          <Button
-            variant="outline"
-            className="h-10 w-10 rounded-full p-0"
-            disabled={!state.diffResult}
+          <ActionButton
+            icon={<Download className="size-4" />}
             onClick={onExportClick}
-            title={t("actions.export")}
-          >
-            <Download className="size-4" />
-          </Button>
-
-          <Button
+            disabled={!state.diffResult}
             variant="outline"
-            className="h-10 w-10 rounded-full p-0"
+            size="lg"
+            tooltip={t("actions.export")}
+          />
+
+          <ActionButton
+            icon={<History className="size-4" />}
             onClick={onHistoryClick}
-            title={t("history.title")}
-          >
-            <History className="size-4" />
-          </Button>
-
-          <Button
             variant="outline"
-            className="h-10 w-10 rounded-full p-0"
+            size="lg"
+            tooltip={t("history.title")}
+          />
+
+          <ActionButton
+            icon={<Settings className="size-4" />}
             onClick={onSettingsClick}
-            title={t("settings.title")}
-          >
-            <Settings className="size-4" />
-          </Button>
+            variant="outline"
+            size="lg"
+            tooltip={t("settings.title")}
+          />
         </div>
       </div>
 

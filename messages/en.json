@@ -104,6 +104,9 @@
       "reset": "Reset",
       "set": "Set",
       "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "editTitle": "Edit title",
       "fullscreen": "Fullscreen",
       "soundEnabled": "Sound enabled",
       "soundDisabled": "Sound disabled"
@@ -122,7 +125,11 @@
       "pause": "Pause",
       "reset": "Reset",
       "lap": "Lap",
-      "fullscreen": "Fullscreen"
+      "fullscreen": "Fullscreen",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "editTitle": "Edit title"
     }
   },
   "QRCode": {
@@ -360,6 +367,7 @@
       "minify": "Minify",
       "clear": "Clear",
       "copy": "Copy",
+      "copied": "Copied!",
       "copyInput": "Copy Input",
       "copyOutput": "Copy Output"
     },

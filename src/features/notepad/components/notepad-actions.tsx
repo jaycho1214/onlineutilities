@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Plus, Download, Trash2 } from "lucide-react";
 
@@ -18,30 +18,27 @@ function NotepadActionsComponent({
 }: NotepadActionsProps) {
   return (
     <GlassSurface className="flex flex-row md:flex-col items-center px-2 py-1.5 md:px-3 md:py-2 gap-1 md:gap-2">
-      <Button
-        size="icon"
+      <ActionButton
+        icon={<Plus className="size-4" />}
         variant="ghost"
+        size="default"
         onClick={onNewNote}
-        title="New Note (Cmd/Ctrl+N)"
-      >
-        <Plus className="size-4" />
-      </Button>
-      <Button
-        size="icon"
+        tooltip="New Note"
+      />
+      <ActionButton
+        icon={<Download className="size-4" />}
         variant="ghost"
+        size="default"
         onClick={onDownload}
-        title="Download (Cmd/Ctrl+D)"
-      >
-        <Download className="size-4" />
-      </Button>
-      <Button
-        size="icon"
-        variant="ghost"
+        tooltip="Download"
+      />
+      <ActionButton
+        icon={<Trash2 className="size-4" />}
+        variant="destructive"
+        size="default"
         onClick={onDelete}
-        title="Delete Note"
-      >
-        <Trash2 className="size-4" />
-      </Button>
+        tooltip="Delete Note"
+      />
     </GlassSurface>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, ToasterProps } from "sonner";
-import { cn } from "@/lib/utils";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
@@ -12,18 +11,32 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       toastOptions={{
-        className: cn(
-          "relative overflow-hidden rounded-[20px]",
-          "transition-all duration-300 ease-out",
-          "transform-gpu",
-          "bg-gradient-to-br from-white/30 to-white/20",
-          "dark:from-white/[0.02] dark:to-white/[0.01]",
-          "backdrop-blur-[5px] backdrop-saturate-[0.4]",
-          "border border-black/20 dark:border-white/[0.06]",
-          "shadow-[0_20px_70px_-15px_rgba(0,0,0,0.15),0_0_0_1px_inset_rgba(255,255,255,0.1)]",
-          "dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.5),0_0_0_1px_inset_rgba(255,255,255,0.05)]",
-          "text-foreground",
-        ),
+        style: {
+          background:
+            theme === "dark"
+              ? "rgba(17, 24, 39, 0.7)"
+              : "rgba(255, 255, 255, 0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border:
+            theme === "dark"
+              ? "1px solid rgba(255, 255, 255, 0.1)"
+              : "1px solid rgba(255, 255, 255, 0.4)",
+          boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+          borderRadius: "16px",
+        },
+        classNames: {
+          toast: "group toast",
+          description: "group-[.toast]:text-muted-foreground",
+          actionButton:
+            "group-[.toast]:bg-primary/80 group-[.toast]:backdrop-blur group-[.toast]:text-primary-foreground",
+          cancelButton:
+            "group-[.toast]:bg-muted/80 group-[.toast]:backdrop-blur group-[.toast]:text-muted-foreground",
+          error: "!bg-red-500/20 !border-red-500/30 !backdrop-blur-xl",
+          success: "!bg-green-500/20 !border-green-500/30 !backdrop-blur-xl",
+          warning: "!bg-yellow-500/20 !border-yellow-500/30 !backdrop-blur-xl",
+          info: "!bg-blue-500/20 !border-blue-500/30 !backdrop-blur-xl",
+        },
       }}
       {...props}
     />

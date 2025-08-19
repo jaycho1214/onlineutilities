@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Play, Pause, RotateCcw, Minimize2, Bell, BellOff } from "lucide-react";
 import { useTimer } from "../lib/timer-context";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { formatDuration } from "@/lib/time";
 
 interface TimerFullscreenProps {
@@ -28,10 +27,10 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
 
   const timer = useMemo(
     () => timers.find((t) => t.id === timerId),
-    [timers, timerId],
+    [timers, timerId]
   );
   const [remainingTime, setRemainingTime] = useState(
-    timer ? getRemainingTime(timer) : 0,
+    timer ? getRemainingTime(timer) : 0
   );
 
   useEffect(() => {
@@ -68,6 +67,21 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
     await toggleSound(timer.id);
   }, [timer, toggleSound]);
 
+  // Keyboard event handler for space key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        handleStartPause();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleStartPause]);
+
   const progressPercentage = useMemo(() => {
     return timer ? (remainingTime / timer.duration) * 100 : 0;
   }, [remainingTime, timer]);
@@ -86,33 +100,26 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
 
       {/* Controls at top - positioned below navbar */}
       <div className="absolute top-20 right-8 flex items-center gap-4">
-        <Button
-          size="icon"
+        <ActionButton
+          icon={<Minimize2 className="size-6" />}
           variant="ghost"
+          size="lg"
           onClick={handleMinimize}
-          className="w-12 h-12"
-          title="Exit fullscreen"
-        >
-          <Minimize2 className="size-6" />
-        </Button>
-        <Button
-          size="icon"
-          variant="ghost"
+          tooltip="Exit fullscreen"
+        />
+        <ActionButton
+          icon={
+            timer.soundEnabled ? (
+              <Bell className="size-6" />
+            ) : (
+              <BellOff className="size-6" />
+            )
+          }
+          variant={timer.soundEnabled ? "info" : "ghost"}
+          size="lg"
           onClick={handleToggleSound}
-          className={cn(
-            "w-12 h-12",
-            timer.soundEnabled
-              ? "text-blue-400 hover:text-blue-300"
-              : "text-muted-foreground hover:text-foreground opacity-60",
-          )}
-          title={timer.soundEnabled ? "Sound enabled" : "Sound disabled"}
-        >
-          {timer.soundEnabled ? (
-            <Bell className="size-6" />
-          ) : (
-            <BellOff className="size-6" />
-          )}
-        </Button>
+          tooltip={timer.soundEnabled ? "Sound enabled" : "Sound disabled"}
+        />
       </div>
 
       {/* Timer Display */}
@@ -124,10 +131,9 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
 
         {/* Time */}
         <div
-          className={cn(
-            "text-5xl sm:text-6xl md:text-7xl font-mono font-bold",
-            isCompleted ? "text-green-400 animate-pulse" : "text-foreground",
-          )}
+          className={`text-5xl sm:text-6xl md:text-7xl font-mono font-bold ${
+            isCompleted ? "text-green-400 animate-pulse" : "text-foreground"
+          }`}
         >
           {formatTime(remainingTime)}
         </div>
@@ -152,14 +158,16 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
               strokeWidth="8"
               fill="none"
               strokeDasharray={`${2 * Math.PI * 45}%`}
-              strokeDashoffset={`${2 * Math.PI * 45 * (1 - progressPercentage / 100)}%`}
-              className={cn(
+              strokeDashoffset={`${
+                2 * Math.PI * 45 * (1 - progressPercentage / 100)
+              }%`}
+              className={
                 isCompleted
                   ? "text-green-500"
                   : timer.isRunning
-                    ? "text-blue-500 transition-none"
-                    : "text-orange-500 transition-all duration-300",
-              )}
+                  ? "text-blue-500 transition-none"
+                  : "text-orange-500 transition-all duration-300"
+              }
               style={{
                 transition: timer.isRunning ? "none" : undefined,
               }}
@@ -176,31 +184,30 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
 
         {/* Controls */}
         <div className="flex items-center gap-6">
-          <Button
+          <ActionButton
+            icon={
+              timer.isRunning ? (
+                <Pause className="size-6" />
+              ) : (
+                <Play className="size-6" />
+              )
+            }
             onClick={handleStartPause}
-            className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center p-0",
-              timer.isRunning
-                ? "bg-red-500/30 hover:bg-red-500/40 text-red-400 dark:text-red-300 border-red-500/50 dark:border-red-500/30"
-                : "bg-green-500/30 hover:bg-green-500/40 text-green-600 dark:text-green-300 border-green-500/50 dark:border-green-500/30",
-            )}
-            variant="outline"
             disabled={isCompleted && remainingTime === 0}
-          >
-            {timer.isRunning ? (
-              <Pause className="size-6" />
-            ) : (
-              <Play className="size-6" />
-            )}
-          </Button>
+            variant={timer.isRunning ? "destructive" : "success"}
+            size="xl"
+            tooltip={timer.isRunning ? "Pause" : "Start"}
+            className="rounded-full"
+          />
 
-          <Button
+          <ActionButton
+            icon={<RotateCcw className="size-6" />}
             onClick={handleReset}
-            variant="outline"
-            className="w-16 h-16 rounded-full bg-orange-500/30 hover:bg-orange-500/40 text-orange-600 dark:text-orange-300 border-orange-500/50 dark:border-orange-500/30 flex items-center justify-center p-0"
-          >
-            <RotateCcw className="size-6" />
-          </Button>
+            variant="warning"
+            size="xl"
+            tooltip="Reset"
+            className="rounded-full"
+          />
         </div>
       </div>
     </div>

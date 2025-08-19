@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, memo } from "react";
-import { Button } from "@/features/shared/ui/button";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Trash2, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -44,14 +44,13 @@ function CalculatorSidebarComponent() {
           {t("history.title")}
         </h2>
         {history.length > 0 && (
-          <Button
+          <ActionButton
+            icon={<Trash2 className="h-4 w-4" />}
             onClick={handleClearHistory}
-            variant="outline"
-            size="icon"
-            title={t("history.clearAll")}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+            variant="destructive"
+            size="default"
+            tooltip={t("history.clearAll")}
+          />
         )}
       </SidebarHeader>
 

@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, memo, useTransition } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { ActionButton } from "@/features/shared/ui/action-button";
 import { Button } from "@/features/shared/ui/button";
 import {
   Plus,
@@ -80,15 +81,13 @@ function NotepadSidebarComponent() {
       <SidebarHeader className="flex-shrink-0">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">My Notes</h2>
-          <Button
+          <ActionButton
+            icon={<Plus />}
             onClick={createNewNote}
             variant="ghost"
-            size="icon"
-            className="w-8 h-8"
-            title="Create new note"
-          >
-            <Plus />
-          </Button>
+            size="default"
+            tooltip="Create new note"
+          />
         </div>
         <div className="mb-2">
           <input

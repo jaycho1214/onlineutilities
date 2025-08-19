@@ -6,7 +6,6 @@ import { Button } from "@/features/shared/ui/button";
 import { calculatorService } from "../lib/calculator-db";
 import { useTranslations } from "next-intl";
 import { useCalculator } from "../lib/calculator-context";
-import { cn } from "@/lib/utils";
 
 interface CalculatorState {
   display: string;
@@ -21,7 +20,6 @@ function CalculatorPageComponent() {
   const { addToHistory } = useCalculator();
   const lastCalculationRef = useRef<string>("");
 
-  const buttonTextClassName = "text-lg sm:text-xl lg:text-2xl font-semibold";
 
   const [state, setState] = useState<CalculatorState>({
     display: "0",

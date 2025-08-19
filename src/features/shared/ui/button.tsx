@@ -11,14 +11,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]",
+          "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]",
         action:
-          "bg-gradient-to-r from-blue-700! to-purple-700! hover:from-blue-800 hover:to-purple-800 text-white shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:bg-gray-400! disabled:from-gray-400! disabled:to-gray-400! disabled:text-gray-200!",
+          "bg-gradient-to-r from-blue-700! to-purple-700! hover:from-blue-800 hover:to-purple-800 text-white shadow-lg transition-all duration-200 hover:shadow-xl disabled:bg-gray-400! disabled:from-gray-400! disabled:to-gray-400! disabled:text-gray-200!",
         destructive:
-          "bg-red-500 text-white hover:bg-red-600 hover:scale-[1.02] active:scale-[0.98]",
-        outline: "text-foreground hover:scale-[1.01] active:scale-[0.98]",
+          "bg-red-500 text-white hover:bg-red-600 active:scale-[0.98]",
+        outline: "text-foreground active:scale-[0.98]",
         ghost:
-          "text-foreground hover:scale-[1.02] transition-transform duration-200",
+          "text-foreground transition-transform duration-200",
         link: "text-primary underline-offset-4 decoration-transparent hover:decoration-current transition-colors duration-300 underline",
       },
       size: {
@@ -27,9 +27,9 @@ const buttonVariants = cva(
         default: "h-10 px-4 py-2",
         lg: "h-12 px-8 py-3",
         xl: "h-14 px-10 py-4 text-lg",
-        icon: "h-8 w-8 hover:rotate-12 hover:scale-110 transition-transform duration-300 ease-out",
+        icon: "h-8 w-8 hover:rotate-12 transition-transform duration-300 ease-out",
         "lg-icon":
-          "h-10 w-10 hover:rotate-12 hover:scale-110 transition-transform duration-300 ease-out",
+          "h-10 w-10 hover:rotate-12 transition-transform duration-300 ease-out",
         none: "",
       },
     },

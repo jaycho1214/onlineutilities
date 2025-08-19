@@ -3,6 +3,7 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
+import { CopyButton } from "@/features/shared/components/copy-button";
 import { useTranslations } from "next-intl";
 import { useFormatter } from "../lib/formatter-context";
 import { cn } from "@/lib/utils";
@@ -28,7 +29,6 @@ import {
   FileText,
   CheckCircle,
   XCircle,
-  Copy,
   RotateCcw,
   Minimize2,
   Eye,
@@ -361,49 +361,53 @@ function FormatterPageComponent() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 flex-shrink-0">
-            <Button
-              onClick={formatInput}
-              variant="outline"
-              disabled={!state.input.trim()}
-              className="text-white h-12 px-6"
-              size="lg"
-            >
-              <Code2 className="h-5 w-5 mr-2" />
-              {t("actions.format")}
-            </Button>
-            <Button
-              onClick={validateInput}
-              variant="outline"
-              disabled={!state.input.trim()}
-              className="h-12 px-6"
-              size="lg"
-            >
-              <CheckCircle className="h-5 w-5 mr-2" />
-              {t("actions.validate")}
-            </Button>
-            {formatterSupports(state.type, "minify") && (
+          <div className="flex items-center justify-start">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10 rounded-xl">
               <Button
-                onClick={minifyInput}
-                variant="outline"
+                onClick={formatInput}
+                variant="action"
                 disabled={!state.input.trim()}
-                className="h-12 px-6"
-                size="lg"
+                className="h-12 px-4 gap-2"
+                size="sm"
               >
-                <Minimize2 className="h-5 w-5 mr-2" />
-                {t("actions.minify")}
+                <Code2 className="h-4 w-4" />
+                {t("actions.format")}
               </Button>
-            )}
-            <Button
-              onClick={clearAll}
-              variant="outline"
-              disabled={!state.input.trim() && !state.output.trim()}
-              className="h-12 px-6"
-              size="lg"
-            >
-              <RotateCcw className="h-5 w-5 mr-2" />
-              {t("actions.clear")}
-            </Button>
+              <Button
+                onClick={validateInput}
+                variant="ghost"
+                disabled={!state.input.trim()}
+                className="h-12 px-4 gap-2"
+                size="sm"
+              >
+                <CheckCircle className="h-4 w-4" />
+                {t("actions.validate")}
+              </Button>
+              {formatterSupports(state.type, "minify") ? (
+                <Button
+                  onClick={minifyInput}
+                  variant="ghost"
+                  disabled={!state.input.trim()}
+                  className="h-12 px-4 gap-2"
+                  size="sm"
+                >
+                  <Minimize2 className="h-4 w-4" />
+                  {t("actions.minify")}
+                </Button>
+              ) : (
+                <div />
+              )}
+              <Button
+                onClick={clearAll}
+                variant="destructive"
+                disabled={!state.input.trim() && !state.output.trim()}
+                className="h-12 px-4 gap-2"
+                size="sm"
+              >
+                <RotateCcw className="h-4 w-4" />
+                {t("actions.clear")}
+              </Button>
+            </div>
           </div>
 
           {/* Input/Output Areas */}
@@ -414,16 +418,12 @@ function FormatterPageComponent() {
                 <h3 className="text-sm font-medium text-foreground/80">
                   {t("labels.input")}
                 </h3>
-                <Button
-                  onClick={copyInput}
-                  variant="ghost"
+                <CopyButton
                   size="sm"
-                  disabled={!state.input.trim()}
-                  className="h-10 px-3"
-                >
-                  <Copy className="h-4 w-4 mr-1" />
-                  {t("actions.copy")}
-                </Button>
+                  variant="ghost"
+                  title={t("actions.copy")}
+                  onClick={() => copyInput()}
+                />
               </div>
 
               <textarea
@@ -452,16 +452,12 @@ function FormatterPageComponent() {
                 <h3 className="text-sm font-medium text-foreground/80">
                   {t("labels.output")}
                 </h3>
-                <Button
-                  onClick={copyOutput}
-                  variant="ghost"
+                <CopyButton
                   size="sm"
-                  disabled={!state.output.trim()}
-                  className="h-10 px-3"
-                >
-                  <Copy className="h-4 w-4 mr-1" />
-                  {t("actions.copy")}
-                </Button>
+                  variant="ghost"
+                  title={t("actions.copy")}
+                  onClick={() => copyOutput()}
+                />
               </div>
               <div
                 className={cn(
