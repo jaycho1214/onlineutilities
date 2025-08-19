@@ -223,14 +223,24 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
                 tooltip={t("actions.fullscreen")}
               />
               <ActionButton
-                icon={timer.soundEnabled ? <Bell className="size-4" /> : <BellOff className="size-4" />}
+                icon={
+                  timer.soundEnabled ? (
+                    <Bell className="size-4" />
+                  ) : (
+                    <BellOff className="size-4" />
+                  )
+                }
                 variant={timer.soundEnabled ? "info" : "ghost"}
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleSound(timer.id);
                 }}
-                tooltip={timer.soundEnabled ? t("actions.soundEnabled") : t("actions.soundDisabled")}
+                tooltip={
+                  timer.soundEnabled
+                    ? t("actions.soundEnabled")
+                    : t("actions.soundDisabled")
+                }
               />
               <ActionButton
                 icon={<Trash2 className="size-4" />}
@@ -360,7 +370,13 @@ export function TimerCard({ timer, isActive, onActivate }: TimerCardProps) {
         {/* Controls */}
         <div className="flex items-center justify-center gap-2">
           <ActionButton
-            icon={timer.isRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
+            icon={
+              timer.isRunning ? (
+                <Pause className="size-4" />
+              ) : (
+                <Play className="size-4" />
+              )
+            }
             onClick={(e) => {
               e.stopPropagation();
               handleStartPause();

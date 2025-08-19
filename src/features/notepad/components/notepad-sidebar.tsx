@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, memo, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ActionButton } from "@/features/shared/ui/action-button";
@@ -30,14 +31,15 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from "@/features/shared/ui/context-menu-glass";
+} from "@/features/shared/ui/context-menu";
 import { Input } from "@/features/shared/ui/input";
 
 function NotepadSidebarComponent() {
+  const t = useTranslations();
   const pathname = usePathname();
   const currentNoteIdFromUrl = useMemo(
     () => pathname.split("/").pop(),
-    [pathname]
+    [pathname],
   );
   const [search, setSearch] = useState("");
   const [, startTransition] = useTransition();
@@ -72,7 +74,7 @@ function NotepadSidebarComponent() {
 
       // Match all search terms
       return searchTerms.every(
-        (term) => titleLower.includes(term) || contentLower.includes(term)
+        (term) => titleLower.includes(term) || contentLower.includes(term),
       );
     });
   }, [notes, search]);
@@ -87,7 +89,7 @@ function NotepadSidebarComponent() {
             onClick={createNewNote}
             variant="ghost"
             size="default"
-            tooltip="Create new note"
+            tooltip={t("Common.tooltips.createNewNote")}
           />
         </div>
         <div className="mb-2">
@@ -98,7 +100,7 @@ function NotepadSidebarComponent() {
                 setSearch(e.target.value);
               });
             }}
-            placeholder="Search notes..."
+            placeholder={t("Common.placeholders.searchNotes")}
             autoComplete="off"
             spellCheck="false"
           />
@@ -174,7 +176,7 @@ function NotepadSidebarComponent() {
                     className="text-red-400 focus:text-red-300"
                     onClick={() => {
                       const confirmDelete = window.confirm(
-                        `Delete "${note.title || "Untitled"}"?`
+                        `Delete "${note.title || "Untitled"}"?`,
                       );
                       if (confirmDelete) {
                         deleteNote(note.id);

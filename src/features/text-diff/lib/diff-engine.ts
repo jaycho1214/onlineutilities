@@ -1,6 +1,6 @@
 /**
  * Diff Engine Module
- * 
+ *
  * This module provides the core diff functionality using the jsdiff library.
  * It handles all diff operations and transformations.
  */
@@ -8,16 +8,23 @@
 import * as diff from "diff";
 import type { Change } from "diff";
 import { nanoid } from "nanoid";
-import type { DiffOptions, DiffResult, DiffBlock, DiffLine, WordDiff, DiffChange } from "../types";
+import type {
+  DiffOptions,
+  DiffResult,
+  DiffBlock,
+  DiffLine,
+  WordDiff,
+  DiffChange,
+} from "../types";
 
 /**
  * Utility function to process diff value into meaningful lines
  * Optimized to eliminate code duplication throughout the file
  */
 function processValueToLines(value: string | undefined): string[] {
-  return (value || "").split("\n").filter((_, i, arr) => 
-    i < arr.length - 1 || arr[i] !== ""
-  );
+  return (value || "")
+    .split("\n")
+    .filter((_, i, arr) => i < arr.length - 1 || arr[i] !== "");
 }
 
 /**
@@ -33,9 +40,9 @@ function processValueToLinesCached(value: string | undefined): string[] {
   if (lineProcessingCache.has(key)) {
     return lineProcessingCache.get(key)!;
   }
-  
+
   const result = processValueToLines(value);
-  
+
   // Limit cache size to prevent memory leaks
   if (lineProcessingCache.size > 1000) {
     const firstKey = lineProcessingCache.keys().next().value;
@@ -43,7 +50,7 @@ function processValueToLinesCached(value: string | undefined): string[] {
       lineProcessingCache.delete(firstKey);
     }
   }
-  
+
   lineProcessingCache.set(key, result);
   return result;
 }
@@ -54,7 +61,7 @@ function processValueToLinesCached(value: string | undefined): string[] {
 export function computeLineDiff(
   originalText: string,
   modifiedText: string,
-  options: DiffOptions
+  options: DiffOptions,
 ): DiffResult {
   // Configure jsdiff options based on our DiffOptions
   const jsDiffOptions = {
@@ -90,7 +97,7 @@ export function computeLineDiff(
 export function computeWordDiff(
   originalText: string,
   modifiedText: string,
-  options: Pick<DiffOptions, "ignoreCase">
+  options: Pick<DiffOptions, "ignoreCase">,
 ): Change[] {
   const jsDiffOptions = {
     ignoreCase: options.ignoreCase,
@@ -105,7 +112,7 @@ export function computeWordDiff(
 export function computeCharDiff(
   originalText: string,
   modifiedText: string,
-  options: Pick<DiffOptions, "ignoreCase">
+  options: Pick<DiffOptions, "ignoreCase">,
 ): Change[] {
   const jsDiffOptions = {
     ignoreCase: options.ignoreCase,
@@ -117,20 +124,21 @@ export function computeCharDiff(
 /**
  * Compute word-level differences for two lines
  */
-function computeWordDiffsForLines(oldLine: string, newLine: string): WordDiff[] {
+function computeWordDiffsForLines(
+  oldLine: string,
+  newLine: string,
+): WordDiff[] {
   const wordChanges = diff.diffWords(oldLine, newLine);
-  return wordChanges.map(change => ({
+  return wordChanges.map((change) => ({
     type: change.added ? "added" : change.removed ? "removed" : "unchanged",
-    content: change.value
+    content: change.value,
   }));
 }
 
 /**
  * Convert diff changes to diff blocks for easier rendering and merging
  */
-function convertChangesToBlocks(
-  changes: Change[]
-): DiffBlock[] {
+function convertChangesToBlocks(changes: Change[]): DiffBlock[] {
   const blocks: DiffBlock[] = [];
   let oldLineNumber = 1;
   let newLineNumber = 1;
@@ -225,7 +233,7 @@ function calculateStats(changes: Change[]): DiffResult["stats"] {
 export function createUnifiedPatch(
   originalText: string,
   modifiedText: string,
-  options: DiffOptions
+  options: DiffOptions,
 ): string {
   const patchOptions = {
     context: options.context,
@@ -240,7 +248,7 @@ export function createUnifiedPatch(
     modifiedText,
     "",
     "",
-    patchOptions
+    patchOptions,
   );
 }
 
@@ -252,7 +260,7 @@ export function applyMergeAction(
   modifiedText: string,
   blocks: DiffBlock[],
   blockId: string,
-  action: "accept-current" | "accept-incoming" | "accept-both"
+  action: "accept-current" | "accept-incoming" | "accept-both",
 ): string {
   const block = blocks.find((b) => b.id === blockId);
   if (!block) return originalText;
@@ -278,7 +286,7 @@ export function applyMergeAction(
         resultLines.splice(
           block.oldStartLine - 1,
           block.oldLines.length,
-          ...block.newLines
+          ...block.newLines,
         );
       }
       break;
@@ -305,26 +313,28 @@ export function applyMergeAction(
 export function applyAllMergeActions(
   originalText: string,
   modifiedText: string,
-  blocks: DiffBlock[]
+  blocks: DiffBlock[],
 ): string {
   const originalLines = originalText.split("\n");
   const resultLines = [...originalLines];
-  
+
   // Sort blocks by line position to apply changes in reverse order
   // This prevents line number shifts from affecting subsequent operations
-  const sortedBlocks = [...blocks].sort((a, b) => b.oldStartLine - a.oldStartLine);
-  
+  const sortedBlocks = [...blocks].sort(
+    (a, b) => b.oldStartLine - a.oldStartLine,
+  );
+
   for (const block of sortedBlocks) {
     if (!block.mergeAction) continue; // Skip blocks without merge decisions
-    
+
     const startIndex = block.oldStartLine - 1;
     const deleteCount = block.oldLines.length;
-    
+
     switch (block.mergeAction) {
       case "accept-current":
         // Keep original lines (do nothing)
         break;
-        
+
       case "accept-incoming":
         if (block.type === "removed") {
           // Remove the lines
@@ -337,7 +347,7 @@ export function applyAllMergeActions(
           resultLines.splice(startIndex, deleteCount, ...block.newLines);
         }
         break;
-        
+
       case "accept-both":
         if (block.type === "modified") {
           // Keep original and add new lines after
@@ -350,16 +360,17 @@ export function applyAllMergeActions(
         break;
     }
   }
-  
+
   return resultLines.join("\n");
 }
 
 /**
  * Format lines for side-by-side view
  */
-export function formatSideBySideView(
-  changes: DiffChange[]
-): { left: DiffLine[]; right: DiffLine[] } {
+export function formatSideBySideView(changes: DiffChange[]): {
+  left: DiffLine[];
+  right: DiffLine[];
+} {
   const leftLines: DiffLine[] = [];
   const rightLines: DiffLine[] = [];
   let leftLineNumber = 1;
@@ -377,26 +388,29 @@ export function formatSideBySideView(
 
         // This is a modification - show both sides with ~ symbol and word-level diffs
         const maxLines = Math.max(lines.length, nextLines.length);
-        
+
         for (let j = 0; j < maxLines; j++) {
           const oldLine = lines[j] || "";
           const newLine = nextLines[j] || "";
-          const wordDiffs = oldLine && newLine ? computeWordDiffsForLines(oldLine, newLine) : undefined;
-          
+          const wordDiffs =
+            oldLine && newLine
+              ? computeWordDiffsForLines(oldLine, newLine)
+              : undefined;
+
           leftLines.push({
             type: "modified",
             content: oldLine,
             lineNumber: j < lines.length ? leftLineNumber++ : undefined,
-            wordDiffs: wordDiffs
+            wordDiffs: wordDiffs,
           });
           rightLines.push({
             type: "modified",
             content: newLine,
             lineNumber: j < nextLines.length ? rightLineNumber++ : undefined,
-            wordDiffs: wordDiffs
+            wordDiffs: wordDiffs,
           });
         }
-        
+
         // Skip the next change since we processed it
         i++;
       } else {
@@ -474,33 +488,36 @@ export function formatUnifiedView(changes: DiffChange[]): DiffLine[] {
 
         // This is a modification - show old lines first, then new lines with word-level diffs
         const maxLinesUnified = Math.max(changeLines.length, nextLines.length);
-        
+
         for (let j = 0; j < maxLinesUnified; j++) {
           const oldLine = changeLines[j] || "";
           const newLine = nextLines[j] || "";
-          const wordDiffs = oldLine && newLine ? computeWordDiffsForLines(oldLine, newLine) : undefined;
-          
+          const wordDiffs =
+            oldLine && newLine
+              ? computeWordDiffsForLines(oldLine, newLine)
+              : undefined;
+
           if (j < changeLines.length) {
             lines.push({
               type: "modified",
               content: oldLine,
               oldLineNumber: oldLineNumber++,
               newLineNumber: undefined,
-              wordDiffs: wordDiffs
+              wordDiffs: wordDiffs,
             });
           }
-          
+
           if (j < nextLines.length) {
             lines.push({
               type: "modified",
               content: newLine,
               oldLineNumber: undefined,
               newLineNumber: newLineNumber++,
-              wordDiffs: wordDiffs
+              wordDiffs: wordDiffs,
             });
           }
         }
-        
+
         // Skip the next change since we processed it
         i++;
       } else {
@@ -544,7 +561,11 @@ export function formatUnifiedView(changes: DiffChange[]): DiffLine[] {
  * Export diff as various formats
  */
 export const exportFormats = {
-  unifiedDiff: (originalText: string, modifiedText: string, options: DiffOptions): string => {
+  unifiedDiff: (
+    originalText: string,
+    modifiedText: string,
+    options: DiffOptions,
+  ): string => {
     return createUnifiedPatch(originalText, modifiedText, options);
   },
 
@@ -560,9 +581,9 @@ export const exportFormats = {
       `- **Deletions**: ${diffResult.stats.deletions} lines`,
       `- **Modifications**: ${diffResult.stats.modifications} lines\n`,
       "## Changes\n",
-      "```diff"
+      "```diff",
     ];
-    
+
     diffResult.changes.forEach((change) => {
       const lines = processValueToLinesCached(change.value);
       const prefix = change.added ? "+" : change.removed ? "-" : " ";
@@ -570,7 +591,7 @@ export const exportFormats = {
         if (line) parts.push(`${prefix} ${line}`);
       });
     });
-    
+
     parts.push("```");
     return parts.join("\n");
   },
@@ -600,7 +621,11 @@ export const exportFormats = {
 
     diffResult.changes.forEach((change) => {
       const lines = processValueToLinesCached(change.value);
-      const className = change.added ? "added" : change.removed ? "removed" : "";
+      const className = change.added
+        ? "added"
+        : change.removed
+          ? "removed"
+          : "";
       lines.forEach((line) => {
         if (line) {
           html += `<div class="line ${className}">${escapeHtml(line)}</div>`;

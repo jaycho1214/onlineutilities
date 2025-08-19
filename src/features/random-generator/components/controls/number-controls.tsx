@@ -3,7 +3,13 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/features/shared/ui/select";
 import { Checkbox } from "@/features/shared/ui/checkbox";
 import type { NumberConfig, NumberType } from "../../types";
 
@@ -15,31 +21,37 @@ interface NumberControlsProps {
 export function NumberControls({ config, onChange }: NumberControlsProps) {
   const t = useTranslations("RandomGenerator.number");
 
-  const handleChange = <K extends keyof NumberConfig>(field: K, value: NumberConfig[K]) => {
+  const handleChange = <K extends keyof NumberConfig>(
+    field: K,
+    value: NumberConfig[K],
+  ) => {
     onChange({ ...config, [field]: value });
   };
 
   // Calculate conflict probability
   const calculateConflictProbability = () => {
     const range = config.max - config.min + 1;
-    const totalPossibleNumbers = config.type === "float" 
-      ? range * Math.pow(10, config.decimalPlaces)
-      : range;
-    
+    const totalPossibleNumbers =
+      config.type === "float"
+        ? range * Math.pow(10, config.decimalPlaces)
+        : range;
+
     // Real-world usage scenarios for collision probability
     const scenarios = [
       { users: 1000, label: "Small dataset (1K)" },
       { users: 10000, label: "Medium dataset (10K)" },
       { users: 100000, label: "Large dataset (100K)" },
-      { users: 1000000, label: "Massive dataset (1M)" }
+      { users: 1000000, label: "Massive dataset (1M)" },
     ];
-    
-    return scenarios.map(scenario => {
+
+    return scenarios.map((scenario) => {
       if (config.unique) return { ...scenario, probability: 0 }; // No collisions when unique is enabled
-      if (scenario.users >= totalPossibleNumbers) return { ...scenario, probability: 100 };
-      
+      if (scenario.users >= totalPossibleNumbers)
+        return { ...scenario, probability: 100 };
+
       // Birthday paradox: probability of at least one collision
-      const probability = 1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossibleNumbers));
+      const probability =
+        1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossibleNumbers));
       return { ...scenario, probability: probability * 100 };
     });
   };
@@ -75,8 +87,8 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           {t("type")}
         </label>
-        <Select 
-          value={config.type} 
+        <Select
+          value={config.type}
           onValueChange={(value) => handleChange("type", value as NumberType)}
         >
           <SelectTrigger>
@@ -99,13 +111,17 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
             type="number"
             placeholder="Min"
             value={config.min}
-            onChange={(e) => handleChange("min", parseFloat(e.target.value) || 0)}
+            onChange={(e) =>
+              handleChange("min", parseFloat(e.target.value) || 0)
+            }
           />
           <Input
             type="number"
             placeholder="Max"
             value={config.max}
-            onChange={(e) => handleChange("max", parseFloat(e.target.value) || 100)}
+            onChange={(e) =>
+              handleChange("max", parseFloat(e.target.value) || 100)
+            }
           />
         </div>
       </div>
@@ -121,7 +137,9 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
             min={0}
             max={10}
             value={config.decimalPlaces}
-            onChange={(e) => handleChange("decimalPlaces", parseInt(e.target.value) || 2)}
+            onChange={(e) =>
+              handleChange("decimalPlaces", parseInt(e.target.value) || 2)
+            }
             className="w-20"
           />
         </div>
@@ -135,7 +153,7 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
             checked={config.unique}
             onCheckedChange={(checked) => handleChange("unique", !!checked)}
           />
-          <label 
+          <label
             htmlFor="unique"
             className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
           >
@@ -149,7 +167,7 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
             checked={config.sorted}
             onCheckedChange={(checked) => handleChange("sorted", !!checked)}
           />
-          <label 
+          <label
             htmlFor="sorted"
             className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
           >
@@ -168,29 +186,35 @@ export function NumberControls({ config, onChange }: NumberControlsProps) {
           </div>
           <div className="space-y-1">
             {conflictProbability.map((scenario, index) => (
-              <div key={index} className="flex items-center justify-between text-xs">
+              <div
+                key={index}
+                className="flex items-center justify-between text-xs"
+              >
                 <span className="text-blue-800 dark:text-blue-200">
                   {scenario.label}:
                 </span>
-                <span className={`font-mono ${
-                  config.unique
-                    ? "text-gray-500 dark:text-gray-400"
-                    : scenario.probability < 0.1 
-                      ? "text-green-600 dark:text-green-400" 
-                      : scenario.probability < 1 
-                        ? "text-yellow-600 dark:text-yellow-400"
-                        : "text-red-600 dark:text-red-400"
-                }`}>
-                  {config.unique ? "0%" : formatProbability(scenario.probability)}
+                <span
+                  className={`font-mono ${
+                    config.unique
+                      ? "text-gray-500 dark:text-gray-400"
+                      : scenario.probability < 0.1
+                        ? "text-green-600 dark:text-green-400"
+                        : scenario.probability < 1
+                          ? "text-yellow-600 dark:text-yellow-400"
+                          : "text-red-600 dark:text-red-400"
+                  }`}
+                >
+                  {config.unique
+                    ? "0%"
+                    : formatProbability(scenario.probability)}
                 </span>
               </div>
             ))}
           </div>
           <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
-            {config.unique 
+            {config.unique
               ? "Unique option enabled - no collisions possible"
-              : "Probability of number collisions in different dataset sizes"
-            }
+              : "Probability of number collisions in different dataset sizes"}
           </p>
         </div>
       </div>

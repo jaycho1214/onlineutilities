@@ -148,7 +148,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
     },
-    [errors]
+    [errors],
   );
 
   return (
@@ -195,7 +195,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                     className={cn(
                       "py-2.5 text-sm",
                       errors.message &&
-                        "border-red-500/50 focus-visible:ring-red-500/50"
+                        "border-red-500/50 focus-visible:ring-red-500/50",
                     )}
                     maxLength={1000}
                   />
@@ -227,7 +227,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                     className={cn(
                       errors.email
                         ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20"
+                        : "border-white/20",
                     )}
                   />
                   {errors.email && (

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { ActionButton } from "@/features/shared/ui/action-button";
 import { Play, Pause, RotateCcw, Minimize2, Bell, BellOff } from "lucide-react";
@@ -15,6 +16,7 @@ interface TimerFullscreenProps {
 const formatTime = formatDuration;
 
 export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
+  const t = useTranslations();
   const router = useRouter();
   const {
     timers,
@@ -27,10 +29,10 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
 
   const timer = useMemo(
     () => timers.find((t) => t.id === timerId),
-    [timers, timerId]
+    [timers, timerId],
   );
   const [remainingTime, setRemainingTime] = useState(
-    timer ? getRemainingTime(timer) : 0
+    timer ? getRemainingTime(timer) : 0,
   );
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
           variant="ghost"
           size="lg"
           onClick={handleMinimize}
-          tooltip="Exit fullscreen"
+          tooltip={t("Common.tooltips.exitFullscreen")}
         />
         <ActionButton
           icon={
@@ -165,8 +167,8 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
                 isCompleted
                   ? "text-green-500"
                   : timer.isRunning
-                  ? "text-blue-500 transition-none"
-                  : "text-orange-500 transition-all duration-300"
+                    ? "text-blue-500 transition-none"
+                    : "text-orange-500 transition-all duration-300"
               }
               style={{
                 transition: timer.isRunning ? "none" : undefined,
@@ -196,7 +198,11 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
             disabled={isCompleted && remainingTime === 0}
             variant={timer.isRunning ? "destructive" : "success"}
             size="xl"
-            tooltip={timer.isRunning ? "Pause" : "Start"}
+            tooltip={
+              timer.isRunning
+                ? t("Common.actions.pause")
+                : t("Common.actions.start")
+            }
             className="rounded-full"
           />
 
@@ -205,7 +211,7 @@ export function TimerFullscreen({ timerId }: TimerFullscreenProps) {
             onClick={handleReset}
             variant="warning"
             size="xl"
-            tooltip="Reset"
+            tooltip={t("Common.actions.reset")}
             className="rounded-full"
           />
         </div>

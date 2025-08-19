@@ -17,7 +17,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/features/shared/ui/command-glass";
+} from "@/features/shared/ui/command";
 import {
   Select,
   SelectContent,
@@ -286,7 +286,9 @@ function FormatterPageComponent() {
                   <div className="flex border border-white/10 rounded-lg overflow-hidden">
                     <Button
                       onClick={() => handleViewModeChange("raw")}
-                      variant={state.csvViewMode === "raw" ? "default" : "ghost"}
+                      variant={
+                        state.csvViewMode === "raw" ? "default" : "ghost"
+                      }
                       size="sm"
                       className="rounded-none border-0"
                     >

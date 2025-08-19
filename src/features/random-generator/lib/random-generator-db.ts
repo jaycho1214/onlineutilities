@@ -15,15 +15,15 @@ import { nanoid } from "nanoid";
 /**
  * Random generator types supported by the application
  */
-export type GeneratorType = 
-  | "password" 
-  | "number" 
-  | "uuid" 
+export type GeneratorType =
+  | "password"
+  | "number"
+  | "uuid"
   | "nanoid"
   | "cuid"
-  | "string" 
-  | "boolean" 
-  | "color" 
+  | "string"
+  | "boolean"
+  | "color"
   | "date";
 
 /**
@@ -87,7 +87,9 @@ class RandomGeneratorDatabase extends Dexie {
 
     // Handle database errors
     this.on("blocked", () => {
-      console.warn("Random generator database upgrade blocked by another connection");
+      console.warn(
+        "Random generator database upgrade blocked by another connection",
+      );
     });
 
     this.on("versionchange", () => {
@@ -192,7 +194,10 @@ export class RandomGeneratorService {
    * @param limit - Maximum number of entries to return
    * @returns Promise<GenerationEntry[]> - Array of generation entries for the type
    */
-  async getHistoryByType(type: GeneratorType, limit: number = 20): Promise<GenerationEntry[]> {
+  async getHistoryByType(
+    type: GeneratorType,
+    limit: number = 20,
+  ): Promise<GenerationEntry[]> {
     try {
       return await randomGeneratorDb.history
         .where("type")
@@ -216,7 +221,7 @@ export class RandomGeneratorService {
   async addToHistory(
     type: GeneratorType,
     config: Record<string, unknown>,
-    results: string[]
+    results: string[],
   ): Promise<GenerationEntry> {
     try {
       const now = new Date().toISOString();
@@ -319,7 +324,7 @@ export class RandomGeneratorService {
   async savePreset(
     name: string,
     type: GeneratorType,
-    config: Record<string, unknown>
+    config: Record<string, unknown>,
   ): Promise<GeneratorPreset> {
     try {
       const now = new Date().toISOString();
@@ -350,7 +355,7 @@ export class RandomGeneratorService {
    */
   async updatePreset(
     id: string,
-    updates: Partial<Omit<GeneratorPreset, "id" | "createdAt">>
+    updates: Partial<Omit<GeneratorPreset, "id" | "createdAt">>,
   ): Promise<boolean> {
     try {
       const preset = await randomGeneratorDb.presets.get(id);
@@ -397,7 +402,7 @@ export class RandomGeneratorService {
   async presetNameExists(
     name: string,
     type: GeneratorType,
-    excludeId?: string
+    excludeId?: string,
   ): Promise<boolean> {
     try {
       const existing = await randomGeneratorDb.presets
@@ -458,7 +463,7 @@ export class RandomGeneratorService {
    * @returns Promise<GeneratorSettings> - Updated settings
    */
   async updateSettings(
-    updates: Partial<Omit<GeneratorSettings, "id">>
+    updates: Partial<Omit<GeneratorSettings, "id">>,
   ): Promise<GeneratorSettings> {
     try {
       const currentSettings = await this.getSettings();

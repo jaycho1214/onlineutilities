@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 import {
@@ -10,12 +11,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/features/shared/ui/command-glass";
+} from "@/features/shared/ui/command";
 
 import { useCommand } from "@/features/shared/providers/command-provider";
 import { utilities } from "@/constants";
 
 export function CommandPalette() {
+  const t = useTranslations();
   const { open, setOpen } = useCommand();
   const router = useRouter();
 
@@ -41,7 +43,7 @@ export function CommandPalette() {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder={t("Common.placeholders.typeCommand")} />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>

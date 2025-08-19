@@ -3,7 +3,13 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/features/shared/ui/select";
 import type { DateConfig, DateFormat } from "../../types";
 
 interface DateControlsProps {
@@ -14,7 +20,10 @@ interface DateControlsProps {
 export function DateControls({ config, onChange }: DateControlsProps) {
   const t = useTranslations("RandomGenerator.date");
 
-  const handleChange = <K extends keyof DateConfig>(field: K, value: DateConfig[K]) => {
+  const handleChange = <K extends keyof DateConfig>(
+    field: K,
+    value: DateConfig[K],
+  ) => {
     onChange({ ...config, [field]: value });
   };
 
@@ -64,8 +73,8 @@ export function DateControls({ config, onChange }: DateControlsProps) {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {t("format")}
         </label>
-        <Select 
-          value={config.format} 
+        <Select
+          value={config.format}
           onValueChange={(value: DateFormat) => handleChange("format", value)}
         >
           <SelectTrigger>
@@ -95,14 +104,17 @@ export function DateControls({ config, onChange }: DateControlsProps) {
             className="font-mono"
           />
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            YYYY = year, MM = month, DD = day, HH = hour, mm = minute, ss = second
+            YYYY = year, MM = month, DD = day, HH = hour, mm = minute, ss =
+            second
           </p>
         </div>
       )}
 
       {/* Preview */}
       <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview format:</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          Preview format:
+        </p>
         <code className="text-sm font-mono text-gray-900 dark:text-gray-100">
           {config.format === "iso" && "2023-12-25"}
           {config.format === "us" && "12/25/2023"}

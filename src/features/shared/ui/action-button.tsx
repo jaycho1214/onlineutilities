@@ -35,7 +35,7 @@ const actionButtonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 interface ActionButtonProps
@@ -65,7 +65,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const buttonContent = (
       <Button
@@ -76,7 +76,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
         className={cn(
           actionButtonVariants({ variant, size }),
           loading && "animate-pulse",
-          className
+          className,
         )}
         {...props}
       >
@@ -100,7 +100,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
     }
 
     return buttonContent;
-  }
+  },
 );
 
 ActionButton.displayName = "ActionButton";

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Compare two texts and visualize differences with git-like formatting. Interactive merge capabilities and export options.",
   keywords: [
     "text diff",
-    "compare text", 
+    "compare text",
     "merge text",
     "git diff",
     "text comparison",

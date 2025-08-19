@@ -20,7 +20,6 @@ function CalculatorPageComponent() {
   const { addToHistory } = useCalculator();
   const lastCalculationRef = useRef<string>("");
 
-
   const [state, setState] = useState<CalculatorState>({
     display: "0",
     previousValue: "",
@@ -306,106 +305,58 @@ function CalculatorPageComponent() {
           {/* Buttons Grid */}
           <div className="flex-1 grid grid-cols-4 gap-2">
             {/* Row 1 */}
-            <Button
-              onClick={clear}
-              variant="outline"
-            >
+            <Button onClick={clear} variant="outline">
               {t("buttons.clear")}
             </Button>
-            <Button
-              onClick={clearEntry}
-              variant="outline"
-            >
+            <Button onClick={clearEntry} variant="outline">
               {t("buttons.clearEntry")}
             </Button>
-            <Button
-              onClick={backspace}
-              variant="outline"
-            >
+            <Button onClick={backspace} variant="outline">
               {t("buttons.backspace")}
             </Button>
-            <Button
-              onClick={() => performOperation("/")}
-              variant="outline"
-            >
+            <Button onClick={() => performOperation("/")} variant="outline">
               {t("buttons.divide")}
             </Button>
 
             {/* Row 2 */}
-            <Button
-              onClick={() => inputNumber("7")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("7")} variant="outline">
               7
             </Button>
-            <Button
-              onClick={() => inputNumber("8")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("8")} variant="outline">
               8
             </Button>
-            <Button
-              onClick={() => inputNumber("9")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("9")} variant="outline">
               9
             </Button>
-            <Button
-              onClick={() => performOperation("*")}
-              variant="outline"
-            >
+            <Button onClick={() => performOperation("*")} variant="outline">
               {t("buttons.multiply")}
             </Button>
 
             {/* Row 3 */}
-            <Button
-              onClick={() => inputNumber("4")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("4")} variant="outline">
               4
             </Button>
-            <Button
-              onClick={() => inputNumber("5")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("5")} variant="outline">
               5
             </Button>
-            <Button
-              onClick={() => inputNumber("6")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("6")} variant="outline">
               6
             </Button>
-            <Button
-              onClick={() => performOperation("-")}
-              variant="outline"
-            >
+            <Button onClick={() => performOperation("-")} variant="outline">
               {t("buttons.subtract")}
             </Button>
 
             {/* Row 4 */}
-            <Button
-              onClick={() => inputNumber("1")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("1")} variant="outline">
               1
             </Button>
-            <Button
-              onClick={() => inputNumber("2")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("2")} variant="outline">
               2
             </Button>
-            <Button
-              onClick={() => inputNumber("3")}
-              variant="outline"
-            >
+            <Button onClick={() => inputNumber("3")} variant="outline">
               3
             </Button>
-            <Button
-              onClick={() => performOperation("+")}
-              variant="outline"
-            >
+            <Button onClick={() => performOperation("+")} variant="outline">
               {t("buttons.add")}
             </Button>
 
@@ -417,10 +368,7 @@ function CalculatorPageComponent() {
             >
               0
             </Button>
-            <Button
-              onClick={inputDecimal}
-              variant="outline"
-            >
+            <Button onClick={inputDecimal} variant="outline">
               {t("buttons.decimal")}
             </Button>
             <Button

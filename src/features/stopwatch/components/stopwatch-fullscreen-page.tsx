@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { ActionButton } from "@/features/shared/ui/action-button";
 import { Play, Pause, RotateCcw, Minimize2, Flag } from "lucide-react";
@@ -15,6 +16,7 @@ interface StopwatchFullscreenProps {
 export function StopwatchFullscreenPage({
   stopwatchId,
 }: StopwatchFullscreenProps) {
+  const t = useTranslations();
   const router = useRouter();
   const {
     stopwatches,
@@ -101,7 +103,7 @@ export function StopwatchFullscreenPage({
           variant="ghost"
           size="lg"
           onClick={handleMinimize}
-          tooltip="Exit fullscreen"
+          tooltip={t("Common.tooltips.exitFullscreen")}
         />
       </div>
 
@@ -149,11 +151,21 @@ export function StopwatchFullscreenPage({
         {/* Controls */}
         <div className="flex items-center gap-6">
           <ActionButton
-            icon={stopwatch.isRunning ? <Pause className="size-6" /> : <Play className="size-6" />}
+            icon={
+              stopwatch.isRunning ? (
+                <Pause className="size-6" />
+              ) : (
+                <Play className="size-6" />
+              )
+            }
             onClick={handleStartPause}
             variant={stopwatch.isRunning ? "destructive" : "success"}
             size="xl"
-            tooltip={stopwatch.isRunning ? "Pause" : "Start"}
+            tooltip={
+              stopwatch.isRunning
+                ? t("Common.actions.pause")
+                : t("Common.actions.start")
+            }
             className="rounded-full"
           />
 
@@ -163,7 +175,7 @@ export function StopwatchFullscreenPage({
             disabled={!stopwatch.isRunning}
             variant="info"
             size="xl"
-            tooltip="Lap"
+            tooltip={t("Common.tooltips.lap")}
             className="rounded-full"
           />
 
@@ -172,7 +184,7 @@ export function StopwatchFullscreenPage({
             onClick={handleReset}
             variant="warning"
             size="xl"
-            tooltip="Reset"
+            tooltip={t("Common.actions.reset")}
             className="rounded-full"
           />
         </div>

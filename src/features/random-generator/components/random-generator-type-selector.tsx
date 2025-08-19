@@ -23,14 +23,17 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/features/shared/ui/command-glass";
+} from "@/features/shared/ui/command";
 
 interface RandomGeneratorTypeSelectorProps {
   activeType: GeneratorType;
   onTypeChange: (type: GeneratorType) => void;
 }
 
-const typeIcons: Record<GeneratorType, React.ComponentType<{ className?: string }>> = {
+const typeIcons: Record<
+  GeneratorType,
+  React.ComponentType<{ className?: string }>
+> = {
   password: KeyRound,
   number: Hash,
   uuid: Fingerprint,
@@ -51,7 +54,7 @@ export function RandomGeneratorTypeSelector({
 
   const types: GeneratorType[] = [
     "password",
-    "number", 
+    "number",
     "uuid",
     "nanoid",
     "cuid",
@@ -79,9 +82,7 @@ export function RandomGeneratorTypeSelector({
         className="w-full justify-start gap-2 h-10 px-3 text-left bg-white/30 dark:bg-white/5 backdrop-blur-sm border-black/10 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10"
       >
         {getTypeIcon(activeType)}
-        <span className="font-medium">
-          {t(`types.${activeType}`)}
-        </span>
+        <span className="font-medium">{t(`types.${activeType}`)}</span>
         <ChevronDown className="size-4 opacity-50 ml-auto" />
       </Button>
 
@@ -101,9 +102,7 @@ export function RandomGeneratorTypeSelector({
                   {getTypeIcon(type)}
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-medium">
-                    {t(`types.${type}`)}
-                  </span>
+                  <span className="font-medium">{t(`types.${type}`)}</span>
                   <span className="text-xs text-muted-foreground">
                     {t(`${type}.description`)}
                   </span>

@@ -11,7 +11,12 @@ import React, {
 import { textDiffReducer, initialState } from "./text-diff-reducer";
 import { computeLineDiff } from "./diff-engine";
 import { textDiffService } from "./text-diff-db";
-import type { TextDiffState, TextDiffAction, MergeAction, DiffViewMode } from "../types";
+import type {
+  TextDiffState,
+  TextDiffAction,
+  MergeAction,
+  DiffViewMode,
+} from "../types";
 
 interface TextDiffContextType {
   state: TextDiffState;
@@ -34,7 +39,9 @@ interface TextDiffContextType {
   loadFromHistory: (id: string) => Promise<void>;
 }
 
-const TextDiffContext = createContext<TextDiffContextType | undefined>(undefined);
+const TextDiffContext = createContext<TextDiffContextType | undefined>(
+  undefined,
+);
 
 export function TextDiffProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(textDiffReducer, initialState);
@@ -84,24 +91,29 @@ export function TextDiffProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Diff operations - optimized with useCallback
-  const computeDiff = useCallback(() => {    
+  const computeDiff = useCallback(() => {
     if (!state.originalText && !state.modifiedText) {
       dispatch({ type: "SET_ERROR", payload: "Please enter text to compare" });
       return;
     }
 
     dispatch({ type: "SET_LOADING", payload: true });
-    
+
     // Use timeout for large diffs to prevent blocking UI
     const timeoutId = setTimeout(() => {
       try {
-        const result = computeLineDiff(state.originalText, state.modifiedText, state.diffOptions);
+        const result = computeLineDiff(
+          state.originalText,
+          state.modifiedText,
+          state.diffOptions,
+        );
         dispatch({ type: "SET_DIFF_RESULT", payload: result });
         dispatch({ type: "SET_ERROR", payload: null });
       } catch (error) {
-        dispatch({ 
-          type: "SET_ERROR", 
-          payload: error instanceof Error ? error.message : "Failed to compute diff" 
+        dispatch({
+          type: "SET_ERROR",
+          payload:
+            error instanceof Error ? error.message : "Failed to compute diff",
         });
       }
     }, 0);
@@ -122,33 +134,48 @@ export function TextDiffProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Settings operations
-  const updateDiffOptions = useCallback((options: Partial<TextDiffState["diffOptions"]>) => {
-    dispatch({ type: "UPDATE_DIFF_OPTIONS", payload: options });
-  }, []);
+  const updateDiffOptions = useCallback(
+    (options: Partial<TextDiffState["diffOptions"]>) => {
+      dispatch({ type: "UPDATE_DIFF_OPTIONS", payload: options });
+    },
+    [],
+  );
 
-  const updateUISettings = useCallback((settings: Partial<TextDiffState["uiSettings"]>) => {
-    dispatch({ type: "UPDATE_UI_SETTINGS", payload: settings });
-  }, []);
+  const updateUISettings = useCallback(
+    (settings: Partial<TextDiffState["uiSettings"]>) => {
+      dispatch({ type: "UPDATE_UI_SETTINGS", payload: settings });
+    },
+    [],
+  );
 
   // History operations - optimized to prevent unnecessary re-renders
-  const saveToHistory = useCallback(async (title?: string) => {
-    if (!state.originalText && !state.modifiedText) {
-      return;
-    }
+  const saveToHistory = useCallback(
+    async (title?: string) => {
+      if (!state.originalText && !state.modifiedText) {
+        return;
+      }
 
-    try {
-      await textDiffService.addEntry({
-        originalText: state.originalText,
-        modifiedText: state.modifiedText,
-        mergedText: state.mergedText,
-        viewMode: state.viewMode,
-        diffOptions: state.diffOptions,
-        title: title || `Diff ${new Date().toLocaleString()}`,
-      });
-    } catch (error) {
-      console.error("Failed to save to history:", error);
-    }
-  }, [state.originalText, state.modifiedText, state.mergedText, state.viewMode, state.diffOptions]);
+      try {
+        await textDiffService.addEntry({
+          originalText: state.originalText,
+          modifiedText: state.modifiedText,
+          mergedText: state.mergedText,
+          viewMode: state.viewMode,
+          diffOptions: state.diffOptions,
+          title: title || `Diff ${new Date().toLocaleString()}`,
+        });
+      } catch (error) {
+        console.error("Failed to save to history:", error);
+      }
+    },
+    [
+      state.originalText,
+      state.modifiedText,
+      state.mergedText,
+      state.viewMode,
+      state.diffOptions,
+    ],
+  );
 
   const loadFromHistory = useCallback(async (id: string) => {
     try {
@@ -214,7 +241,7 @@ export function TextDiffProvider({ children }: { children: React.ReactNode }) {
       updateUISettings,
       saveToHistory,
       loadFromHistory,
-    ]
+    ],
   );
 
   return (

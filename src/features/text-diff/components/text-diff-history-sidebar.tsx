@@ -37,7 +37,6 @@ export function TextDiffHistorySidebar() {
     setSelectedEntry(entryId);
   };
 
-
   const handleClearAll = async () => {
     await textDiffService.clearHistory();
     setEntries([]);
@@ -93,7 +92,8 @@ export function TextDiffHistorySidebar() {
                   </div>
                   <div className="flex flex-col items-start w-full mt-1">
                     <p className="text-xs text-muted-foreground line-clamp-2 text-left">
-                      {entry.originalText.split("\n").length} → {entry.modifiedText.split("\n").length} lines
+                      {entry.originalText.split("\n").length} →{" "}
+                      {entry.modifiedText.split("\n").length} lines
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {formatDate(entry.timestamp)}

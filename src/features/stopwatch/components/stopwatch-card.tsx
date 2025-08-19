@@ -74,7 +74,7 @@ function StopwatchCardComponent({
   // Memoize reversed laps to avoid recreating on every render
   const reversedLaps = useMemo(
     () => stopwatch.laps.slice().reverse(),
-    [stopwatch.laps]
+    [stopwatch.laps],
   );
 
   useEffect(() => {
@@ -124,7 +124,7 @@ function StopwatchCardComponent({
         handleTitleCancel();
       }
     },
-    [handleTitleSubmit, handleTitleCancel]
+    [handleTitleSubmit, handleTitleCancel],
   );
 
   return (
@@ -134,7 +134,7 @@ function StopwatchCardComponent({
         "w-full transition-all duration-300 cursor-pointer",
         isActive
           ? "shadow-xl ring-2 ring-blue-500/20"
-          : "shadow-lg hover:shadow-xl"
+          : "shadow-lg hover:shadow-xl",
       )}
       onClick={onActivate}
     >
@@ -230,14 +230,22 @@ function StopwatchCardComponent({
         {/* Controls */}
         <div className="flex items-center justify-center gap-2">
           <ActionButton
-            icon={stopwatch.isRunning ? <Pause className="size-4" /> : <Play className="size-4" />}
+            icon={
+              stopwatch.isRunning ? (
+                <Pause className="size-4" />
+              ) : (
+                <Play className="size-4" />
+              )
+            }
             onClick={(e) => {
               e.stopPropagation();
               handleStartPause();
             }}
             variant={stopwatch.isRunning ? "destructive" : "success"}
             size="lg"
-            tooltip={stopwatch.isRunning ? t("actions.pause") : t("actions.start")}
+            tooltip={
+              stopwatch.isRunning ? t("actions.pause") : t("actions.start")
+            }
             className="rounded-full"
           />
 
@@ -303,7 +311,7 @@ export const StopwatchCard = React.memo(
   (prev, next) =>
     prev.stopwatch === next.stopwatch &&
     prev.isActive === next.isActive &&
-    prev.onActivate === next.onActivate
+    prev.onActivate === next.onActivate,
 );
 
 StopwatchCard.displayName = "StopwatchCard";

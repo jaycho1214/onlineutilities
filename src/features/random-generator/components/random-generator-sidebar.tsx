@@ -15,7 +15,8 @@ import {
 } from "@/features/shared/ui/sidebar";
 
 export function RandomGeneratorSidebar() {
-  const t = useTranslations("RandomGenerator");
+  const t = useTranslations();
+  const tRandom = useTranslations("RandomGenerator");
   const { state, clearHistory, deleteHistoryEntry } = useRandomGenerator();
 
   const formatDate = (dateString: string) => {
@@ -31,14 +32,14 @@ export function RandomGeneratorSidebar() {
     <Sidebar className="!h-[calc(100vh-2.25rem)] !top-9 flex flex-col">
       <SidebarHeader className="flex-shrink-0">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("history.title")}</h2>
+          <h2 className="text-lg font-semibold">{tRandom("history.title")}</h2>
           {state.history.length > 0 && (
             <ActionButton
               icon={<Trash2 />}
               onClick={clearHistory}
               variant="destructive"
               size="default"
-              tooltip={t("history.clearAll")}
+              tooltip={tRandom("history.clearAll")}
             />
           )}
         </div>
@@ -59,7 +60,7 @@ export function RandomGeneratorSidebar() {
         ) : state.history.length === 0 ? (
           <div className="p-4 text-center text-muted-foreground">
             <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">{t("history.noHistory")}</p>
+            <p className="text-sm">{tRandom("history.noHistory")}</p>
             <p className="text-xs">Generate random data to see history</p>
           </div>
         ) : (
@@ -80,12 +81,13 @@ export function RandomGeneratorSidebar() {
                         }}
                         variant="ghost"
                         size="sm"
-                        tooltip="Delete entry"
+                        tooltip={t("Common.tooltips.deleteEntry")}
                       />
                     </div>
                     <div className="flex flex-col items-start w-full mt-1">
                       <p className="text-xs text-muted-foreground line-clamp-1 text-left">
-                        {entry.results.length} {entry.results.length === 1 ? "result" : "results"}
+                        {entry.results.length}{" "}
+                        {entry.results.length === 1 ? "result" : "results"}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         {formatDate(entry.createdAt)}

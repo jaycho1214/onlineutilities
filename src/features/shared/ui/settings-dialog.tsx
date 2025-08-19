@@ -93,7 +93,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           "flex-shrink-0 sm:w-full flex items-center sm:items-start gap-2 sm:gap-2.5 px-2 sm:px-2 py-2 rounded-lg text-left transition-all duration-200 text-sm justify-center sm:justify-start whitespace-nowrap",
                           activeTab === item.id
                             ? "bg-white/20 shadow-lg backdrop-blur-sm border border-white/30"
-                            : "hover:bg-white/10 border border-transparent"
+                            : "hover:bg-white/10 border border-transparent",
                         )}
                       >
                         <Icon className="w-4 h-4 sm:mt-0.5" />

@@ -15,14 +15,17 @@ interface PasswordControlsProps {
 export function PasswordControls({ config, onChange }: PasswordControlsProps) {
   const t = useTranslations("RandomGenerator.password");
 
-  const handleChange = <K extends keyof PasswordConfig>(field: K, value: PasswordConfig[K]) => {
+  const handleChange = <K extends keyof PasswordConfig>(
+    field: K,
+    value: PasswordConfig[K],
+  ) => {
     onChange({ ...config, [field]: value });
   };
 
-  const hasAnyCharacterType = 
-    config.includeUppercase || 
-    config.includeLowercase || 
-    config.includeNumbers || 
+  const hasAnyCharacterType =
+    config.includeUppercase ||
+    config.includeLowercase ||
+    config.includeNumbers ||
     config.includeSymbols ||
     config.customCharacters.length > 0;
 
@@ -31,37 +34,40 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
     if (config.customCharacters.length > 0) {
       return new Set(config.customCharacters).size; // Remove duplicates
     }
-    
+
     let size = 0;
     if (config.includeUppercase) size += 26; // A-Z
-    if (config.includeLowercase) size += 26; // a-z  
+    if (config.includeLowercase) size += 26; // a-z
     if (config.includeNumbers) size += 10; // 0-9
     if (config.includeSymbols) size += 32; // Common symbols
-    
+
     // Apply exclusions
     if (config.excludeSimilar) size -= Math.min(size, 8); // Remove similar chars like 0O1lI
     if (config.excludeAmbiguous) size -= Math.min(size, 6); // Remove ambiguous chars
-    
+
     return Math.max(size, 1);
   };
 
   const calculateConflictProbability = () => {
     const alphabetSize = getAlphabetSize();
     const totalPossiblePasswords = Math.pow(alphabetSize, config.length);
-    
+
     // Real-world usage scenarios for collision probability
     const scenarios = [
       { users: 1000, label: "Small org (1K)" },
       { users: 10000, label: "Medium org (10K)" },
       { users: 100000, label: "Large org (100K)" },
-      { users: 1000000, label: "Enterprise (1M)" }
+      { users: 1000000, label: "Enterprise (1M)" },
     ];
-    
-    return scenarios.map(scenario => {
-      if (scenario.users >= totalPossiblePasswords) return { ...scenario, probability: 100 };
-      
+
+    return scenarios.map((scenario) => {
+      if (scenario.users >= totalPossiblePasswords)
+        return { ...scenario, probability: 100 };
+
       // Birthday paradox: probability of at least one collision
-      const probability = 1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossiblePasswords));
+      const probability =
+        1 -
+        Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossiblePasswords));
       return { ...scenario, probability: probability * 100 };
     });
   };
@@ -122,9 +128,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="uppercase"
               checked={config.includeUppercase}
-              onCheckedChange={(checked) => handleChange("includeUppercase", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("includeUppercase", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="uppercase"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -136,9 +144,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="lowercase"
               checked={config.includeLowercase}
-              onCheckedChange={(checked) => handleChange("includeLowercase", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("includeLowercase", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="lowercase"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -150,9 +160,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="numbers"
               checked={config.includeNumbers}
-              onCheckedChange={(checked) => handleChange("includeNumbers", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("includeNumbers", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="numbers"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -164,9 +176,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="symbols"
               checked={config.includeSymbols}
-              onCheckedChange={(checked) => handleChange("includeSymbols", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("includeSymbols", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="symbols"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -192,9 +206,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="excludeSimilar"
               checked={config.excludeSimilar}
-              onCheckedChange={(checked) => handleChange("excludeSimilar", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("excludeSimilar", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="excludeSimilar"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -206,9 +222,11 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             <Checkbox
               id="excludeAmbiguous"
               checked={config.excludeAmbiguous}
-              onCheckedChange={(checked) => handleChange("excludeAmbiguous", !!checked)}
+              onCheckedChange={(checked) =>
+                handleChange("excludeAmbiguous", !!checked)
+              }
             />
-            <label 
+            <label
               htmlFor="excludeAmbiguous"
               className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
             >
@@ -246,17 +264,22 @@ export function PasswordControls({ config, onChange }: PasswordControlsProps) {
             </div>
             <div className="space-y-1">
               {conflictProbability.map((scenario, index) => (
-                <div key={index} className="flex items-center justify-between text-xs">
+                <div
+                  key={index}
+                  className="flex items-center justify-between text-xs"
+                >
                   <span className="text-blue-800 dark:text-blue-200">
                     {scenario.label}:
                   </span>
-                  <span className={`font-mono ${
-                    scenario.probability < 0.1 
-                      ? "text-green-600 dark:text-green-400" 
-                      : scenario.probability < 1 
-                        ? "text-yellow-600 dark:text-yellow-400"
-                        : "text-red-600 dark:text-red-400"
-                  }`}>
+                  <span
+                    className={`font-mono ${
+                      scenario.probability < 0.1
+                        ? "text-green-600 dark:text-green-400"
+                        : scenario.probability < 1
+                          ? "text-yellow-600 dark:text-yellow-400"
+                          : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
                     {formatProbability(scenario.probability)}
                   </span>
                 </div>

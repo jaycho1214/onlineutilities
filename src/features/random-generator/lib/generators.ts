@@ -1,4 +1,3 @@
-
 import { customAlphabet } from "nanoid";
 import type {
   PasswordConfig,
@@ -33,11 +32,12 @@ function getRandomFloat(min: number, max: number, decimals: number): number {
   return parseFloat(randomFloat.toFixed(decimals));
 }
 
-
 /**
  * Password Generator
  */
-export async function generatePasswords(config: PasswordConfig): Promise<string[]> {
+export async function generatePasswords(
+  config: PasswordConfig,
+): Promise<string[]> {
   const {
     count,
     length,
@@ -60,7 +60,7 @@ export async function generatePasswords(config: PasswordConfig): Promise<string[
 
   // Build character set
   let charset = "";
-  
+
   if (customCharacters) {
     charset = customCharacters;
   } else {
@@ -81,7 +81,13 @@ export async function generatePasswords(config: PasswordConfig): Promise<string[
 
   // Remove ambiguous characters if requested
   if (excludeAmbiguous) {
-    charset = charset.replace(new RegExp(`[${CHARS.ambiguous.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")}]`, "g"), "");
+    charset = charset.replace(
+      new RegExp(
+        `[${CHARS.ambiguous.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")}]`,
+        "g",
+      ),
+      "",
+    );
   }
 
   if (!charset) {
@@ -120,11 +126,15 @@ export async function generateNumbers(config: NumberConfig): Promise<string[]> {
 
   for (let i = 0; i < count; i++) {
     let number: number;
-    
+
     if (type === "integer") {
       do {
         number = getRandomInt(min, max);
-      } while (unique && usedNumbers.has(number) && usedNumbers.size < (max - min + 1));
+      } while (
+        unique &&
+        usedNumbers.has(number) &&
+        usedNumbers.size < max - min + 1
+      );
     } else {
       do {
         number = getRandomFloat(min, max, decimalPlaces);
@@ -146,7 +156,9 @@ export async function generateNumbers(config: NumberConfig): Promise<string[]> {
     numbers.sort((a, b) => a - b);
   }
 
-  return numbers.map(num => type === "integer" ? num.toString() : num.toFixed(decimalPlaces));
+  return numbers.map((num) =>
+    type === "integer" ? num.toString() : num.toFixed(decimalPlaces),
+  );
 }
 
 /**
@@ -228,9 +240,14 @@ function generateCuid2(fingerprint?: string): string {
   const prefix = "c"; // Fixed prefix for CUID2
   const timestamp = Date.now().toString(36).slice(-4); // Last 4 chars of timestamp in base36
   const counter = getRandomInt(0, 35).toString(36); // Single char counter
-  const fp = fingerprint ? fingerprint.slice(0, 2) : generateFingerprint().slice(0, 2);
-  const random = generateRandomString(16, "abcdefghijklmnopqrstuvwxyz0123456789");
-  
+  const fp = fingerprint
+    ? fingerprint.slice(0, 2)
+    : generateFingerprint().slice(0, 2);
+  const random = generateRandomString(
+    16,
+    "abcdefghijklmnopqrstuvwxyz0123456789",
+  );
+
   return prefix + timestamp + counter + fp + random;
 }
 
@@ -243,8 +260,11 @@ function generateCuidLegacy(fingerprint?: string): string {
   const timestamp = Date.now().toString(36);
   const counter = getRandomInt(0, 1295).toString(36).padStart(2, "0"); // 2 chars
   const fp = fingerprint ? fingerprint.slice(0, 4) : generateFingerprint();
-  const random = generateRandomString(8, "abcdefghijklmnopqrstuvwxyz0123456789");
-  
+  const random = generateRandomString(
+    8,
+    "abcdefghijklmnopqrstuvwxyz0123456789",
+  );
+
   return prefix + timestamp + counter + fp + random;
 }
 
@@ -253,19 +273,21 @@ function generateCuidLegacy(fingerprint?: string): string {
  */
 function generateFingerprint(): string {
   // Use browser/environment info to create a consistent fingerprint
-  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'nodejs';
-  const platform = typeof navigator !== 'undefined' ? navigator.platform : 'server';
-  const language = typeof navigator !== 'undefined' ? navigator.language : 'en';
-  
+  const userAgent =
+    typeof navigator !== "undefined" ? navigator.userAgent : "nodejs";
+  const platform =
+    typeof navigator !== "undefined" ? navigator.platform : "server";
+  const language = typeof navigator !== "undefined" ? navigator.language : "en";
+
   // Create a simple hash of these values
   let hash = 0;
   const combined = userAgent + platform + language;
   for (let i = 0; i < combined.length; i++) {
     const char = combined.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
-  
+
   return Math.abs(hash).toString(36).slice(0, 4);
 }
 
@@ -361,7 +383,9 @@ function getCharsetString(charset: string): string {
 /**
  * Boolean Generator
  */
-export async function generateBooleans(config: BooleanConfig): Promise<string[]> {
+export async function generateBooleans(
+  config: BooleanConfig,
+): Promise<string[]> {
   const { count, probability, format } = config;
 
   if (count < 1 || count > 100) {
@@ -375,7 +399,7 @@ export async function generateBooleans(config: BooleanConfig): Promise<string[]>
   const results = [];
   for (let i = 0; i < count; i++) {
     const isTrue = getRandomInt(1, 100) <= probability;
-    
+
     let result: string;
     switch (format) {
       case "boolean":
@@ -390,7 +414,7 @@ export async function generateBooleans(config: BooleanConfig): Promise<string[]>
       default:
         result = isTrue.toString();
     }
-    
+
     results.push(result);
   }
 
@@ -418,11 +442,15 @@ export async function generateColors(config: ColorConfig): Promise<string[]> {
       case "hex":
         // Convert HSL to RGB then to HEX
         const rgb = hslToRgb(hue / 360, saturation / 100, lightness / 100);
-        color = `#${rgb.map(c => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
+        color = `#${rgb.map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
         break;
       case "rgb":
-        const rgbValues = hslToRgb(hue / 360, saturation / 100, lightness / 100);
-        color = `rgb(${rgbValues.map(c => Math.round(c)).join(", ")})`;
+        const rgbValues = hslToRgb(
+          hue / 360,
+          saturation / 100,
+          lightness / 100,
+        );
+        color = `rgb(${rgbValues.map((c) => Math.round(c)).join(", ")})`;
         break;
       case "hsl":
         color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -504,20 +532,34 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   const x = c * (1 - Math.abs(((h * 6) % 2) - 1));
   const m = l - c / 2;
 
-  let r = 0, g = 0, b = 0;
+  let r = 0,
+    g = 0,
+    b = 0;
 
-  if (0 <= h && h < 1/6) {
-    r = c; g = x; b = 0;
-  } else if (1/6 <= h && h < 2/6) {
-    r = x; g = c; b = 0;
-  } else if (2/6 <= h && h < 3/6) {
-    r = 0; g = c; b = x;
-  } else if (3/6 <= h && h < 4/6) {
-    r = 0; g = x; b = c;
-  } else if (4/6 <= h && h < 5/6) {
-    r = x; g = 0; b = c;
-  } else if (5/6 <= h && h < 1) {
-    r = c; g = 0; b = x;
+  if (0 <= h && h < 1 / 6) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (1 / 6 <= h && h < 2 / 6) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (2 / 6 <= h && h < 3 / 6) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (3 / 6 <= h && h < 4 / 6) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (4 / 6 <= h && h < 5 / 6) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (5 / 6 <= h && h < 1) {
+    r = c;
+    g = 0;
+    b = x;
   }
 
   return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
@@ -526,10 +568,14 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 /**
  * Convert HSL to HSV
  */
-function hslToHsv(h: number, s: number, l: number): { h: number; s: number; v: number } {
+function hslToHsv(
+  h: number,
+  s: number,
+  l: number,
+): { h: number; s: number; v: number } {
   const sNorm = s / 100;
   const lNorm = l / 100;
-  
+
   const v = lNorm + sNorm * Math.min(lNorm, 1 - lNorm);
   const sNew = v === 0 ? 0 : 2 * (1 - lNorm / v);
 

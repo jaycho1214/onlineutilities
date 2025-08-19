@@ -154,7 +154,7 @@ export const searchUtilities = (query: string): Utility[] => {
     (utility) =>
       utility.name.toLowerCase().includes(lowercaseQuery) ||
       utility.description.toLowerCase().includes(lowercaseQuery) ||
-      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery))
+      utility.keywords?.some((keyword) => keyword.includes(lowercaseQuery)),
   );
 };
 

@@ -22,7 +22,8 @@ export function RandomGeneratorResults({
   type,
 }: RandomGeneratorResultsProps) {
   const t = useTranslations("RandomGenerator");
-  const { copyToClipboard, copyAllResults, generateValues, state } = useRandomGenerator();
+  const { copyToClipboard, copyAllResults, generateValues, state } =
+    useRandomGenerator();
 
   const handleCopyResult = async (result: string) => {
     await copyToClipboard(result);
@@ -65,9 +66,7 @@ export function RandomGeneratorResults({
     return (
       <div className="text-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
-        <p className="text-gray-600 dark:text-gray-400">
-          Generating values...
-        </p>
+        <p className="text-gray-600 dark:text-gray-400">Generating values...</p>
       </div>
     );
   }
@@ -128,7 +127,7 @@ interface ResultItemProps {
 function ResultItem({ result, type, onCopy }: ResultItemProps) {
   const isColor = type === "color";
   const isPassword = type === "password";
-  
+
   return (
     <div className="group relative flex items-center gap-3 p-3 rounded-lg border border-black/10 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-white/10 transition-all duration-200 shadow-sm">
       {/* Color preview for color results */}
@@ -141,11 +140,13 @@ function ResultItem({ result, type, onCopy }: ResultItemProps) {
 
       {/* Result text */}
       <div className="flex-1 min-w-0">
-        <code className={cn(
-          "block font-mono text-sm break-all",
-          isPassword && "tracking-wider",
-          "text-gray-900 dark:text-gray-100"
-        )}>
+        <code
+          className={cn(
+            "block font-mono text-sm break-all",
+            isPassword && "tracking-wider",
+            "text-gray-900 dark:text-gray-100",
+          )}
+        >
           {result}
         </code>
       </div>

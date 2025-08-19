@@ -27,7 +27,6 @@ function FormatterSidebarComponent() {
   const t = useTranslations("Formatter");
   const { history, isLoading, clearHistory, loadHistoryItem } = useFormatter();
 
-
   const handleClearHistory = useCallback(async () => {
     await clearHistory();
   }, [clearHistory]);

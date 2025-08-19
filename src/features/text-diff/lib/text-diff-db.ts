@@ -24,7 +24,6 @@ export interface DiffEntry {
   mergedText?: string;
 }
 
-
 export interface DiffSettings {
   id: string;
   defaultViewMode: "side-by-side" | "unified";
@@ -51,7 +50,7 @@ class TextDiffDatabase extends Dexie {
 
     this.version(1).stores({
       entries: "id, timestamp, title",
-      settings: "id"
+      settings: "id",
     });
 
     this.entries.mapToClass(DiffEntryModel);
@@ -169,11 +168,11 @@ export class TextDiffService {
           defaultOptions: {
             ignoreCase: false,
             ignoreWhitespace: false,
-            context: 3
+            context: 3,
           },
           lineNumbers: true,
           wordWrap: false,
-          fontSize: 14
+          fontSize: 14,
         };
       }
       return settings;
@@ -192,7 +191,7 @@ export class TextDiffService {
    * @returns Promise<DiffEntry> - The created entry
    */
   async addEntry(
-    entry: Omit<DiffEntry, "id" | "timestamp">
+    entry: Omit<DiffEntry, "id" | "timestamp">,
   ): Promise<DiffEntry> {
     try {
       const now = new Date().toISOString();
@@ -201,7 +200,7 @@ export class TextDiffService {
       const newEntry: DiffEntry = {
         id,
         timestamp: now,
-        ...entry
+        ...entry,
       };
 
       await textDiff2Db.entries.add(newEntry);
@@ -219,7 +218,7 @@ export class TextDiffService {
    */
   async updateEntry(
     id: string,
-    updates: Partial<Omit<DiffEntry, "id" | "timestamp">>
+    updates: Partial<Omit<DiffEntry, "id" | "timestamp">>,
   ): Promise<boolean> {
     try {
       const count = await textDiff2Db.entries.update(id, updates);
@@ -234,9 +233,7 @@ export class TextDiffService {
    * @param settings - The settings to save
    * @returns Promise<boolean> - True if saved successfully
    */
-  async saveSettings(
-    settings: Omit<DiffSettings, "id">
-  ): Promise<boolean> {
+  async saveSettings(settings: Omit<DiffSettings, "id">): Promise<boolean> {
     try {
       await textDiff2Db.settings.put({ id: "default", ...settings });
       return true;

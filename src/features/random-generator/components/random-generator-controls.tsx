@@ -11,8 +11,8 @@ import { StringControls } from "./controls/string-controls";
 import { BooleanControls } from "./controls/boolean-controls";
 import { ColorControls } from "./controls/color-controls";
 import { DateControls } from "./controls/date-controls";
-import type { 
-  GeneratorType, 
+import type {
+  GeneratorType,
   GeneratorConfig,
   PasswordConfig,
   NumberConfig,
@@ -22,7 +22,7 @@ import type {
   StringConfig,
   BooleanConfig,
   ColorConfig,
-  DateConfig
+  DateConfig,
 } from "../types";
 
 interface RandomGeneratorControlsProps {
@@ -51,7 +51,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "number":
       return (
         <NumberControls
@@ -59,7 +59,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "uuid":
       return (
         <UuidControls
@@ -67,7 +67,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "nanoid":
       return (
         <NanoidControls
@@ -75,7 +75,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "cuid":
       return (
         <CuidControls
@@ -83,7 +83,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "string":
       return (
         <StringControls
@@ -91,7 +91,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "boolean":
       return (
         <BooleanControls
@@ -99,7 +99,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "color":
       return (
         <ColorControls
@@ -107,7 +107,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     case "date":
       return (
         <DateControls
@@ -115,7 +115,7 @@ export function RandomGeneratorControls({
           onChange={handleConfigChange}
         />
       );
-    
+
     default:
       return (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">

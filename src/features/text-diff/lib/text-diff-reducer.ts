@@ -30,7 +30,7 @@ export const initialState: TextDiffState = {
 
 export function textDiffReducer(
   state: TextDiffState,
-  action: TextDiffAction
+  action: TextDiffAction,
 ): TextDiffState {
   switch (action.type) {
     case "SET_ORIGINAL_TEXT":
@@ -100,26 +100,26 @@ export function textDiffReducer(
 
     case "APPLY_MERGE_ACTION":
       if (!state.diffResult) return state;
-      
+
       // Update the merge action for the specific block
-      const updatedBlocks = state.diffResult.blocks.map(block => 
-        block.id === action.payload.blockId 
+      const updatedBlocks = state.diffResult.blocks.map((block) =>
+        block.id === action.payload.blockId
           ? { ...block, mergeAction: action.payload.action }
-          : block
+          : block,
       );
-      
+
       // Apply all merge actions to generate final merged text
       const mergedText = applyAllMergeActions(
         state.originalText,
         state.modifiedText,
-        updatedBlocks
+        updatedBlocks,
       );
-      
+
       return {
         ...state,
         diffResult: {
           ...state.diffResult,
-          blocks: updatedBlocks
+          blocks: updatedBlocks,
         },
         mergedText,
       };

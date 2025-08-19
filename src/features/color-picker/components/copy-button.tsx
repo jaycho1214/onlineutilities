@@ -12,13 +12,7 @@ interface CopyButtonProps {
   format?: string;
   className?: string;
   size?: "sm" | "default" | "lg" | "icon";
-  variant?:
-    | "default"
-    | "action"
-    | "destructive"
-    | "outline"
-    | "ghost"
-    | "link";
+  variant?: "default" | "action" | "destructive" | "outline" | "ghost" | "link";
   onClick?: (e: React.MouseEvent) => void;
 }
 

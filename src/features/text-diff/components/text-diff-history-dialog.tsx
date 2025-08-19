@@ -44,7 +44,7 @@ export function TextDiffHistoryDialog({
 
   const handleLoad = async () => {
     if (!selectedEntry) return;
-    
+
     await loadFromHistory(selectedEntry);
     toast.success(t("notifications.compared"));
     onOpenChange(false);
@@ -82,7 +82,9 @@ export function TextDiffHistoryDialog({
             <History className="size-5" />
             {t("history.title")}
           </DialogTitle>
-          <DialogDescription>Load a previous diff comparison from history</DialogDescription>
+          <DialogDescription>
+            Load a previous diff comparison from history
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto min-h-[300px] max-h-[400px] my-4">
@@ -101,7 +103,7 @@ export function TextDiffHistoryDialog({
                     "p-3 rounded-lg border cursor-pointer transition-all",
                     selectedEntry === entry.id
                       ? "bg-primary/10 border-primary"
-                      : "bg-background/50 border-border hover:bg-muted/50"
+                      : "bg-background/50 border-border hover:bg-muted/50",
                   )}
                 >
                   <div className="flex items-start justify-between">
@@ -151,7 +153,11 @@ export function TextDiffHistoryDialog({
               {t("history.clearAll")}
             </Button>
           )}
-          <Button variant="outline" onClick={() => onOpenChange(false)} size="sm">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            size="sm"
+          >
             {t("actions.close")}
           </Button>
           <Button onClick={handleLoad} disabled={!selectedEntry} size="sm">

@@ -44,7 +44,10 @@ export function DiffViewUnified() {
             line.oldLineNumber <= b.oldEndLine
           );
         }
-        if (line.newLineNumber && (b.type === "added" || b.type === "modified")) {
+        if (
+          line.newLineNumber &&
+          (b.type === "added" || b.type === "modified")
+        ) {
           return (
             line.newLineNumber >= b.newStartLine &&
             line.newLineNumber <= b.newEndLine
@@ -59,7 +62,7 @@ export function DiffViewUnified() {
         key={index}
         className={cn(
           "flex group hover:bg-muted/30 transition-colors relative",
-          lineTypeStyles[line.type]
+          lineTypeStyles[line.type],
         )}
       >
         {state.uiSettings.showLineNumbers && (
@@ -67,7 +70,7 @@ export function DiffViewUnified() {
             <div
               className={cn(
                 lineNumberWidth,
-                "text-xs text-muted-foreground text-right pr-2 py-1 select-none border-r border-border/50"
+                "text-xs text-muted-foreground text-right pr-2 py-1 select-none border-r border-border/50",
               )}
             >
               {line.oldLineNumber || ""}
@@ -75,7 +78,7 @@ export function DiffViewUnified() {
             <div
               className={cn(
                 lineNumberWidth,
-                "text-xs text-muted-foreground text-right pr-2 py-1 select-none border-r border-border/50"
+                "text-xs text-muted-foreground text-right pr-2 py-1 select-none border-r border-border/50",
               )}
             >
               {line.newLineNumber || ""}
@@ -92,9 +95,11 @@ export function DiffViewUnified() {
                 <span
                   key={idx}
                   className={cn(
-                    wordDiff.type === "added" && "bg-green-500/20 text-green-700 dark:text-green-300",
-                    wordDiff.type === "removed" && "bg-red-500/20 text-red-700 dark:text-red-300",
-                    wordDiff.type === "unchanged" && ""
+                    wordDiff.type === "added" &&
+                      "bg-green-500/20 text-green-700 dark:text-green-300",
+                    wordDiff.type === "removed" &&
+                      "bg-red-500/20 text-red-700 dark:text-red-300",
+                    wordDiff.type === "unchanged" && "",
                   )}
                 >
                   {wordDiff.content}
@@ -105,42 +110,47 @@ export function DiffViewUnified() {
             line.content || "\u00A0"
           )}
         </div>
-        
+
         {/* Merge controls for the first line of each block */}
-        {block && index === lines.findIndex(l => 
-          (l.oldLineNumber === block.oldStartLine && block.type === "removed") ||
-          (l.newLineNumber === block.newStartLine && (block.type === "added" || block.type === "modified"))
-        ) && (
-          <div className="absolute right-2 top-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            <Button
-              variant="ghost"
-              className="h-6 px-2 text-xs"
-              onClick={() => applyMerge(block.id, "accept-current")}
-              title={t("merge.selectOriginal")}
-            >
-              <Check className="size-3" />
-              {t("merge.selectOriginal")}
-            </Button>
-            <Button
-              variant="ghost"
-              className="h-6 px-2 text-xs"
-              onClick={() => applyMerge(block.id, "accept-incoming")}
-              title={t("merge.selectModified")}
-            >
-              <X className="size-3" />
-              {t("merge.selectModified")}
-            </Button>
-            <Button
-              variant="ghost"
-              className="h-6 px-2 text-xs"
-              onClick={() => applyMerge(block.id, "accept-both")}
-              title={t("merge.selectBoth")}
-            >
-              <Merge className="size-3" />
-              {t("merge.selectBoth")}
-            </Button>
-          </div>
-        )}
+        {block &&
+          index ===
+            lines.findIndex(
+              (l) =>
+                (l.oldLineNumber === block.oldStartLine &&
+                  block.type === "removed") ||
+                (l.newLineNumber === block.newStartLine &&
+                  (block.type === "added" || block.type === "modified")),
+            ) && (
+            <div className="absolute right-2 top-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <Button
+                variant="ghost"
+                className="h-6 px-2 text-xs"
+                onClick={() => applyMerge(block.id, "accept-current")}
+                title={t("merge.selectOriginal")}
+              >
+                <Check className="size-3" />
+                {t("merge.selectOriginal")}
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-6 px-2 text-xs"
+                onClick={() => applyMerge(block.id, "accept-incoming")}
+                title={t("merge.selectModified")}
+              >
+                <X className="size-3" />
+                {t("merge.selectModified")}
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-6 px-2 text-xs"
+                onClick={() => applyMerge(block.id, "accept-both")}
+                title={t("merge.selectBoth")}
+              >
+                <Merge className="size-3" />
+                {t("merge.selectBoth")}
+              </Button>
+            </div>
+          )}
       </div>
     );
   };
@@ -160,7 +170,9 @@ export function DiffViewUnified() {
           </span>
           <span className="flex items-center gap-1">
             <span className="w-3 h-3 bg-yellow-500/20 border border-yellow-500 rounded-sm"></span>
-            {t("diff.modifications", { count: state.diffResult.stats.modifications })}
+            {t("diff.modifications", {
+              count: state.diffResult.stats.modifications,
+            })}
           </span>
         </div>
       </div>

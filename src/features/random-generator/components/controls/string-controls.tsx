@@ -3,7 +3,13 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/features/shared/ui/select";
 import { Checkbox } from "@/features/shared/ui/checkbox";
 import type { StringConfig, CharsetType } from "../../types";
 
@@ -15,7 +21,10 @@ interface StringControlsProps {
 export function StringControls({ config, onChange }: StringControlsProps) {
   const t = useTranslations("RandomGenerator.string");
 
-  const handleChange = <K extends keyof StringConfig>(field: K, value: StringConfig[K]) => {
+  const handleChange = <K extends keyof StringConfig>(
+    field: K,
+    value: StringConfig[K],
+  ) => {
     onChange({ ...config, [field]: value });
   };
 
@@ -24,36 +33,47 @@ export function StringControls({ config, onChange }: StringControlsProps) {
     if (config.charset === "custom") {
       return config.customCharset ? new Set(config.customCharset).size : 1;
     }
-    
+
     switch (config.charset) {
-      case "alphanumeric": return 62; // a-z, A-Z, 0-9
-      case "alphabetic": return 52; // a-z, A-Z
-      case "numeric": return 10; // 0-9
-      case "lowercase": return 26; // a-z
-      case "uppercase": return 26; // A-Z
-      case "symbols": return 32; // Common symbols
-      default: return 62;
+      case "alphanumeric":
+        return 62; // a-z, A-Z, 0-9
+      case "alphabetic":
+        return 52; // a-z, A-Z
+      case "numeric":
+        return 10; // 0-9
+      case "lowercase":
+        return 26; // a-z
+      case "uppercase":
+        return 26; // A-Z
+      case "symbols":
+        return 32; // Common symbols
+      default:
+        return 62;
     }
   };
 
   const calculateConflictProbability = () => {
     const alphabetSize = getAlphabetSize();
-    const effectiveLength = config.usePattern ? config.pattern.length : config.length;
+    const effectiveLength = config.usePattern
+      ? config.pattern.length
+      : config.length;
     const totalPossibleStrings = Math.pow(alphabetSize, effectiveLength);
-    
+
     // Real-world usage scenarios for collision probability
     const scenarios = [
       { users: 1000, label: "Small app (1K)" },
       { users: 10000, label: "Medium app (10K)" },
       { users: 100000, label: "Large app (100K)" },
-      { users: 1000000, label: "Major service (1M)" }
+      { users: 1000000, label: "Major service (1M)" },
     ];
-    
-    return scenarios.map(scenario => {
-      if (scenario.users >= totalPossibleStrings) return { ...scenario, probability: 100 };
-      
+
+    return scenarios.map((scenario) => {
+      if (scenario.users >= totalPossibleStrings)
+        return { ...scenario, probability: 100 };
+
       // Birthday paradox: probability of at least one collision
-      const probability = 1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossibleStrings));
+      const probability =
+        1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossibleStrings));
       return { ...scenario, probability: probability * 100 };
     });
   };
@@ -94,7 +114,9 @@ export function StringControls({ config, onChange }: StringControlsProps) {
           min={1}
           max={1000}
           value={config.length}
-          onChange={(e) => handleChange("length", parseInt(e.target.value) || 10)}
+          onChange={(e) =>
+            handleChange("length", parseInt(e.target.value) || 10)
+          }
           className="w-20"
         />
       </div>
@@ -104,16 +126,20 @@ export function StringControls({ config, onChange }: StringControlsProps) {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           {t("charset")}
         </label>
-        <Select 
-          value={config.charset} 
+        <Select
+          value={config.charset}
           onValueChange={(value: CharsetType) => handleChange("charset", value)}
         >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="alphanumeric">{t("charsets.alphanumeric")}</SelectItem>
-            <SelectItem value="alphabetic">{t("charsets.alphabetic")}</SelectItem>
+            <SelectItem value="alphanumeric">
+              {t("charsets.alphanumeric")}
+            </SelectItem>
+            <SelectItem value="alphabetic">
+              {t("charsets.alphabetic")}
+            </SelectItem>
             <SelectItem value="numeric">{t("charsets.numeric")}</SelectItem>
             <SelectItem value="lowercase">{t("charsets.lowercase")}</SelectItem>
             <SelectItem value="uppercase">{t("charsets.uppercase")}</SelectItem>
@@ -147,7 +173,7 @@ export function StringControls({ config, onChange }: StringControlsProps) {
             checked={config.usePattern}
             onCheckedChange={(checked) => handleChange("usePattern", !!checked)}
           />
-          <label 
+          <label
             htmlFor="usePattern"
             className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
           >
@@ -184,17 +210,22 @@ export function StringControls({ config, onChange }: StringControlsProps) {
           </div>
           <div className="space-y-1">
             {conflictProbability.map((scenario, index) => (
-              <div key={index} className="flex items-center justify-between text-xs">
+              <div
+                key={index}
+                className="flex items-center justify-between text-xs"
+              >
                 <span className="text-blue-800 dark:text-blue-200">
                   {scenario.label}:
                 </span>
-                <span className={`font-mono ${
-                  scenario.probability < 0.1 
-                    ? "text-green-600 dark:text-green-400" 
-                    : scenario.probability < 1 
-                      ? "text-yellow-600 dark:text-yellow-400"
-                      : "text-red-600 dark:text-red-400"
-                }`}>
+                <span
+                  className={`font-mono ${
+                    scenario.probability < 0.1
+                      ? "text-green-600 dark:text-green-400"
+                      : scenario.probability < 1
+                        ? "text-yellow-600 dark:text-yellow-400"
+                        : "text-red-600 dark:text-red-400"
+                  }`}
+                >
                   {formatProbability(scenario.probability)}
                 </span>
               </div>

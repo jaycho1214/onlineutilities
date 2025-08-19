@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslations } from "next-intl";
 import { ActionButton } from "@/features/shared/ui/action-button";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Plus, Download, Trash2 } from "lucide-react";
@@ -16,6 +17,8 @@ function NotepadActionsComponent({
   onDownload,
   onDelete,
 }: NotepadActionsProps) {
+  const t = useTranslations();
+
   return (
     <GlassSurface className="flex flex-row md:flex-col items-center px-2 py-1.5 md:px-3 md:py-2 gap-1 md:gap-2">
       <ActionButton
@@ -23,21 +26,21 @@ function NotepadActionsComponent({
         variant="ghost"
         size="default"
         onClick={onNewNote}
-        tooltip="New Note"
+        tooltip={t("Common.tooltips.newNote")}
       />
       <ActionButton
         icon={<Download className="size-4" />}
         variant="ghost"
         size="default"
         onClick={onDownload}
-        tooltip="Download"
+        tooltip={t("Common.actions.download")}
       />
       <ActionButton
         icon={<Trash2 className="size-4" />}
         variant="destructive"
         size="default"
         onClick={onDelete}
-        tooltip="Delete Note"
+        tooltip={t("Common.tooltips.deleteNote")}
       />
     </GlassSurface>
   );

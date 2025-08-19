@@ -17,8 +17,7 @@ const buttonVariants = cva(
         destructive:
           "bg-red-500 text-white hover:bg-red-600 active:scale-[0.98]",
         outline: "text-foreground active:scale-[0.98]",
-        ghost:
-          "text-foreground transition-transform duration-200",
+        ghost: "text-foreground transition-transform duration-200",
         link: "text-primary underline-offset-4 decoration-transparent hover:decoration-current transition-colors duration-300 underline",
       },
       size: {
@@ -37,7 +36,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "none",
     },
-  }
+  },
 );
 
 const glassVariants = cva("", {
@@ -89,7 +88,7 @@ function Button({
         className={cn(
           buttonVariants({ variant, size }),
           "transition-transform",
-          className
+          className,
         )}
         {...props}
       >
@@ -106,7 +105,7 @@ function Button({
           "transition-transform",
           glassVariants({ variant, size }),
           buttonVariants({ variant, size }),
-          className
+          className,
         )}
         {...props}
       >

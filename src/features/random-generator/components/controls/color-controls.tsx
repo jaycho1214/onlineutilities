@@ -3,7 +3,13 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/features/shared/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/features/shared/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/features/shared/ui/select";
 import { Slider } from "@/features/shared/ui/slider";
 import type { ColorConfig, ColorFormat } from "../../types";
 
@@ -15,7 +21,10 @@ interface ColorControlsProps {
 export function ColorControls({ config, onChange }: ColorControlsProps) {
   const t = useTranslations("RandomGenerator.color");
 
-  const handleChange = <K extends keyof ColorConfig>(field: K, value: ColorConfig[K]) => {
+  const handleChange = <K extends keyof ColorConfig>(
+    field: K,
+    value: ColorConfig[K],
+  ) => {
     onChange({ ...config, [field]: value });
   };
 
@@ -41,8 +50,8 @@ export function ColorControls({ config, onChange }: ColorControlsProps) {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {t("format")}
         </label>
-        <Select 
-          value={config.format} 
+        <Select
+          value={config.format}
           onValueChange={(value: ColorFormat) => handleChange("format", value)}
         >
           <SelectTrigger>
@@ -65,7 +74,9 @@ export function ColorControls({ config, onChange }: ColorControlsProps) {
         <div className="px-3">
           <Slider
             value={config.hueRange}
-            onValueChange={(value) => handleChange("hueRange", value as [number, number])}
+            onValueChange={(value) =>
+              handleChange("hueRange", value as [number, number])
+            }
             min={0}
             max={360}
             step={1}
@@ -81,12 +92,15 @@ export function ColorControls({ config, onChange }: ColorControlsProps) {
       {/* Saturation Range */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {t("saturationRange")}: {config.saturationRange[0]}% - {config.saturationRange[1]}%
+          {t("saturationRange")}: {config.saturationRange[0]}% -{" "}
+          {config.saturationRange[1]}%
         </label>
         <div className="px-3">
           <Slider
             value={config.saturationRange}
-            onValueChange={(value) => handleChange("saturationRange", value as [number, number])}
+            onValueChange={(value) =>
+              handleChange("saturationRange", value as [number, number])
+            }
             min={0}
             max={100}
             step={1}
@@ -102,12 +116,15 @@ export function ColorControls({ config, onChange }: ColorControlsProps) {
       {/* Lightness Range */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {t("lightnessRange")}: {config.lightnessRange[0]}% - {config.lightnessRange[1]}%
+          {t("lightnessRange")}: {config.lightnessRange[0]}% -{" "}
+          {config.lightnessRange[1]}%
         </label>
         <div className="px-3">
           <Slider
             value={config.lightnessRange}
-            onValueChange={(value) => handleChange("lightnessRange", value as [number, number])}
+            onValueChange={(value) =>
+              handleChange("lightnessRange", value as [number, number])
+            }
             min={0}
             max={100}
             step={1}
@@ -122,7 +139,9 @@ export function ColorControls({ config, onChange }: ColorControlsProps) {
 
       {/* Preview */}
       <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Preview format:</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          Preview format:
+        </p>
         <code className="text-sm font-mono text-gray-900 dark:text-gray-100">
           {config.format === "hex" && "#FF5733"}
           {config.format === "rgb" && "rgb(255, 87, 51)"}

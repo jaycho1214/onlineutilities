@@ -91,12 +91,20 @@ const ColorDisplayComponent: React.FC<ColorDisplayProps> = React.memo(
             )}
 
             <ActionButton
-              icon={<Pipette className={`w-4 h-4 ${isPickerLoading ? "animate-pulse" : ""}`} />}
+              icon={
+                <Pipette
+                  className={`w-4 h-4 ${isPickerLoading ? "animate-pulse" : ""}`}
+                />
+              }
               variant="ghost"
               size="default"
               onClick={handleScreenPicker}
               disabled={isPickerLoading}
-              tooltip={isPickerLoading ? t("actions.openingColorPicker") : t("actions.pickFromScreen")}
+              tooltip={
+                isPickerLoading
+                  ? t("actions.openingColorPicker")
+                  : t("actions.pickFromScreen")
+              }
               className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 disabled:opacity-50"
             />
           </div>

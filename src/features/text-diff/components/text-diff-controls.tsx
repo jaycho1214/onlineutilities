@@ -3,15 +3,12 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { ButtonGroup, ButtonGroupItem } from "@/features/shared/ui/button-group";
-import { ActionButton } from "@/features/shared/ui/action-button";
 import {
-  Columns2,
-  FileText,
-  Settings,
-  Download,
-  FilePlay,
-} from "lucide-react";
+  ButtonGroup,
+  ButtonGroupItem,
+} from "@/features/shared/ui/button-group";
+import { ActionButton } from "@/features/shared/ui/action-button";
+import { Columns2, FileText, Settings, Download, FilePlay } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
 
 interface TextDiffControlsProps {

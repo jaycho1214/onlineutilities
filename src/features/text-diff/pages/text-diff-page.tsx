@@ -40,75 +40,76 @@ export function TextDiffPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">{/* Follow random generator pattern */}
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {t("title")}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">{t("description")}</p>
-        </div>
-
-        {/* Main Content */}
-        <div className="space-y-4">
-          {/* Controls */}
-          <TextDiffControls
-            onSettingsClick={() => setSettingsOpen(true)}
-            onExportClick={() => setExportOpen(true)}
-          />
-
-          {/* Input Area */}
-          <TextDiffInputArea />
-
-          {/* Diff View */}
-          {state.diffResult && (
-            <GlassSurface className="p-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Comparison Result
-              </h2>
-              {state.viewMode === "side-by-side" ? (
-                <DiffViewSideBySide />
-              ) : (
-                <DiffViewUnified />
-              )}
-            </GlassSurface>
-          )}
-
-          {/* Merged Result (if any) */}
-          {state.mergedText && (
-            <GlassSurface className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {t("merge.mergedResult")}
-                </h3>
-                <Button
-                  variant="outline"
-                  onClick={handleCopyMergedText}
-                  className="size-8 p-0"
-                >
-                  {mergedTextCopied ? (
-                    <Check className="size-3" />
-                  ) : (
-                    <Copy className="size-3" />
-                  )}
-                </Button>
-              </div>
-              <Textarea
-                value={state.mergedText}
-                readOnly
-                className="h-64 p-3 font-mono text-sm"
-                spellCheck={false}
-              />
-            </GlassSurface>
-          )}
-        </div>
-
-        {/* Dialogs */}
-        <TextDiffSettingsDialog
-          open={settingsOpen}
-          onOpenChange={setSettingsOpen}
-        />
-        <TextDiffExportDialog open={exportOpen} onOpenChange={setExportOpen} />
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Follow random generator pattern */}
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {t("title")}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">{t("description")}</p>
       </div>
+
+      {/* Main Content */}
+      <div className="space-y-4">
+        {/* Controls */}
+        <TextDiffControls
+          onSettingsClick={() => setSettingsOpen(true)}
+          onExportClick={() => setExportOpen(true)}
+        />
+
+        {/* Input Area */}
+        <TextDiffInputArea />
+
+        {/* Diff View */}
+        {state.diffResult && (
+          <GlassSurface className="p-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Comparison Result
+            </h2>
+            {state.viewMode === "side-by-side" ? (
+              <DiffViewSideBySide />
+            ) : (
+              <DiffViewUnified />
+            )}
+          </GlassSurface>
+        )}
+
+        {/* Merged Result (if any) */}
+        {state.mergedText && (
+          <GlassSurface className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {t("merge.mergedResult")}
+              </h3>
+              <Button
+                variant="outline"
+                onClick={handleCopyMergedText}
+                className="size-8 p-0"
+              >
+                {mergedTextCopied ? (
+                  <Check className="size-3" />
+                ) : (
+                  <Copy className="size-3" />
+                )}
+              </Button>
+            </div>
+            <Textarea
+              value={state.mergedText}
+              readOnly
+              className="h-64 p-3 font-mono text-sm"
+              spellCheck={false}
+            />
+          </GlassSurface>
+        )}
+      </div>
+
+      {/* Dialogs */}
+      <TextDiffSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+      />
+      <TextDiffExportDialog open={exportOpen} onOpenChange={setExportOpen} />
+    </div>
   );
 }

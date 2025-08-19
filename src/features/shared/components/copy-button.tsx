@@ -8,21 +8,27 @@ import { ActionButton } from "../ui/action-button";
 import { cn } from "@/lib/utils";
 
 interface CopyButtonProps
-  extends Omit<React.ComponentProps<typeof ActionButton>, "onClick" | "children" | "icon"> {
+  extends Omit<
+    React.ComponentProps<typeof ActionButton>,
+    "onClick" | "children" | "icon"
+  > {
   onClick?: () => void;
   feedbackDuration?: number;
 }
 
 const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
-  ({
-    size = "default",
-    variant = "ghost",
-    className,
-    onClick,
-    feedbackDuration = 2000,
-    disabled,
-    ...props
-  }, ref) => {
+  (
+    {
+      size = "default",
+      variant = "ghost",
+      className,
+      onClick,
+      feedbackDuration = 2000,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
     const t = useTranslations("Formatter");
     const [isCopied, setIsCopied] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -33,7 +39,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
       // Trigger animation
       setIsAnimating(true);
       setIsCopied(true);
-      
+
       // Call custom onClick handler if provided
       onClick?.();
 
@@ -56,29 +62,37 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
         <div
           className={cn(
             "transition-all duration-200 ease-out",
-            isCopied ? "scale-0 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"
+            isCopied
+              ? "scale-0 rotate-90 opacity-0"
+              : "scale-100 rotate-0 opacity-100",
           )}
         >
-          <Copy className={cn(
-            "transition-all duration-200",
-            size === "sm" && "h-3 w-3",
-            size === "default" && "h-4 w-4",
-            size === "lg" && "h-5 w-5"
-          )} />
+          <Copy
+            className={cn(
+              "transition-all duration-200",
+              size === "sm" && "h-3 w-3",
+              size === "default" && "h-4 w-4",
+              size === "lg" && "h-5 w-5",
+            )}
+          />
         </div>
-        
+
         <div
           className={cn(
             "absolute transition-all duration-200 ease-out",
-            isCopied ? "scale-100 rotate-0 opacity-100" : "scale-0 rotate-90 opacity-0"
+            isCopied
+              ? "scale-100 rotate-0 opacity-100"
+              : "scale-0 rotate-90 opacity-0",
           )}
         >
-          <Check className={cn(
-            "transition-all duration-200 text-green-500",
-            size === "sm" && "h-3 w-3",
-            size === "default" && "h-4 w-4", 
-            size === "lg" && "h-5 w-5"
-          )} />
+          <Check
+            className={cn(
+              "transition-all duration-200 text-green-500",
+              size === "sm" && "h-3 w-3",
+              size === "default" && "h-4 w-4",
+              size === "lg" && "h-5 w-5",
+            )}
+          />
         </div>
       </div>
     );
@@ -96,12 +110,12 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
           "relative overflow-hidden",
           isCopied && "text-green-500",
           isAnimating && "scale-95",
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 CopyButton.displayName = "CopyButton";

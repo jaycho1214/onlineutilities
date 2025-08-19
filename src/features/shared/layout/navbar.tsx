@@ -41,11 +41,7 @@ export function Navbar() {
           {showSidebarButton && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleSidebar}
-                >
+                <Button variant="ghost" size="icon" onClick={toggleSidebar}>
                   <PanelLeftIcon />
                 </Button>
               </TooltipTrigger>

@@ -9,21 +9,26 @@
 /**
  * Random generator types supported by the application
  */
-export type GeneratorType = 
-  | "password" 
-  | "number" 
-  | "uuid" 
+export type GeneratorType =
+  | "password"
+  | "number"
+  | "uuid"
   | "nanoid"
   | "cuid"
-  | "string" 
-  | "boolean" 
-  | "color" 
+  | "string"
+  | "boolean"
+  | "color"
   | "date";
 
 /**
  * Password strength levels
  */
-export type PasswordStrength = "weak" | "fair" | "good" | "strong" | "veryStrong";
+export type PasswordStrength =
+  | "weak"
+  | "fair"
+  | "good"
+  | "strong"
+  | "veryStrong";
 
 /**
  * Number types for number generator
@@ -33,13 +38,13 @@ export type NumberType = "integer" | "float";
 /**
  * Character set types for string generator
  */
-export type CharsetType = 
-  | "alphanumeric" 
-  | "alphabetic" 
-  | "numeric" 
-  | "lowercase" 
-  | "uppercase" 
-  | "symbols" 
+export type CharsetType =
+  | "alphanumeric"
+  | "alphabetic"
+  | "numeric"
+  | "lowercase"
+  | "uppercase"
+  | "symbols"
   | "custom";
 
 /**
@@ -60,7 +65,12 @@ export type DateFormat = "iso" | "us" | "european" | "timestamp" | "custom";
 /**
  * Nanoid alphabet presets
  */
-export type NanoidPreset = "default" | "alphanumeric" | "numbers" | "lowercase" | "uppercase";
+export type NanoidPreset =
+  | "default"
+  | "alphanumeric"
+  | "numbers"
+  | "lowercase"
+  | "uppercase";
 
 // ============================================================================
 // CONFIGURATION INTERFACES
@@ -167,15 +177,15 @@ export interface DateConfig extends BaseGeneratorConfig {
 /**
  * Union type for all generator configurations
  */
-export type GeneratorConfig = 
-  | PasswordConfig 
-  | NumberConfig 
-  | UuidConfig 
+export type GeneratorConfig =
+  | PasswordConfig
+  | NumberConfig
+  | UuidConfig
   | NanoidConfig
   | CuidConfig
-  | StringConfig 
-  | BooleanConfig 
-  | ColorConfig 
+  | StringConfig
+  | BooleanConfig
+  | ColorConfig
   | DateConfig;
 
 // ============================================================================
@@ -274,7 +284,9 @@ export type TypeGuard<T> = (value: unknown) => value is T;
 /**
  * Generator function type
  */
-export type GeneratorFunction<T extends GeneratorConfig> = (config: T) => Promise<string[]>;
+export type GeneratorFunction<T extends GeneratorConfig> = (
+  config: T,
+) => Promise<string[]>;
 
 /**
  * Validator function type
@@ -348,8 +360,10 @@ export const DEFAULT_CONFIGS: Record<GeneratorType, GeneratorConfig> = {
   },
   date: {
     count: 1,
-    startDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year ago
-    endDate: new Date().toISOString().split('T')[0], // today
+    startDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0], // 1 year ago
+    endDate: new Date().toISOString().split("T")[0], // today
     format: "iso",
     customFormat: "YYYY-MM-DD",
   },
@@ -372,7 +386,8 @@ export const CHARACTER_SETS = {
  */
 export const NANOID_ALPHABETS: Record<NanoidPreset, string> = {
   default: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-",
-  alphanumeric: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+  alphanumeric:
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   numbers: "0123456789",
   lowercase: "abcdefghijklmnopqrstuvwxyz0123456789",
   uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",

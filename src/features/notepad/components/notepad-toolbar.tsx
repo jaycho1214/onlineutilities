@@ -49,14 +49,7 @@ function NotepadToolbarComponent({ onFormat }: NotepadToolbarProps) {
             variant="ghost"
             size="default"
             onClick={() => onFormat(tool.format)}
-            tooltip={
-              <div>
-                <p>{tool.label}</p>
-                {tool.shortcut && (
-                  <p className="text-xs text-muted-foreground">{tool.shortcut}</p>
-                )}
-              </div>
-            }
+            tooltip={`${tool.label}${tool.shortcut ? ` (${tool.shortcut})` : ""}`}
           />
         ))}
       </div>

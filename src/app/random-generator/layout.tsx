@@ -10,9 +10,7 @@ export default function RandomGeneratorLayout({
     <RandomGeneratorProvider>
       <div className="flex flex-row">
         <RandomGeneratorSidebar />
-        <div className="flex-1">
-          {children}
-        </div>
+        <div className="flex-1">{children}</div>
       </div>
     </RandomGeneratorProvider>
   );

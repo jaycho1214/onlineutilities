@@ -10,9 +10,7 @@ export default function TextDiffLayout({
     <TextDiffProvider>
       <div className="flex flex-row">
         <TextDiffHistorySidebar />
-        <div className="flex-1">
-          {children}
-        </div>
+        <div className="flex-1">{children}</div>
       </div>
     </TextDiffProvider>
   );

@@ -44,7 +44,7 @@ export function TextDiffExportDialog({
         content = exportFormats.unifiedDiff(
           state.originalText,
           state.modifiedText,
-          state.diffOptions
+          state.diffOptions,
         );
         filename = "diff.patch";
         mimeType = "text/plain";
@@ -90,7 +90,7 @@ export function TextDiffExportDialog({
         content = exportFormats.unifiedDiff(
           state.originalText,
           state.modifiedText,
-          state.diffOptions
+          state.diffOptions,
         );
         break;
       case "json":
@@ -164,7 +164,7 @@ export function TextDiffExportDialog({
                   "w-full p-3 h-auto text-left justify-start",
                   selectedFormat === format.id
                     ? "bg-primary/10 border-primary"
-                    : "bg-background/50 hover:bg-muted/50"
+                    : "bg-background/50 hover:bg-muted/50",
                 )}
               >
                 <div className="flex items-start gap-3">
