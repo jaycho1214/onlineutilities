@@ -40,6 +40,7 @@ const buttonVariants = cva(
   }
 );
 
+// Optimized glass variants - removed empty strings for better performance
 const glassVariants = cva("", {
   variants: {
     variant: {

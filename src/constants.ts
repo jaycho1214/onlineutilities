@@ -8,6 +8,7 @@ import {
   Code2,
   Dices,
   FileDiff,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
 
@@ -138,6 +139,33 @@ export const utilities: Utility[] = [
       "version",
     ],
   },
+  {
+    id: "encoder-decoder",
+    name: "Encoder/Decoder",
+    description: "Encode and decode text with Base64, URL, HTML entities, Hex, ASCII, Binary, Unicode, and more formats",
+    icon: Lock,
+    href: "/encoder-decoder",
+    category: "Text",
+    keywords: [
+      "encode",
+      "decode",
+      "base64",
+      "url",
+      "html",
+      "hex",
+      "ascii",
+      "binary",
+      "unicode",
+      "punycode",
+      "base58",
+      "rot13",
+      "morse",
+      "escape",
+      "unescape",
+      "encryption",
+      "conversion",
+    ],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -165,6 +193,7 @@ export const SIDEBAR_SUPPORTED_PAGES = [
   "/formatter",
   "/random-generator",
   "/text-diff",
+  "/encoder-decoder",
 ];
 
 export const isSidebarSupported = (pathname: string): boolean => {

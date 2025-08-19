@@ -17,6 +17,7 @@ import {
   ArrowLeftRight,
   Trash2,
 } from "lucide-react";
+import { ErrorDisplay } from "@/features/shared/components/error-display";
 import { useTextDiff } from "../lib/text-diff-context";
 
 interface TextDiffControlsProps {
@@ -107,11 +108,12 @@ export function TextDiffControls({
       </div>
 
       {/* Error Display */}
-      {state.error && (
-        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-600 dark:text-red-400">
-          {state.error}
-        </div>
-      )}
+      <ErrorDisplay
+        error={state.error}
+        variant="card"
+        showIcon
+        className="mt-4"
+      />
     </GlassSurface>
   );
 }

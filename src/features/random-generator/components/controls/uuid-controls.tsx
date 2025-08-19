@@ -2,8 +2,12 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Input } from "@/features/shared/ui/input";
-import { Checkbox } from "@/features/shared/ui/checkbox";
+import { NumberField, CheckboxField } from "@/features/shared/components/form-field";
+import { CollisionProbabilityDisplay } from "@/features/shared/components/collision-probability-display";
+import { 
+  calculateCollisionScenarios, 
+  COMMON_COLLISION_SCENARIOS 
+} from "../../lib/collision-probability";
 import type { UuidConfig } from "../../types";
 
 interface UuidControlsProps {
@@ -11,130 +15,59 @@ interface UuidControlsProps {
   onChange: (config: UuidConfig) => void;
 }
 
-export function UuidControls({ config, onChange }: UuidControlsProps) {
+export const UuidControls = React.memo<UuidControlsProps>(({ config, onChange }) => {
   const t = useTranslations("RandomGenerator.uuid");
 
-  const handleChange = <K extends keyof UuidConfig>(
+  const handleChange = React.useCallback(<K extends keyof UuidConfig>(
     field: K,
     value: UuidConfig[K],
   ) => {
     onChange({ ...config, [field]: value });
-  };
+  }, [config, onChange]);
 
   // UUID v4 has 2^122 possible values (extremely low collision probability)
-  const calculateConflictProbability = () => {
+  const collisionScenarios = React.useMemo(() => {
     // UUID v4 has 122 random bits = 2^122 ≈ 5.3 × 10^36 possible values
     const totalPossibleUuids = Math.pow(2, 122);
-
-    const scenarios = [
-      { users: 1000000, label: "1 Million UUIDs" },
-      { users: 1000000000, label: "1 Billion UUIDs" },
-      { users: 1000000000000, label: "1 Trillion UUIDs" },
-      { users: 1000000000000000, label: "1 Quadrillion UUIDs" },
-    ];
-
-    return scenarios.map((scenario) => {
-      // Birthday paradox: probability of at least one collision
-      const probability =
-        1 - Math.exp(-Math.pow(scenario.users, 2) / (2 * totalPossibleUuids));
-      return { ...scenario, probability: probability * 100 };
-    });
-  };
-
-  const conflictProbability = calculateConflictProbability();
-  const formatProbability = (prob: number) => {
-    if (prob < 0.000000001) return "< 0.000000001%";
-    if (prob < 0.001) return prob.toExponential(2) + "%";
-    if (prob < 1) return prob.toFixed(6) + "%";
-    return prob.toFixed(2) + "%";
-  };
+    return calculateCollisionScenarios(totalPossibleUuids, COMMON_COLLISION_SCENARIOS.uuid);
+  }, []);
 
   return (
     <div className="space-y-6">
       {/* Count */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {t("count")}
-        </label>
-        <Input
-          type="number"
-          min={1}
-          max={100}
-          value={config.count}
-          onChange={(e) => handleChange("count", parseInt(e.target.value) || 1)}
-          className="w-24"
-        />
-      </div>
+      <NumberField
+        label={t("count")}
+        value={config.count}
+        onChange={(value) => handleChange("count", value)}
+        min={1}
+        max={100}
+        inputClassName="w-24"
+      />
 
       {/* Options */}
       <div className="space-y-3">
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="uppercase"
-            checked={config.uppercase}
-            onCheckedChange={(checked) => handleChange("uppercase", !!checked)}
-          />
-          <label
-            htmlFor="uppercase"
-            className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
-          >
-            {t("uppercase")}
-          </label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="hyphenated"
-            checked={config.hyphenated}
-            onCheckedChange={(checked) => handleChange("hyphenated", !!checked)}
-          />
-          <label
-            htmlFor="hyphenated"
-            className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
-          >
-            {t("hyphenated")}
-          </label>
-        </div>
+        <CheckboxField
+          id="uppercase"
+          label={t("uppercase")}
+          checked={config.uppercase}
+          onChange={(checked) => handleChange("uppercase", checked)}
+        />
+        <CheckboxField
+          id="hyphenated"
+          label={t("hyphenated")}
+          checked={config.hyphenated}
+          onChange={(checked) => handleChange("hyphenated", checked)}
+        />
       </div>
 
-      {/* Conflict Probability */}
-      <div>
-        <div className="p-3 bg-blue-500/10 dark:bg-blue-400/5 rounded-lg border border-blue-500/20 dark:border-blue-400/20 backdrop-blur-sm">
-          <div className="mb-2">
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-              Collision Risk (UUID v4):
-            </span>
-          </div>
-          <div className="space-y-1">
-            {conflictProbability.map((scenario, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between text-xs"
-              >
-                <span className="text-blue-800 dark:text-blue-200">
-                  {scenario.label}:
-                </span>
-                <span className="font-mono text-green-600 dark:text-green-400">
-                  {formatProbability(scenario.probability)}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
-            UUID v4 is cryptographically secure with virtually zero collision
-            risk
-          </p>
-          <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-700">
-            <p className="text-xs text-blue-600 dark:text-blue-400">
-              💡 For production: Consider using the{" "}
-              <code className="font-mono bg-blue-100 dark:bg-blue-900 px-1 rounded">
-                uuid
-              </code>{" "}
-              npm package
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Collision Probability */}
+      <CollisionProbabilityDisplay
+        title="Collision Risk (UUID v4):"
+        scenarios={collisionScenarios}
+        formatType="uuid"
+        description="UUID v4 is cryptographically secure with virtually zero collision risk"
+        tip="💡 For production: Consider using the uuid npm package"
+      />
 
       {/* Preview */}
       <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -153,4 +86,6 @@ export function UuidControls({ config, onChange }: UuidControlsProps) {
       </div>
     </div>
   );
-}
+});
+
+UuidControls.displayName = "UuidControls";

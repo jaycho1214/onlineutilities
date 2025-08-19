@@ -21,6 +21,13 @@
     "privacyPolicy": "Privacy Policy",
     "github": "Github"
   },
+  "ErrorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. We've been notified and are working to fix it.",
+    "descriptionWithDetails": "{message}",
+    "reloadButton": "Reload Page",
+    "tryAgainButton": "Try Again"
+  },
   "Welcome": {
     "greetings": {
       "withName": {
@@ -227,6 +234,13 @@
       "Enhanced error handling shows exact line and column information for syntax errors",
       "All processing happens locally in your browser for privacy"
     ],
+    "calculator": [
+      "Your calculation history is automatically saved for easy reference",
+      "Use keyboard shortcuts: Enter to calculate, C to clear, +/-/* for operations",
+      "Click any previous calculation to reuse the result",
+      "All calculations are stored locally in your browser for privacy",
+      "The calculator supports decimals, percentages, and standard arithmetic operations"
+    ],
     "random-generator": [
       "All generation happens locally in your browser for maximum security"
     ],
@@ -237,6 +251,9 @@
       "All comparisons are saved to history automatically for quick access later",
       "Adjust diff settings to ignore whitespace, case, or blank lines for cleaner comparisons",
       "Export your diff results in multiple formats: text, HTML, JSON, or standard patch format"
+    ],
+    "encoder-decoder": [
+      "Paste encoded text to the output area (when input is empty) to automatically switch to decode mode"
     ]
   },
   "ColorPicker": {
@@ -308,7 +325,8 @@
     "calculator": "Calculator",
     "formatter": "Formatter",
     "random-generator": "Random Generator",
-    "text-diff": "Text Diff"
+    "text-diff": "Text Diff",
+    "encoder-decoder": "Encoder/Decoder"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -957,6 +975,159 @@
       "diffFailed": "Diff comparison failed",
       "mergeFailed": "Merge operation failed",
       "exportFailed": "Export operation failed"
+    }
+  },
+  "EncoderDecoder": {
+    "title": "Encoder/Decoder",
+    "description": "Encode and decode text with various formats",
+    "types": {
+      "base64": "Base64",
+      "url": "URL Encoding",
+      "html-entity": "HTML Entity",
+      "hex": "Hexadecimal",
+      "base32": "Base32",
+      "ascii": "ASCII Codes",
+      "binary": "Binary",
+      "unicode-escape": "Unicode Escape",
+      "punycode": "Punycode",
+      "base58": "Base58",
+      "rot13": "ROT13",
+      "morse-code": "Morse Code",
+      "uri-component": "URI Component",
+      "form-data": "Form Data",
+      "cookie": "Cookie Encoding"
+    },
+    "descriptions": {
+      "base64": "Binary-to-text encoding scheme",
+      "url": "Percent-encoding for URLs",
+      "html-entity": "HTML character entity encoding",
+      "hex": "Binary data to hexadecimal",
+      "base32": "32-character encoding scheme",
+      "ascii": "Text to ASCII character codes",
+      "binary": "Text to binary representation",
+      "unicode-escape": "Unicode \\u sequences",
+      "punycode": "International domain name encoding",
+      "base58": "Cryptocurrency address encoding",
+      "rot13": "Caesar cipher with 13-character rotation",
+      "morse-code": "Dots and dashes encoding",
+      "uri-component": "Encode URI components",
+      "form-data": "application/x-www-form-urlencoded",
+      "cookie": "HTTP cookie value encoding"
+    },
+    "operations": {
+      "encode": "Encode",
+      "decode": "Decode"
+    },
+    "actions": {
+      "encode": "Encode",
+      "decode": "Decode",
+      "paste": "Paste",
+      "copy": "Copy",
+      "clear": "Clear"
+    },
+    "labels": {
+      "input": "Input",
+      "output": "Output"
+    },
+    "input": {
+      "placeholder": "Enter text to encode or decode..."
+    },
+    "output": {
+      "placeholder": "Result will appear here...",
+      "placeholderWithReversal": "Result will appear here... (Paste to reverse operation)"
+    },
+    "status": {
+      "encodeSuccess": "Encoded successfully",
+      "decodeSuccess": "Decoded successfully"
+    },
+    "settings": {
+      "autoConvert": "Auto Convert",
+      "autoConvertDesc": "Automatically convert when typing",
+      "saveHistory": "Save History",
+      "saveHistoryDesc": "Keep a history of encoding/decoding operations"
+    },
+    "warnings": {
+      "sizeLimitExceeded": "Input size exceeds 1MB limit. Auto-convert disabled for performance."
+    },
+    "dragDrop": {
+      "title": "Drop File Here",
+      "description": "Drop a text file to load its contents"
+    },
+    "typeSelector": {
+      "placeholder": "Search encoding types...",
+      "noResults": "No encoding type found"
+    },
+    "sidebar": {
+      "title": "History",
+      "empty": "No encoding history yet",
+      "noResults": "No matching entries found",
+      "loading": "Loading history...",
+      "disabled": {
+        "title": "History Disabled",
+        "message": "Enable \"Save History\" in settings to track your encoding operations",
+        "searchPlaceholder": "History disabled"
+      },
+      "stats": {
+        "total": "Total",
+        "valid": "Valid",
+        "encoded": "Encoded",
+        "decoded": "Decoded"
+      },
+      "search": {
+        "placeholder": "Search history..."
+      },
+      "filters": {
+        "type": "Type",
+        "operation": "Operation",
+        "all": "All"
+      }
+    },
+    "history": {
+      "title": "Encoding History",
+      "empty": "No encoding history yet",
+      "noHistory": "Your encoding history will appear here",
+      "clearAll": "Clear All",
+      "error": "Error occurred",
+      "timeAgo": {
+        "now": "Just now",
+        "minutes": "{count, plural, one {# minute ago} other {# minutes ago}}",
+        "hours": "{count, plural, one {# hour ago} other {# hours ago}}",
+        "days": "{count, plural, one {# day ago} other {# days ago}}"
+      },
+      "actions": {
+        "use": "Use",
+        "copyInput": "Copy Input",
+        "copyOutput": "Copy Output",
+        "delete": "Delete"
+      }
+    },
+    "notifications": {
+      "encoded": "Text encoded successfully",
+      "decoded": "Text decoded successfully",
+      "copied": "Copied to clipboard",
+      "pasted": "Pasted from clipboard",
+      "cleared": "Content cleared",
+      "historyCleared": "History cleared",
+      "error": "Operation failed",
+      "invalidInput": "Invalid input for this encoding type",
+      "copyError": "Failed to copy to clipboard",
+      "pasteError": "Failed to paste from clipboard",
+      "emptyInput": "Please enter text to encode or decode",
+      "encodeFailed": "Encoding failed: {error}",
+      "decodeFailed": "Decoding failed: {error}",
+      "noInputToCopy": "No input to copy",
+      "noOutputToCopy": "No output to copy",
+      "inputCopied": "Input copied to clipboard",
+      "outputCopied": "Output copied to clipboard",
+      "textPasted": "Text pasted from clipboard",
+      "clipboardEmpty": "Clipboard is empty",
+      "actionReversed": "Action reversed - switched to {operation} mode"
+    },
+    "errors": {
+      "encodingFailed": "Encoding operation failed",
+      "decodingFailed": "Decoding operation failed",
+      "invalidFormat": "Invalid format for this encoding type",
+      "unsupportedOperation": "Operation not supported for this encoding type"
     }
   }
 }
