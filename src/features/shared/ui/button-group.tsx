@@ -5,24 +5,27 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const buttonGroupVariants = cva("inline-flex rounded-lg overflow-hidden", {
-  variants: {
-    variant: {
-      default: "bg-background/50 p-1",
-      outline: "border border-border",
-      ghost: "",
+const buttonGroupVariants = cva(
+  "inline-flex rounded-lg overflow-hidden gap-1",
+  {
+    variants: {
+      variant: {
+        default: "bg-background/50 p-1",
+        outline: "border border-border",
+        ghost: "",
+      },
+      size: {
+        default: "",
+        sm: "",
+        lg: "",
+      },
     },
-    size: {
-      default: "",
-      sm: "",
-      lg: "",
+    defaultVariants: {
+      variant: "default",
+      size: "default",
     },
-  },
-  defaultVariants: {
-    variant: "default",
-    size: "default",
-  },
-});
+  }
+);
 
 const buttonGroupItemVariants = cva(
   "px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-all [&_svg]:size-4 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -37,7 +40,7 @@ const buttonGroupItemVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  },
+  }
 );
 
 interface ButtonGroupProps
@@ -74,7 +77,7 @@ const ButtonGroupItem = React.forwardRef<
         buttonGroupItemVariants({ variant }),
         "data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
         "data-[state=unchecked]:text-muted-foreground data-[state=unchecked]:hover:text-foreground data-[state=unchecked]:hover:bg-muted/50 data-[state=unchecked]:bg-transparent",
-        className,
+        className
       )}
       {...props}
     >
