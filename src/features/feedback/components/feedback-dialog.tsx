@@ -151,7 +151,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
-        className="w-full max-w-sm sm:max-w-md h-[90vh] sm:h-auto max-h-[600px] p-2 sm:p-3"
+        className="w-full max-w-sm sm:max-w-md h-[90vh] sm:h-auto max-h-[600px] p-1 sm:p-2"
         showCloseButton={false}
       >
         <VisuallyHidden>
@@ -167,7 +167,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
 
         <div className="flex flex-col h-full gap-3">
           {/* Header */}
-          <div className="p-4">
+          <div className="p-3">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 text-blue-500" />
@@ -183,7 +183,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
           <div className="flex-1 overflow-y-auto min-h-0 space-y-3">
             {/* Message */}
             <GlassSurface className="shadow-lg">
-              <div className="p-4">
+              <div className="p-3">
                 <div className="space-y-3">
                   <label htmlFor="message" className="text-sm font-medium">
                     {t("form.message")} <span className="text-red-500">*</span>
@@ -220,7 +220,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
 
             {/* Email */}
             <GlassSurface className="shadow-lg">
-              <div className="p-4">
+              <div className="p-3">
                 <div className="space-y-3">
                   <label htmlFor="email" className="text-sm font-medium">
                     {t("form.email")}
@@ -253,7 +253,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
 
           {/* Footer */}
           <GlassSurface className="shadow-lg">
-            <div className="p-4">
+            <div className="p-3">
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
