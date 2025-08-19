@@ -14,9 +14,9 @@ interface CopyButtonProps {
   size?: "sm" | "default" | "lg" | "icon";
   variant?:
     | "default"
+    | "action"
     | "destructive"
     | "outline"
-    | "secondary"
     | "ghost"
     | "link";
   onClick?: (e: React.MouseEvent) => void;

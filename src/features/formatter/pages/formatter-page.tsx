@@ -285,7 +285,7 @@ function FormatterPageComponent() {
                   <div className="flex border border-white/10 rounded-lg overflow-hidden">
                     <Button
                       onClick={() => handleViewModeChange("raw")}
-                      variant={state.csvViewMode === "raw" ? "solid" : "ghost"}
+                      variant={state.csvViewMode === "raw" ? "default" : "ghost"}
                       size="sm"
                       className="rounded-none border-0"
                     >
@@ -295,7 +295,7 @@ function FormatterPageComponent() {
                     <Button
                       onClick={() => handleViewModeChange("table")}
                       variant={
-                        state.csvViewMode === "table" ? "solid" : "ghost"
+                        state.csvViewMode === "table" ? "default" : "ghost"
                       }
                       size="sm"
                       className="rounded-none border-0 border-l border-white/10"
@@ -328,7 +328,7 @@ function FormatterPageComponent() {
                   </Select>
                   <Button
                     onClick={() => setUseTabs(!state.useTabs)}
-                    variant={state.useTabs ? "solid" : "outline"}
+                    variant={state.useTabs ? "default" : "outline"}
                     className="h-8 px-2 whitespace-nowrap"
                   >
                     {state.useTabs ? t("labels.tabs") : t("labels.spaces")}
@@ -364,7 +364,7 @@ function FormatterPageComponent() {
           <div className="flex flex-wrap gap-2 sm:gap-3 flex-shrink-0">
             <Button
               onClick={formatInput}
-              variant="secondary"
+              variant="outline"
               disabled={!state.input.trim()}
               className="text-white h-12 px-6"
               size="lg"
@@ -374,7 +374,7 @@ function FormatterPageComponent() {
             </Button>
             <Button
               onClick={validateInput}
-              variant="secondary"
+              variant="outline"
               disabled={!state.input.trim()}
               className="h-12 px-6"
               size="lg"
@@ -385,7 +385,7 @@ function FormatterPageComponent() {
             {formatterSupports(state.type, "minify") && (
               <Button
                 onClick={minifyInput}
-                variant="secondary"
+                variant="outline"
                 disabled={!state.input.trim()}
                 className="h-12 px-6"
                 size="lg"

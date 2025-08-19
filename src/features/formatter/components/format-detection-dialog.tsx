@@ -143,7 +143,7 @@ function FormatDetectionDialogComponent({
                 </div>
               </div>
             </div>
-            <Badge variant="secondary">
+            <Badge variant="outline">
               {t("detection.detected", { type: "" }).replace(":", "")}
             </Badge>
           </div>
@@ -199,7 +199,7 @@ function FormatDetectionDialogComponent({
             <Button
               onClick={handleUseDetected}
               className="flex-1"
-              variant="secondary"
+              variant="outline"
             >
               {t("detection.useDetected", {
                 type: getFormatterName(detectedFormat),

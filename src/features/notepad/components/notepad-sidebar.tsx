@@ -172,7 +172,7 @@ function NotepadSidebarComponent() {
                   </ContextMenuItem>
                   <ContextMenuSeparator />
                   <ContextMenuItem
-                    variant="destructive"
+                    className="text-red-400 focus:text-red-300"
                     onClick={() => {
                       const confirmDelete = window.confirm(
                         `Delete "${note.title || "Untitled"}"?`,

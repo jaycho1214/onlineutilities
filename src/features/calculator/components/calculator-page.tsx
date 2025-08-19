@@ -310,29 +310,25 @@ function CalculatorPageComponent() {
             {/* Row 1 */}
             <Button
               onClick={clear}
-              innerClassName={buttonTextClassName}
               variant="outline"
             >
               {t("buttons.clear")}
             </Button>
             <Button
               onClick={clearEntry}
-              innerClassName={buttonTextClassName}
               variant="outline"
             >
               {t("buttons.clearEntry")}
             </Button>
             <Button
               onClick={backspace}
-              innerClassName={buttonTextClassName}
               variant="outline"
             >
               {t("buttons.backspace")}
             </Button>
             <Button
               onClick={() => performOperation("/")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               {t("buttons.divide")}
             </Button>
@@ -340,29 +336,25 @@ function CalculatorPageComponent() {
             {/* Row 2 */}
             <Button
               onClick={() => inputNumber("7")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               7
             </Button>
             <Button
               onClick={() => inputNumber("8")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               8
             </Button>
             <Button
               onClick={() => inputNumber("9")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               9
             </Button>
             <Button
               onClick={() => performOperation("*")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               {t("buttons.multiply")}
             </Button>
@@ -370,29 +362,25 @@ function CalculatorPageComponent() {
             {/* Row 3 */}
             <Button
               onClick={() => inputNumber("4")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               4
             </Button>
             <Button
               onClick={() => inputNumber("5")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               5
             </Button>
             <Button
               onClick={() => inputNumber("6")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               6
             </Button>
             <Button
               onClick={() => performOperation("-")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               {t("buttons.subtract")}
             </Button>
@@ -400,29 +388,25 @@ function CalculatorPageComponent() {
             {/* Row 4 */}
             <Button
               onClick={() => inputNumber("1")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               1
             </Button>
             <Button
               onClick={() => inputNumber("2")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               2
             </Button>
             <Button
               onClick={() => inputNumber("3")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               3
             </Button>
             <Button
               onClick={() => performOperation("+")}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               {t("buttons.add")}
             </Button>
@@ -431,25 +415,20 @@ function CalculatorPageComponent() {
             <Button
               onClick={() => inputNumber("0")}
               className="col-span-2"
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               0
             </Button>
             <Button
               onClick={inputDecimal}
-              innerClassName={buttonTextClassName}
-              variant="secondary"
+              variant="outline"
             >
               {t("buttons.decimal")}
             </Button>
             <Button
               onClick={performCalculation}
-              innerClassName={cn(
-                buttonTextClassName,
-                "text-white dark:text-black",
-              )}
-              variant="solid"
+              className="text-lg sm:text-xl lg:text-2xl font-semibold"
+              variant="action"
             >
               {t("buttons.equals")}
             </Button>

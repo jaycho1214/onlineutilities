@@ -53,7 +53,6 @@ function NotepadToolbarComponent({ onFormat }: NotepadToolbarProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
                 onClick={() => onFormat(tool.format)}
                 aria-label={tool.label}
               >

@@ -57,8 +57,7 @@ export function RandomGeneratorPage() {
             <Button
               onClick={handleGenerate}
               disabled={state.isGenerating}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg backdrop-blur-md border border-white/20 transition-all duration-200 hover:shadow-xl hover:scale-105"
-              innerClassName="text-white"
+              variant="action"
               size="default"
             >
               {state.isGenerating ? "Generating..." : t("actions.generate")}

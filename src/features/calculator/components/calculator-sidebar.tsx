@@ -48,7 +48,6 @@ function CalculatorSidebarComponent() {
             onClick={handleClearHistory}
             variant="outline"
             size="icon"
-            className="h-8 w-8"
             title={t("history.clearAll")}
           >
             <Trash2 className="h-4 w-4" />

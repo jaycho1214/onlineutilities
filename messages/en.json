@@ -513,7 +513,7 @@
       "includeNumbers": "Include Numbers (0-9)",
       "includeSymbols": "Include Symbols (!@#$...)",
       "excludeSimilar": "Exclude Similar Characters (0, O, l, I)",
-      "excludeAmbiguous": "Exclude Ambiguous Characters ({}, [], (), /\\, ~, `, ', \")",
+      "excludeAmbiguous": "Exclude Ambiguous Characters",
       "customCharacters": "Custom Characters",
       "customCharactersPlaceholder": "Enter custom characters to include",
       "customCharactersInfo": "When provided, only these characters will be used (overrides other selections)",

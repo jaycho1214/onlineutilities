@@ -2,11 +2,13 @@
 
 import { Dialog, DialogContent, DialogTitle, VisuallyHidden } from "./dialog";
 import { GlassSurface } from "./glass-surface";
+import { Button } from "./button";
+import { ButtonGroup, ButtonGroupItem } from "./button-group";
 import { useTheme } from "next-themes";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { savePersonalName } from "@/lib/actions";
-import { X, User, Palette, ArrowUp, Info } from "lucide-react";
+import { User, Palette, ArrowUp, Info } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface SettingsDialogProps {
@@ -59,19 +61,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="w-full max-w-sm sm:max-w-2xl h-[500px] p-2 sm:p-3"
-        showCloseButton={false}
+        className="size-full max-w-sm sm:max-w-2xl h-[500px] p-2 sm:p-3"
+        showCloseButton
       >
         <VisuallyHidden>
           <DialogTitle>{t("title")}</DialogTitle>
         </VisuallyHidden>
-        {/* Custom Close Button */}
-        <button
-          onClick={() => onOpenChange(false)}
-          className="absolute top-4 right-4 z-10 w-7 h-7 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
 
         <div className="flex flex-col sm:flex-row h-full gap-2 sm:gap-3">
           {/* Sidebar */}
@@ -97,7 +92,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           "flex-shrink-0 sm:w-full flex items-center sm:items-start gap-2 sm:gap-2.5 px-2 sm:px-2 py-2 rounded-lg text-left transition-all duration-200 text-sm justify-center sm:justify-start whitespace-nowrap",
                           activeTab === item.id
                             ? "bg-white/20 shadow-lg backdrop-blur-sm border border-white/30"
-                            : "hover:bg-white/10 border border-transparent",
+                            : "hover:bg-white/10 border border-transparent"
                         )}
                       >
                         <Icon className="w-4 h-4 sm:mt-0.5" />
@@ -114,7 +109,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           {/* Content Area */}
           <div className="flex-1 overflow-y-auto min-h-0">
-            <div className="p-3 sm:p-4">
+            <div className="pt-1 px-3 pb-3 sm:pt-2 sm:px-4 sm:pb-4">
               {activeTab === "personal" && (
                 <div className="space-y-3 sm:space-y-4">
                   <div>
@@ -136,7 +131,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           >
                             {t("personalization.name")}
                           </label>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 items-center">
                             <input
                               id="name"
                               type="text"
@@ -152,13 +147,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                                 }
                               }}
                             />
-                            <button
+                            <Button
+                              variant="outline"
+                              size="icon"
                               onClick={handleSaveName}
-                              className="px-3 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg transition-colors flex items-center justify-center text-sm font-medium"
                               title="Save name"
                             >
-                              <ArrowUp className="w-4 h-4" />
-                            </button>
+                              <ArrowUp />
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -185,41 +181,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                           <p className="text-sm font-medium mb-2">
                             {t("appearance.theme")}
                           </p>
-                          <div className="flex rounded-lg bg-white/5 backdrop-blur-sm border border-white/20 overflow-hidden">
-                            <button
-                              onClick={() => setTheme("light")}
-                              className={cn(
-                                "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                theme === "light"
-                                  ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
-                              )}
-                            >
+                          <ButtonGroup
+                            value={theme}
+                            onValueChange={setTheme}
+                            variant="default"
+                          >
+                            <ButtonGroupItem value="light">
                               {t("appearance.light")}
-                            </button>
-                            <button
-                              onClick={() => setTheme("dark")}
-                              className={cn(
-                                "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200 border-x border-white/20",
-                                theme === "dark"
-                                  ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
-                              )}
-                            >
+                            </ButtonGroupItem>
+                            <ButtonGroupItem value="dark">
                               {t("appearance.dark")}
-                            </button>
-                            <button
-                              onClick={() => setTheme("system")}
-                              className={cn(
-                                "flex-1 px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                theme === "system"
-                                  ? "bg-white/15 backdrop-blur-sm border border-white/30 shadow-sm"
-                                  : "hover:bg-white/10",
-                              )}
-                            >
+                            </ButtonGroupItem>
+                            <ButtonGroupItem value="system">
                               {t("appearance.system")}
-                            </button>
-                          </div>
+                            </ButtonGroupItem>
+                          </ButtonGroup>
                         </div>
                       </div>
                     </div>

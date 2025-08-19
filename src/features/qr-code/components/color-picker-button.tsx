@@ -3,6 +3,7 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "@/features/shared/ui/input";
+import { Button } from "@/features/shared/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -46,15 +47,17 @@ export const ColorPickerButton = memo(
         <div className="flex gap-2">
           <Popover>
             <PopoverTrigger asChild>
-              <button
-                className="h-10 w-10 rounded-lg border-2 border-border/50 hover:border-border transition-all bg-white/10 backdrop-blur-sm flex items-center justify-center"
+              <Button
+                variant="outline"
+                size="none"
+                className="h-10 w-10 rounded-lg p-0"
                 aria-label={`Pick color for ${label}`}
               >
                 <div
                   className="w-6 h-6 rounded border border-border/50"
                   style={{ backgroundColor: color }}
                 />
-              </button>
+              </Button>
             </PopoverTrigger>
             <PopoverContent
               className="w-auto p-3 border border-border bg-background/95 backdrop-blur-xl"

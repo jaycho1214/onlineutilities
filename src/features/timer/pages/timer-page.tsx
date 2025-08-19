@@ -81,7 +81,7 @@ export function Timer() {
                 onClick={handleTestTimer}
                 size="sm"
                 variant="outline"
-                className="bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
+                className="bg-red-500/30 hover:bg-red-500/40 text-red-400 dark:text-red-300 border-red-500/50 dark:border-red-500/30"
                 title={t("buttons.testTimer")}
               >
                 3s
@@ -90,7 +90,7 @@ export function Timer() {
                 onClick={() => handleQuickTimer(1)}
                 size="sm"
                 variant="outline"
-                className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
+                className="bg-purple-500/30 hover:bg-purple-500/40 text-purple-600 dark:text-purple-300 border-purple-500/50 dark:border-purple-500/30"
                 title={t("buttons.oneMinute")}
               >
                 1m
@@ -99,7 +99,7 @@ export function Timer() {
                 onClick={() => handleQuickTimer(5)}
                 size="sm"
                 variant="outline"
-                className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
+                className="bg-purple-500/30 hover:bg-purple-500/40 text-purple-600 dark:text-purple-300 border-purple-500/50 dark:border-purple-500/30"
                 title={t("buttons.fiveMinutes")}
               >
                 5m
@@ -108,7 +108,7 @@ export function Timer() {
                 onClick={() => handleQuickTimer(10)}
                 size="sm"
                 variant="outline"
-                className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
+                className="bg-purple-500/30 hover:bg-purple-500/40 text-purple-600 dark:text-purple-300 border-purple-500/50 dark:border-purple-500/30"
                 title={t("buttons.tenMinutes")}
               >
                 10m
@@ -117,7 +117,7 @@ export function Timer() {
                 onClick={() => handleQuickTimer(30)}
                 size="sm"
                 variant="outline"
-                className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/30"
+                className="bg-purple-500/30 hover:bg-purple-500/40 text-purple-600 dark:text-purple-300 border-purple-500/50 dark:border-purple-500/30"
                 title={t("buttons.thirtyMinutes")}
               >
                 30m

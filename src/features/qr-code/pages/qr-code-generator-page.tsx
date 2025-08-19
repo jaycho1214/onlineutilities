@@ -771,8 +771,8 @@ END:VCARD`;
 
                 <Button
                   onClick={handleDownload}
-                  variant="default"
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                  variant="action"
+                  className="w-full"
                   size="sm"
                 >
                   <Download className="h-4 w-4" />

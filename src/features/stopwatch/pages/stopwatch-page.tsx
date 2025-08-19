@@ -37,7 +37,7 @@ export function Stopwatch() {
           <Button
             onClick={handleCreateStopwatch}
             size="icon"
-            className="w-10 h-10 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30 flex items-center justify-center"
+            className="w-10 h-10 bg-blue-500/30 hover:bg-blue-500/40 text-blue-600 dark:text-blue-300 border-blue-500/50 dark:border-blue-500/30 flex items-center justify-center"
             variant="outline"
             title={t("actions.newStopwatch")}
           >

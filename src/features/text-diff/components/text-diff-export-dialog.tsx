@@ -156,14 +156,15 @@ export function TextDiffExportDialog({
           {formats.map((format) => {
             const Icon = format.icon;
             return (
-              <button
+              <Button
                 key={format.id}
                 onClick={() => setSelectedFormat(format.id)}
+                variant={selectedFormat === format.id ? "default" : "outline"}
                 className={cn(
-                  "w-full p-3 rounded-lg border text-left transition-all",
+                  "w-full p-3 h-auto text-left justify-start",
                   selectedFormat === format.id
                     ? "bg-primary/10 border-primary"
-                    : "bg-background/50 border-border hover:bg-muted/50"
+                    : "bg-background/50 hover:bg-muted/50"
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -177,7 +178,7 @@ export function TextDiffExportDialog({
                     </div>
                   </div>
                 </div>
-              </button>
+              </Button>
             );
           })}
         </div>

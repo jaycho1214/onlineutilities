@@ -41,20 +41,13 @@ export function Navbar() {
           {showSidebarButton && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <GlassSurface
-                  className={cn(
-                    "flex-shrink-0 h-9 aspect-square cursor-pointer",
-                    "hover:scale-105 hover:rotate-1 hover:shadow-lg",
-                    "transition-all duration-300 ease-out group",
-                  )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleSidebar}
                 >
-                  <button
-                    onClick={toggleSidebar}
-                    className="w-full h-full flex items-center justify-center"
-                  >
-                    <PanelLeftIcon className="size-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
-                  </button>
-                </GlassSurface>
+                  <PanelLeftIcon />
+                </Button>
               </TooltipTrigger>
               <TooltipContent sideOffset={20}>
                 <span>{t("toggleSidebar")}</span>
@@ -84,21 +77,14 @@ export function Navbar() {
           {/* Feedback Glass Surface */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <GlassSurface
-                className={cn(
-                  "flex-shrink-0 h-9 aspect-square cursor-pointer",
-                  "hover:scale-105 hover:rotate-1 hover:shadow-lg",
-                  "transition-all duration-300 ease-out group",
-                )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setFeedbackOpen(true)}
+                aria-label={t("openFeedback")}
               >
-                <button
-                  onClick={() => setFeedbackOpen(true)}
-                  aria-label={t("openFeedback")}
-                  className="w-full h-full flex items-center justify-center"
-                >
-                  <MessageSquare className="size-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out" />
-                </button>
-              </GlassSurface>
+                <MessageSquare />
+              </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
               <span>{t("feedback")}</span>
@@ -108,21 +94,14 @@ export function Navbar() {
           {/* Settings Glass Surface */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <GlassSurface
-                className={cn(
-                  "flex-shrink-0 h-9 aspect-square cursor-pointer",
-                  "hover:scale-105 hover:rotate-1 hover:shadow-lg",
-                  "transition-all duration-300 ease-out group",
-                )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSettingsOpen(true)}
+                aria-label={t("openSettings")}
               >
-                <button
-                  onClick={() => setSettingsOpen(true)}
-                  aria-label={t("openSettings")}
-                  className="w-full h-full flex items-center justify-center"
-                >
-                  <Settings className="size-4 group-hover:scale-110 group-hover:rotate-180 transition-all duration-300 ease-out" />
-                </button>
-              </GlassSurface>
+                <Settings />
+              </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
               <span>{t("settings")}</span>

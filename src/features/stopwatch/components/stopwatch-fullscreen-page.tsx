@@ -141,8 +141,8 @@ export function StopwatchFullscreenPage({
             className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center p-0",
               stopwatch.isRunning
-                ? "bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/30"
-                : "bg-green-500/20 hover:bg-green-500/30 text-green-300 border-green-500/30",
+                ? "bg-red-500/30 hover:bg-red-500/40 text-red-400 dark:text-red-300 border-red-500/50 dark:border-red-500/30"
+                : "bg-green-500/30 hover:bg-green-500/40 text-green-600 dark:text-green-300 border-green-500/50 dark:border-green-500/30",
             )}
             variant="outline"
           >
@@ -157,7 +157,7 @@ export function StopwatchFullscreenPage({
             onClick={handleLap}
             disabled={!stopwatch.isRunning}
             variant="outline"
-            className="w-16 h-16 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center p-0"
+            className="w-16 h-16 rounded-full bg-blue-500/30 hover:bg-blue-500/40 text-blue-600 dark:text-blue-300 border-blue-500/50 dark:border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center p-0"
           >
             <Flag className="size-6" />
           </Button>
@@ -165,7 +165,7 @@ export function StopwatchFullscreenPage({
           <Button
             onClick={handleReset}
             variant="outline"
-            className="w-16 h-16 rounded-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border-orange-500/30 flex items-center justify-center p-0"
+            className="w-16 h-16 rounded-full bg-orange-500/30 hover:bg-orange-500/40 text-orange-600 dark:text-orange-300 border-orange-500/50 dark:border-orange-500/30 flex items-center justify-center p-0"
           >
             <RotateCcw className="size-6" />
           </Button>

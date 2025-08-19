@@ -8,9 +8,10 @@ import {
   VisuallyHidden,
 } from "@/features/shared/ui/dialog";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
+import { Button } from "@/features/shared/ui/button";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { X, Send, MessageSquare } from "lucide-react";
+import { Send, MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import posthog from "posthog-js";
@@ -145,30 +146,23 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
     },
-    [errors],
+    [errors]
   );
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
         className="w-full max-w-sm sm:max-w-md h-[90vh] sm:h-auto max-h-[600px] p-1 sm:p-2"
-        showCloseButton={false}
+        showCloseButton
       >
         <VisuallyHidden>
           <DialogTitle>{t("title")}</DialogTitle>
         </VisuallyHidden>
-        {/* Custom Close Button */}
-        <button
-          onClick={handleClose}
-          className="absolute top-4 right-4 z-10 w-7 h-7 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
 
         <div className="flex flex-col h-full gap-3">
           {/* Header */}
-          <div className="p-3">
-            <div className="flex items-center gap-3">
+          <div className="pt-1 pb-2 px-3">
+            <div className="flex justify-start items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
                 <MessageSquare className="w-4 h-4 text-blue-500" />
               </div>
@@ -202,7 +196,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                       "backdrop-blur-sm transition-colors",
                       errors.message
                         ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20",
+                        : "border-white/20"
                     )}
                     maxLength={1000}
                   />
@@ -237,7 +231,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                       "backdrop-blur-sm transition-colors",
                       errors.email
                         ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20",
+                        : "border-white/20"
                     )}
                   />
                   {errors.email && (
@@ -252,31 +246,25 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
           </div>
 
           {/* Footer */}
-          <GlassSurface className="shadow-lg">
-            <div className="p-3">
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className={cn(
-                  "w-full px-4 py-3 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600",
-                  "disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors",
-                  "flex items-center justify-center gap-2",
-                )}
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    {t("actions.submit")}
-                  </>
-                )}
-              </button>
-            </div>
-          </GlassSurface>
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            variant="action"
+            className="w-full"
+            size="lg"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Send />
+                {t("actions.submit")}
+              </>
+            )}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
+import { ButtonGroup, ButtonGroupItem } from "@/features/shared/ui/button-group";
 import {
   Columns2,
   FileText,
@@ -13,6 +14,7 @@ import {
   FilePlay,
 } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
+import { DiffViewMode } from "../types";
 import { cn } from "@/lib/utils";
 
 interface TextDiffControlsProps {
@@ -39,32 +41,20 @@ export function TextDiffControls({
         {/* Left side - View mode */}
         <div className="flex flex-wrap items-center gap-3">
           {/* View mode selector */}
-          <div className="flex gap-1 p-1 bg-background/50 rounded-lg">
-            <button
-              onClick={() => setViewMode("side-by-side")}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2",
-                state.viewMode === "side-by-side"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              <Columns2 className="size-4" />
+          <ButtonGroup
+            value={state.viewMode}
+            onValueChange={setViewMode}
+            variant="default"
+          >
+            <ButtonGroupItem value="side-by-side">
+              <Columns2 />
               {t("views.sideBySide")}
-            </button>
-            <button
-              onClick={() => setViewMode("unified")}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2",
-                state.viewMode === "unified"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              <FileText className="size-4" />
+            </ButtonGroupItem>
+            <ButtonGroupItem value="unified">
+              <FileText />
               {t("views.unified")}
-            </button>
-          </div>
+            </ButtonGroupItem>
+          </ButtonGroup>
         </div>
 
         {/* Right side - Action buttons */}
@@ -72,7 +62,7 @@ export function TextDiffControls({
           <Button
             onClick={handleComputeDiff}
             disabled={!state.originalText && !state.modifiedText}
-            variant="secondary"
+            variant="action"
             className="h-10 w-10 rounded-full p-0"
             title={t("actions.compare")}
           >
