@@ -3,15 +3,13 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
-import { Button } from "@/features/shared/ui/button";
 import { Textarea } from "@/features/shared/ui/textarea";
-import { ArrowLeftRight, FileText, Trash2 } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
 
 export function TextDiffInputArea() {
   const t = useTranslations("TextDiff");
-  const { state, setOriginalText, setModifiedText, swapTexts, clearAll } =
-    useTextDiff();
+  const { state, setOriginalText, setModifiedText } = useTextDiff();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,28 +52,6 @@ export function TextDiffInputArea() {
           spellCheck={false}
         />
       </GlassSurface>
-
-      {/* Action Buttons */}
-      <div className="md:col-span-2 flex justify-center gap-2">
-        <Button
-          onClick={swapTexts}
-          variant="outline"
-          className="h-9 px-4"
-          disabled={!state.originalText && !state.modifiedText}
-        >
-          <ArrowLeftRight className="size-4" />
-          {t("actions.swap")}
-        </Button>
-        <Button
-          onClick={clearAll}
-          variant="outline"
-          className="h-9 px-4"
-          disabled={!state.originalText && !state.modifiedText}
-        >
-          <Trash2 className="size-4" />
-          {t("actions.clear")}
-        </Button>
-      </div>
     </div>
   );
 }

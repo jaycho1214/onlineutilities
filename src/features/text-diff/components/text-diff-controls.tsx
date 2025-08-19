@@ -8,7 +8,15 @@ import {
   ButtonGroupItem,
 } from "@/features/shared/ui/button-group";
 import { ActionButton } from "@/features/shared/ui/action-button";
-import { Columns2, FileText, Settings, Download, FilePlay } from "lucide-react";
+import {
+  Columns2,
+  FileText,
+  Settings,
+  Download,
+  FilePlay,
+  ArrowLeftRight,
+  Trash2,
+} from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
 
 interface TextDiffControlsProps {
@@ -21,7 +29,8 @@ export function TextDiffControls({
   onExportClick,
 }: TextDiffControlsProps) {
   const t = useTranslations("TextDiff");
-  const { state, setViewMode, computeDiff } = useTextDiff();
+  const { state, setViewMode, computeDiff, swapTexts, clearAll } =
+    useTextDiff();
 
   const handleComputeDiff = () => {
     computeDiff();
@@ -51,6 +60,24 @@ export function TextDiffControls({
 
         {/* Right side - Action buttons */}
         <div className="flex flex-wrap gap-2">
+          <ActionButton
+            icon={<ArrowLeftRight className="size-4" />}
+            onClick={swapTexts}
+            disabled={!state.originalText && !state.modifiedText}
+            variant="outline"
+            size="lg"
+            tooltip={t("actions.swap")}
+          />
+
+          <ActionButton
+            icon={<Trash2 className="size-4" />}
+            onClick={clearAll}
+            disabled={!state.originalText && !state.modifiedText}
+            variant="destructive"
+            size="lg"
+            tooltip={t("actions.clear")}
+          />
+
           <ActionButton
             icon={<FilePlay className="size-4" />}
             onClick={handleComputeDiff}
