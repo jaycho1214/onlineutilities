@@ -9,10 +9,10 @@ import { DiffViewSideBySide } from "../components/diff-view-side-by-side";
 import { DiffViewUnified } from "../components/diff-view-unified";
 import { TextDiffSettingsDialog } from "../components/text-diff-settings-dialog";
 import { TextDiffExportDialog } from "../components/text-diff-export-dialog";
-import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
-import { FileDiff, Copy, Check } from "lucide-react";
+import { Textarea } from "@/features/shared/ui/textarea";
+import { Copy, Check } from "lucide-react";
 
 export function TextDiffPage() {
   const t = useTranslations("TextDiff");
@@ -52,25 +52,13 @@ export function TextDiffPage() {
         {/* Main Content */}
         <div className="space-y-4">
           {/* Controls */}
-          <GlassSurface className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Controls
-              </h2>
-            </div>
-            <TextDiffControls
-              onSettingsClick={() => setSettingsOpen(true)}
-              onExportClick={() => setExportOpen(true)}
-            />
-          </GlassSurface>
+          <TextDiffControls
+            onSettingsClick={() => setSettingsOpen(true)}
+            onExportClick={() => setExportOpen(true)}
+          />
 
           {/* Input Area */}
-          <GlassSurface className="p-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Input
-            </h2>
-            <TextDiffInputArea />
-          </GlassSurface>
+          <TextDiffInputArea />
 
           {/* Diff View */}
           {state.diffResult && (
@@ -105,10 +93,10 @@ export function TextDiffPage() {
                   )}
                 </Button>
               </div>
-              <textarea
+              <Textarea
                 value={state.mergedText}
                 readOnly
-                className="w-full h-64 p-3 bg-background/50 border border-border/50 rounded-lg resize-none font-mono text-sm"
+                className="h-64 p-3 font-mono text-sm"
                 spellCheck={false}
               />
             </GlassSurface>

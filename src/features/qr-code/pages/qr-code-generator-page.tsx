@@ -12,6 +12,7 @@ import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
 import { Input } from "@/features/shared/ui/input";
+import { Textarea } from "@/features/shared/ui/textarea";
 import { Separator } from "@/features/shared/ui/separator";
 import { Slider } from "@/features/shared/ui/slider";
 import { Checkbox } from "@/features/shared/ui/checkbox";
@@ -442,11 +443,11 @@ END:VCARD`;
               )}
 
               {contentType === "text" && (
-                <textarea
+                <Textarea
                   value={textData}
                   onChange={(e) => setTextData(e.target.value)}
                   placeholder="Enter your text here..."
-                  className="w-full h-20 px-3 py-2 rounded-lg border border-border bg-white/10 backdrop-blur-sm resize-none"
+                  className="h-20"
                 />
               )}
 

@@ -9,6 +9,7 @@ import {
 } from "@/features/shared/ui/dialog";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
+import { Textarea } from "@/features/shared/ui/textarea";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Send, MessageSquare } from "lucide-react";
@@ -182,7 +183,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                   <label htmlFor="message" className="text-sm font-medium">
                     {t("form.message")} <span className="text-red-500">*</span>
                   </label>
-                  <textarea
+                  <Textarea
                     id="message"
                     value={formData.message}
                     onChange={(e) =>
@@ -191,12 +192,8 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
                     placeholder={t("form.messagePlaceholder")}
                     rows={4}
                     className={cn(
-                      "w-full px-3 py-2.5 text-sm bg-white/5 border rounded-lg resize-none",
-                      "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50",
-                      "backdrop-blur-sm transition-colors",
-                      errors.message
-                        ? "border-red-500/50 focus:ring-red-500/50"
-                        : "border-white/20"
+                      "py-2.5 text-sm",
+                      errors.message && "border-red-500/50 focus-visible:ring-red-500/50"
                     )}
                     maxLength={1000}
                   />

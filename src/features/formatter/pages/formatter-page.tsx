@@ -3,6 +3,7 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
+import { Textarea } from "@/features/shared/ui/textarea";
 import { CopyButton } from "@/features/shared/components/copy-button";
 import { useTranslations } from "next-intl";
 import { useFormatter } from "../lib/formatter-context";
@@ -426,7 +427,7 @@ function FormatterPageComponent() {
                 />
               </div>
 
-              <textarea
+              <Textarea
                 value={state.input}
                 onChange={handleInputChange}
                 onFocus={() => setInputFocused(true)}
@@ -434,8 +435,7 @@ function FormatterPageComponent() {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 placeholder={t(`input.placeholder.${state.type}` as any)}
                 className={cn(
-                  "flex-1 w-full h-full p-4 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10 rounded-xl",
-                  "outline-none resize-none font-mono text-sm text-foreground/90 placeholder:text-foreground/40",
+                  "flex-1 h-full p-4 rounded-xl font-mono text-sm text-foreground/90 placeholder:text-foreground/40",
                   "transition-all duration-200",
                   inputFocused && "ring-2 ring-blue-500/50 border-blue-500/30",
                   state.dragDrop.isDragOver &&
@@ -497,12 +497,12 @@ function FormatterPageComponent() {
                     </div>
                   </div>
                 ) : (
-                  <textarea
+                  <Textarea
                     value={state.output}
                     onFocus={() => setOutputFocused(true)}
                     onBlur={() => setOutputFocused(false)}
                     placeholder={t("output.placeholder")}
-                    className="w-full h-full bg-transparent border-0 outline-none resize-none font-mono text-sm text-foreground/90 placeholder:text-foreground/40"
+                    className="h-full bg-transparent border-0 font-mono text-sm text-foreground/90 placeholder:text-foreground/40"
                     readOnly
                     spellCheck={false}
                   />

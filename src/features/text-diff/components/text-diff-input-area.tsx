@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
+import { Textarea } from "@/features/shared/ui/textarea";
 import { ArrowLeftRight, FileText, Trash2 } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
 
@@ -26,11 +27,11 @@ export function TextDiffInputArea() {
             {state.originalText.split("\n").length} lines
           </span>
         </div>
-        <textarea
+        <Textarea
           value={state.originalText}
           onChange={(e) => setOriginalText(e.target.value)}
           placeholder={t("inputs.originalPlaceholder")}
-          className="w-full h-48 md:h-64 p-3 bg-background/50 border border-border/50 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 font-mono text-sm"
+          className="h-48 md:h-64 p-3 font-mono text-sm"
           spellCheck={false}
         />
       </GlassSurface>
@@ -48,11 +49,11 @@ export function TextDiffInputArea() {
             {state.modifiedText.split("\n").length} lines
           </span>
         </div>
-        <textarea
+        <Textarea
           value={state.modifiedText}
           onChange={(e) => setModifiedText(e.target.value)}
           placeholder={t("inputs.modifiedPlaceholder")}
-          className="w-full h-48 md:h-64 p-3 bg-background/50 border border-border/50 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 font-mono text-sm"
+          className="h-48 md:h-64 p-3 font-mono text-sm"
           spellCheck={false}
         />
       </GlassSurface>

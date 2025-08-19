@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/features/shared/ui/action-button";
-import { History, Trash2, Clock, FileText, X } from "lucide-react";
+import { History, Trash2, FileText, X } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
 import { textDiffService, type DiffEntry } from "../lib/text-diff-db";
 import { toast } from "sonner";

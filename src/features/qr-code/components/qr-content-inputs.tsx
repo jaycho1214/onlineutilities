@@ -2,6 +2,7 @@
 
 import React, { memo } from "react";
 import { Input } from "@/features/shared/ui/input";
+import { Textarea } from "@/features/shared/ui/textarea";
 import { Checkbox } from "@/features/shared/ui/checkbox";
 
 interface EmailDataProps {
@@ -24,11 +25,11 @@ export const EmailInput = memo(
         }
         placeholder="Subject"
       />
-      <textarea
+      <Textarea
         value={emailData.body}
         onChange={(e) => setEmailData({ ...emailData, body: e.target.value })}
         placeholder="Message body..."
-        className="w-full h-16 px-3 py-2 rounded-lg border border-border bg-white/10 backdrop-blur-sm resize-none"
+        className="h-16"
       />
     </div>
   ),
@@ -47,11 +48,11 @@ export const SmsInput = memo(({ smsData, setSmsData }: SmsDataProps) => (
       onChange={(e) => setSmsData({ ...smsData, phone: e.target.value })}
       placeholder="Phone number"
     />
-    <textarea
+    <Textarea
       value={smsData.message}
       onChange={(e) => setSmsData({ ...smsData, message: e.target.value })}
       placeholder="Message (optional)"
-      className="w-full h-16 px-3 py-2 rounded-lg border border-border bg-white/10 backdrop-blur-sm resize-none"
+      className="h-16"
     />
   </div>
 ));
