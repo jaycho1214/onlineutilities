@@ -35,7 +35,7 @@ export default async function Home() {
                 <div className="relative w-full h-full p-4 flex flex-col">
                   {/* Icon - Top Left */}
                   <div className="absolute top-4 left-4">
-                    <div className="p-2 rounded-lg bg-foreground/5 backdrop-blur-sm">
+                    <div className="p-2 rounded-lg bg-foreground/5 backdrop-blur-sm inset-shadow-sm">
                       <IconComponent className="w-5 h-5 text-foreground/70" />
                     </div>
                   </div>
