@@ -3,6 +3,10 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupItem,
+} from "@/features/shared/ui/button-group";
 import { Textarea } from "@/features/shared/ui/textarea";
 import { CopyButton } from "@/features/shared/components/copy-button";
 import { useTranslations } from "next-intl";
@@ -122,21 +126,28 @@ function FormatterPageComponent() {
       setType(value as FormatterType);
       setFormatterDialogOpen(false);
     },
-    [setType],
+    [setType]
   );
 
   const handleDelimiterChange = useCallback(
     (value: string) => {
       setCsvDelimiter(value as CsvDelimiter);
     },
-    [setCsvDelimiter],
+    [setCsvDelimiter]
   );
 
   const handleViewModeChange = useCallback(
     (mode: "raw" | "table") => {
       setCsvViewMode(mode);
     },
-    [setCsvViewMode],
+    [setCsvViewMode]
+  );
+
+  const handleIndentTypeChange = useCallback(
+    (value: string) => {
+      setUseTabs(value === "tabs");
+    },
+    [setUseTabs]
   );
 
   // Format detection dialog handlers
@@ -146,7 +157,7 @@ function FormatterPageComponent() {
       setShowDetectionDialog(false);
       setDetectionData(null);
     },
-    [setType],
+    [setType]
   );
 
   const handleFormatDetectionClose = useCallback(() => {
@@ -158,7 +169,7 @@ function FormatterPageComponent() {
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setInput(e.target.value);
     },
-    [setInput],
+    [setInput]
   );
 
   // Page-level drag and drop is handled on the main container
@@ -329,13 +340,18 @@ function FormatterPageComponent() {
                       <SelectItem value="8">8</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button
-                    onClick={() => setUseTabs(!state.useTabs)}
-                    variant={state.useTabs ? "default" : "outline"}
-                    className="h-8 px-2 whitespace-nowrap"
+                  <ButtonGroup
+                    value={state.useTabs ? "tabs" : "spaces"}
+                    onValueChange={handleIndentTypeChange}
+                    className="h-8 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10"
                   >
-                    {state.useTabs ? t("labels.tabs") : t("labels.spaces")}
-                  </Button>
+                    <ButtonGroupItem value="spaces" className="h-6 px-2">
+                      {t("labels.spaces")}
+                    </ButtonGroupItem>
+                    <ButtonGroupItem value="tabs" className="h-6 px-2">
+                      {t("labels.tabs")}
+                    </ButtonGroupItem>
+                  </ButtonGroup>
                 </div>
               )}
             </div>
@@ -441,7 +457,7 @@ function FormatterPageComponent() {
                   "transition-all duration-200",
                   inputFocused && "ring-2 ring-blue-500/50 border-blue-500/30",
                   state.dragDrop.isDragOver &&
-                    "border-blue-500/50 bg-blue-500/5",
+                    "border-blue-500/50 bg-blue-500/5"
                 )}
                 spellCheck={false}
                 disabled={state.fileLoading.isLoading}
@@ -465,7 +481,7 @@ function FormatterPageComponent() {
                 className={cn(
                   "flex-1 p-4 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10 rounded-xl",
                   "transition-all duration-200 flex flex-col",
-                  outputFocused && "ring-2 ring-blue-500/50 border-blue-500/30",
+                  outputFocused && "ring-2 ring-blue-500/50 border-blue-500/30"
                 )}
               >
                 {state.type === "csv" &&

@@ -9,6 +9,7 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
+import { ButtonGroup, ButtonGroupItem } from "@/features/shared/ui/button-group";
 import { Textarea } from "@/features/shared/ui/textarea";
 import { CopyButton } from "@/features/shared/components/copy-button";
 import { useTranslations } from "next-intl";
@@ -127,9 +128,12 @@ function EncoderDecoderPageComponent() {
     [setType],
   );
 
-  const handleOperationToggle = useCallback(() => {
-    setOperation(state.operation === "encode" ? "decode" : "encode");
-  }, [state.operation, setOperation]);
+  const handleOperationChange = useCallback(
+    (value: string) => {
+      setOperation(value as "encode" | "decode");
+    },
+    [setOperation],
+  );
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -227,20 +231,22 @@ function EncoderDecoderPageComponent() {
                 <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
               </Button>
 
-              <Button
-                onClick={handleOperationToggle}
-                variant={state.operation === "encode" ? "default" : "outline"}
-                className="h-10 px-4 flex items-center gap-2"
-                title="Toggle between encode and decode"
+              <ButtonGroup
+                value={state.operation}
+                onValueChange={handleOperationChange}
+                className="h-10 bg-black/10 dark:bg-white/5 backdrop-blur-md border border-white/10"
               >
-                {state.operation === "encode" ? (
+                <ButtonGroupItem value="encode" className="h-8">
                   <Lock className="h-4 w-4" />
-                ) : (
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {t("operations.encode" as any)}
+                </ButtonGroupItem>
+                <ButtonGroupItem value="decode" className="h-8">
                   <UnlockKeyhole className="h-4 w-4" />
-                )}
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {t(`operations.${state.operation}` as any)}
-              </Button>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {t("operations.decode" as any)}
+                </ButtonGroupItem>
+              </ButtonGroup>
             </div>
 
             {/* Status and Settings */}
