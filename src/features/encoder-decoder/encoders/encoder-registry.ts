@@ -1,6 +1,6 @@
 /**
  * Encoder Registry
- * 
+ *
  * Central registry for all encoders and their configurations.
  */
 
@@ -26,7 +26,7 @@ import { CookieEncoder } from "./cookie-encoder";
 
 // Encoder configurations
 export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
-  "base64": {
+  base64: {
     id: "base64",
     name: "Base64",
     description: "Binary-to-text encoding scheme",
@@ -36,10 +36,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello World",
       encoded: "SGVsbG8gV29ybGQ=",
-      decoded: "Hello World"
-    }
+      decoded: "Hello World",
+    },
   },
-  "url": {
+  url: {
     id: "url",
     name: "URL Encoding",
     description: "Percent-encoding for URLs",
@@ -49,8 +49,8 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello World!",
       encoded: "Hello%20World%21",
-      decoded: "Hello World!"
-    }
+      decoded: "Hello World!",
+    },
   },
   "html-entity": {
     id: "html-entity",
@@ -62,10 +62,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "<script>alert('hello')</script>",
       encoded: "&lt;script&gt;alert(&#39;hello&#39;)&lt;/script&gt;",
-      decoded: "<script>alert('hello')</script>"
-    }
+      decoded: "<script>alert('hello')</script>",
+    },
   },
-  "hex": {
+  hex: {
     id: "hex",
     name: "Hexadecimal",
     description: "Binary data to hexadecimal",
@@ -75,10 +75,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello",
       encoded: "48656c6c6f",
-      decoded: "Hello"
-    }
+      decoded: "Hello",
+    },
   },
-  "base32": {
+  base32: {
     id: "base32",
     name: "Base32",
     description: "32-character encoding scheme",
@@ -88,10 +88,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello",
       encoded: "JBSWY3DP",
-      decoded: "Hello"
-    }
+      decoded: "Hello",
+    },
   },
-  "ascii": {
+  ascii: {
     id: "ascii",
     name: "ASCII Codes",
     description: "Text to ASCII character codes",
@@ -101,10 +101,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hi",
       encoded: "72 105",
-      decoded: "Hi"
-    }
+      decoded: "Hi",
+    },
   },
-  "binary": {
+  binary: {
     id: "binary",
     name: "Binary",
     description: "Text to binary representation",
@@ -114,8 +114,8 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hi",
       encoded: "01001000 01101001",
-      decoded: "Hi"
-    }
+      decoded: "Hi",
+    },
   },
   "unicode-escape": {
     id: "unicode-escape",
@@ -127,10 +127,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello 世界",
       encoded: "Hello \\u4e16\\u754c",
-      decoded: "Hello 世界"
-    }
+      decoded: "Hello 世界",
+    },
   },
-  "punycode": {
+  punycode: {
     id: "punycode",
     name: "Punycode",
     description: "International domain name encoding",
@@ -140,10 +140,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "münchen.de",
       encoded: "xn--mnchen-3ya.de",
-      decoded: "münchen.de"
-    }
+      decoded: "münchen.de",
+    },
   },
-  "base58": {
+  base58: {
     id: "base58",
     name: "Base58",
     description: "Cryptocurrency address encoding",
@@ -153,10 +153,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello World",
       encoded: "JxF12TrwUP45BMd",
-      decoded: "Hello World"
-    }
+      decoded: "Hello World",
+    },
   },
-  "rot13": {
+  rot13: {
     id: "rot13",
     name: "ROT13",
     description: "Caesar cipher with 13-character rotation",
@@ -166,8 +166,8 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "Hello World",
       encoded: "Uryyb Jbeyq",
-      decoded: "Hello World"
-    }
+      decoded: "Hello World",
+    },
   },
   "morse-code": {
     id: "morse-code",
@@ -179,8 +179,8 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "HELLO",
       encoded: ".... . .-.. .-.. ---",
-      decoded: "HELLO"
-    }
+      decoded: "HELLO",
+    },
   },
   "uri-component": {
     id: "uri-component",
@@ -192,8 +192,8 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "hello world!",
       encoded: "hello%20world!",
-      decoded: "hello world!"
-    }
+      decoded: "hello world!",
+    },
   },
   "form-data": {
     id: "form-data",
@@ -205,10 +205,10 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: '{"name": "John Doe", "email": "john@example.com"}',
       encoded: "name=John+Doe&email=john%40example.com",
-      decoded: '{\n  "name": "John Doe",\n  "email": "john@example.com"\n}'
-    }
+      decoded: '{\n  "name": "John Doe",\n  "email": "john@example.com"\n}',
+    },
   },
-  "cookie": {
+  cookie: {
     id: "cookie",
     name: "Cookie Encoding",
     description: "HTTP cookie value encoding",
@@ -218,28 +218,28 @@ export const encodingConfigs: Record<EncodingType, EncodingConfig> = {
     examples: {
       input: "user=John Doe; path=/",
       encoded: "user=John%20Doe%3B%20path%3D%2F",
-      decoded: "user=John Doe; path=/"
-    }
-  }
+      decoded: "user=John Doe; path=/",
+    },
+  },
 };
 
 // Encoder instances
 const encoderInstances: Record<EncodingType, BaseEncoder> = {
-  "base64": new Base64Encoder(),
-  "url": new UrlEncoder(),
+  base64: new Base64Encoder(),
+  url: new UrlEncoder(),
   "html-entity": new HtmlEntityEncoder(),
-  "hex": new HexEncoder(),
-  "base32": new Base32Encoder(),
-  "ascii": new AsciiEncoder(),
-  "binary": new BinaryEncoder(),
+  hex: new HexEncoder(),
+  base32: new Base32Encoder(),
+  ascii: new AsciiEncoder(),
+  binary: new BinaryEncoder(),
   "unicode-escape": new UnicodeEscapeEncoder(),
-  "punycode": new PunycodeEncoder(),
-  "base58": new Base58Encoder(),
-  "rot13": new Rot13Encoder(),
+  punycode: new PunycodeEncoder(),
+  base58: new Base58Encoder(),
+  rot13: new Rot13Encoder(),
   "morse-code": new MorseEncoder(),
   "uri-component": new UriComponentEncoder(),
   "form-data": new FormDataEncoder(),
-  "cookie": new CookieEncoder(),
+  cookie: new CookieEncoder(),
 };
 
 /**
@@ -260,7 +260,9 @@ export function getAvailableEncodings(): EncodingConfig[] {
  * Get encodings by category
  */
 export function getEncodingsByCategory(category: string): EncodingConfig[] {
-  return Object.values(encodingConfigs).filter(config => config.category === category);
+  return Object.values(encodingConfigs).filter(
+    (config) => config.category === category,
+  );
 }
 
 /**
@@ -278,7 +280,7 @@ export function detectEncoding(input: string): DetectionResult[] {
       results.push({
         type: type as EncodingType,
         confidence,
-        reason: `${confidence > 0.7 ? "High" : confidence > 0.4 ? "Medium" : "Low"} confidence based on pattern analysis`
+        reason: `${confidence > 0.7 ? "High" : confidence > 0.4 ? "Medium" : "Low"} confidence based on pattern analysis`,
       });
     }
   }
@@ -294,6 +296,8 @@ export function detectEncoding(input: string): DetectionResult[] {
  */
 export function getCategories(): string[] {
   const categories = new Set<string>();
-  Object.values(encodingConfigs).forEach(config => categories.add(config.category));
+  Object.values(encodingConfigs).forEach((config) =>
+    categories.add(config.category),
+  );
   return Array.from(categories).sort();
 }

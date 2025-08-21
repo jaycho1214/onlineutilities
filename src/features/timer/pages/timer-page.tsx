@@ -8,13 +8,11 @@ import { Input } from "@/features/shared/ui/input";
 import { Plus, Clock, X } from "lucide-react";
 import { useTimer } from "@/features/timer/lib/timer-context";
 import { TimerCard } from "@/features/timer/components/timer-card";
-import { Skeleton } from "@/features/shared/ui/skeleton";
 import { useTranslations } from "next-intl";
 
 export function Timer() {
   const t = useTranslations("Timer");
-  const { timers, activeTimerId, createTimer, setActiveTimer, isLoaded } =
-    useTimer();
+  const { timers, activeTimerId, createTimer, setActiveTimer } = useTimer();
 
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickHours, setQuickHours] = useState("0");
@@ -194,25 +192,8 @@ export function Timer() {
         </GlassSurface>
       )}
 
-      {/* Timer Grid / Loading */}
-      {!isLoaded ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <GlassSurface key={i} className="rounded-2xl p-4 space-y-4">
-              <div className="flex justify-between items-center">
-                <Skeleton className="h-6 w-40" />
-                <Skeleton className="h-6 w-10" />
-              </div>
-              <Skeleton className="h-10 w-48 mx-auto" />
-              <div className="flex justify-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <Skeleton className="h-10 w-10 rounded-full" />
-              </div>
-              <Skeleton className="h-2 w-full" />
-            </GlassSurface>
-          ))}
-        </div>
-      ) : timers.length === 0 ? (
+      {/* Timer Grid */}
+      {timers.length === 0 ? (
         <div className="text-center py-12">
           <GlassSurface className="max-w-md mx-auto rounded-2xl">
             <div className="p-8 text-center space-y-4">

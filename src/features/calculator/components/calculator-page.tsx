@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, memo, useRef } from "react";
 import { GlassSurface } from "@/features/shared/ui/glass-surface";
 import { Button } from "@/features/shared/ui/button";
-import { calculatorService } from "../lib/calculator-db";
+import { calculatorService } from "../lib/calculator-service";
 import { useTranslations } from "next-intl";
 import { useCalculator } from "../lib/calculator-context";
 

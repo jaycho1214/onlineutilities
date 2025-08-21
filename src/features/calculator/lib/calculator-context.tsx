@@ -1,21 +1,15 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  ReactNode,
-  memo,
-} from "react";
-import { calculatorService } from "./calculator-db";
-import { type CalculationEntry } from "./calculator-db";
+import { createContext, useContext, useCallback, ReactNode, memo } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { calculatorService } from "@/features/calculator/lib/calculator-service";
+import { calculatorDb } from "@/features/calculator/lib/calculator-db";
+import type { CalculationEntry } from "@/features/calculator/types";
 
 interface CalculatorContextValue {
   history: CalculationEntry[];
   isLoading: boolean;
-  addToHistory: (entry: CalculationEntry) => void;
+  addToHistory: (entry: CalculationEntry) => Promise<void>;
   clearHistory: () => Promise<void>;
 }
 
@@ -34,37 +28,43 @@ interface CalculatorProviderProps {
 }
 
 function CalculatorProviderComponent({ children }: CalculatorProviderProps) {
-  const [history, setHistory] = useState<CalculationEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Use useLiveQuery to get real-time calculation history
+  const history = useLiveQuery<CalculationEntry[]>(
+    async (): Promise<CalculationEntry[]> => {
+      try {
+        return await calculatorDb.calculations
+          .orderBy("createdAt")
+          .reverse()
+          .limit(20)
+          .toArray();
+      } catch (error) {
+        console.error("Failed to fetch calculation history:", error);
+        return [];
+      }
+    },
+    [], // No dependencies - always watch calculations
+  );
 
-  const loadHistory = useCallback(async () => {
-    setIsLoading(true);
+  const isLoading = history === undefined;
+
+  const addToHistory = useCallback(async (entry: CalculationEntry) => {
     try {
-      const calculations = await calculatorService.getRecentCalculations(20);
-      setHistory(calculations);
+      await calculatorService.addCalculation(entry.expression, entry.result);
     } catch (error) {
-      console.error("Failed to load calculation history:", error);
-    } finally {
-      setIsLoading(false);
+      console.error("Failed to add calculation to history:", error);
     }
   }, []);
 
-  // Load history on mount
-  useEffect(() => {
-    loadHistory();
-  }, [loadHistory]);
-
-  const addToHistory = useCallback((entry: CalculationEntry) => {
-    setHistory((prev) => [entry, ...prev.slice(0, 19)]);
-  }, []);
-
   const clearHistory = useCallback(async () => {
-    await calculatorService.clearHistory();
-    setHistory([]);
+    try {
+      await calculatorService.clearHistory();
+    } catch (error) {
+      console.error("Failed to clear calculation history:", error);
+    }
   }, []);
 
   const contextValue: CalculatorContextValue = {
-    history,
+    history: history || [],
     isLoading,
     addToHistory,
     clearHistory,

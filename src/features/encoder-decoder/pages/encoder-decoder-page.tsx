@@ -1,6 +1,6 @@
 /**
  * Encoder/Decoder Page Component
- * 
+ *
  * Main page component for the encoder/decoder feature with glassmorphism styling.
  */
 
@@ -9,7 +9,10 @@
 import { useState, useCallback, memo, useEffect } from "react";
 import { GradientBackground } from "@/features/shared/ui/gradient-background";
 import { Button } from "@/features/shared/ui/button";
-import { ButtonGroup, ButtonGroupItem } from "@/features/shared/ui/button-group";
+import {
+  ButtonGroup,
+  ButtonGroupItem,
+} from "@/features/shared/ui/button-group";
 import { Textarea } from "@/features/shared/ui/textarea";
 import { CopyButton } from "@/features/shared/components/copy-button";
 import { useTranslations } from "next-intl";
@@ -43,7 +46,10 @@ import {
 import { Switch } from "@/features/shared/ui/switch";
 import { Label } from "@/features/shared/ui/label";
 import type { EncodingType } from "../types";
-import { getAvailableEncodings, getCategories } from "../encoders/encoder-registry";
+import {
+  getAvailableEncodings,
+  getCategories,
+} from "../encoders/encoder-registry";
 
 function EncoderDecoderPageComponent() {
   const t = useTranslations("EncoderDecoder");
@@ -150,17 +156,14 @@ function EncoderDecoderPageComponent() {
     [pasteToOutput],
   );
 
-  const handleOutputChange = useCallback(
-    () => {
-      // Only allow changes when input is empty (reversal mode)
-      if (!state.input.trim()) {
-        // For now, we don't allow direct editing of output
-        // The paste handler will handle the reversal logic
-        return;
-      }
-    },
-    [state.input],
-  );
+  const handleOutputChange = useCallback(() => {
+    // Only allow changes when input is empty (reversal mode)
+    if (!state.input.trim()) {
+      // For now, we don't allow direct editing of output
+      // The paste handler will handle the reversal logic
+      return;
+    }
+  }, [state.input]);
 
   const getTypeIcon = useCallback((type: EncodingType) => {
     switch (type) {
@@ -201,7 +204,6 @@ function EncoderDecoderPageComponent() {
     }
     return null;
   }, [state.error, state.output]);
-
 
   return (
     <div
@@ -402,7 +404,7 @@ function EncoderDecoderPageComponent() {
                 onBlur={() => setOutputFocused(false)}
                 onPaste={handleOutputPaste}
                 placeholder={
-                  !state.input.trim() 
+                  !state.input.trim()
                     ? t("output.placeholderWithReversal")
                     : t("output.placeholder")
                 }
@@ -429,18 +431,13 @@ function EncoderDecoderPageComponent() {
             <h3 className="text-lg font-medium text-white mb-2">
               {t("dragDrop.title")}
             </h3>
-            <p className="text-sm text-white/70">
-              {t("dragDrop.description")}
-            </p>
+            <p className="text-sm text-white/70">{t("dragDrop.description")}</p>
           </div>
         </div>
       )}
 
       {/* Type Selection Dialog */}
-      <CommandDialog
-        open={typeDialogOpen}
-        onOpenChange={setTypeDialogOpen}
-      >
+      <CommandDialog open={typeDialogOpen} onOpenChange={setTypeDialogOpen}>
         <CommandInput placeholder={t("typeSelector.placeholder")} />
         <CommandList>
           <CommandEmpty>{t("typeSelector.noResults")}</CommandEmpty>

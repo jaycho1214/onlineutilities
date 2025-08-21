@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { ActionButton } from "@/features/shared/ui/action-button";
 import { Trash2, FileText } from "lucide-react";
 import { useTextDiff } from "../lib/text-diff-context";
-import { textDiffService, type DiffEntry } from "../lib/text-diff-db";
+import { textDiffService } from "../lib/text-diff-service";
+import type { DiffEntry } from "../types";
 import { toast } from "sonner";
 import {
   Sidebar,
@@ -92,7 +93,7 @@ export function TextDiffHistorySidebar() {
                       {t("history.itemTitle")}
                     </span>
                     <span className="text-xs text-muted-foreground shrink-0 ml-2">
-                      {formatDate(entry.timestamp)}
+                      {formatDate(entry.createdAt)}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">

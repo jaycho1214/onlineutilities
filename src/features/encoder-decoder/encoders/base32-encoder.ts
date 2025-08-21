@@ -1,6 +1,6 @@
 /**
  * Base32 Encoder
- * 
+ *
  * Handles Base32 encoding and decoding.
  */
 
@@ -48,14 +48,14 @@ export class Base32Encoder extends AbstractEncoder {
     try {
       // Clean and validate input
       const cleaned = input.replace(/\s/g, "").toUpperCase();
-      
+
       if (!/^[A-Z2-7=]*$/.test(cleaned)) {
         return this.createResult(false, undefined, "Invalid Base32 characters");
       }
 
       // Remove padding
       const noPadding = cleaned.replace(/=+$/, "");
-      
+
       let buffer = 0;
       let bitsLeft = 0;
       const bytes: number[] = [];
@@ -63,7 +63,11 @@ export class Base32Encoder extends AbstractEncoder {
       for (const char of noPadding) {
         const index = this.alphabet.indexOf(char);
         if (index === -1) {
-          return this.createResult(false, undefined, `Invalid Base32 character: ${char}`);
+          return this.createResult(
+            false,
+            undefined,
+            `Invalid Base32 character: ${char}`,
+          );
         }
 
         buffer = (buffer << 5) | index;
@@ -86,33 +90,33 @@ export class Base32Encoder extends AbstractEncoder {
     if (!input) return 0;
 
     const cleaned = input.replace(/\s/g, "").toUpperCase();
-    
+
     // Check Base32 alphabet
     if (!/^[A-Z2-7=]*$/.test(cleaned)) return 0;
-    
+
     // Should be multiple of 8 with proper padding
     if (cleaned.length % 8 !== 0) return 0;
-    
+
     // Check padding (should only be at the end)
     const paddingMatch = cleaned.match(/=*$/);
     const paddingLength = paddingMatch ? paddingMatch[0].length : 0;
-    
+
     if (paddingLength > 6) return 0; // Max 6 padding chars in Base32
-    
+
     let confidence = 0.6;
-    
+
     // Higher confidence with proper padding
     if (paddingLength > 0 && paddingLength <= 6) {
       confidence += 0.2;
     }
-    
+
     // Check character distribution
     const noPadding = cleaned.replace(/=+$/, "");
     const uniqueChars = new Set(noPadding).size;
     if (uniqueChars > noPadding.length * 0.2) {
       confidence += 0.2;
     }
-    
+
     return Math.min(confidence, 1);
   }
 }

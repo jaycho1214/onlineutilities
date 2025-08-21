@@ -1,4 +1,4 @@
-export interface Timer {
+export interface TimerModel {
   id: string;
   title: string;
   duration: number; // Total duration in milliseconds
@@ -13,10 +13,11 @@ export interface Timer {
 }
 
 export interface TimerContextType {
-  timers: Timer[];
+  timers: TimerModel[];
   activeTimerId: string | null;
   createTimer: (duration: number) => Promise<string>;
   deleteTimer: (id: string) => Promise<void>;
+  clearAll: () => Promise<void>;
   startTimer: (id: string) => Promise<void>;
   pauseTimer: (id: string) => Promise<void>;
   resetTimer: (id: string) => Promise<void>;
@@ -24,9 +25,7 @@ export interface TimerContextType {
   updateTimerDuration: (id: string, duration: number) => Promise<void>;
   toggleSound: (id: string) => Promise<void>;
   setActiveTimer: (id: string | null) => void;
-  getRemainingTime: (timer: Timer) => number;
+  getRemainingTime: (timer: TimerModel) => number;
   // Shared ticking timestamp (ms) used for rendering smooth countdowns
   now?: number;
-  // Indicates initial DB load completed
-  isLoaded?: boolean;
 }

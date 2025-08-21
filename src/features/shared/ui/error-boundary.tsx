@@ -28,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Error boundary caught:", error, errorInfo);
-    
+
     // Report to PostHog in production
     const isProduction = process.env.NODE_ENV === "production";
     if (isProduction && typeof window !== "undefined") {
@@ -67,10 +67,9 @@ export class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle className="w-12 h-12 text-destructive" />
               <h2 className="text-xl font-semibold">Something went wrong</h2>
               <p className="text-sm text-muted-foreground">
-                {showErrorDetails 
+                {showErrorDetails
                   ? this.state.error?.message
-                  : "An unexpected error occurred. We've been notified and are working to fix it."
-                }
+                  : "An unexpected error occurred. We've been notified and are working to fix it."}
               </p>
               <Button
                 onClick={this.handleReset}

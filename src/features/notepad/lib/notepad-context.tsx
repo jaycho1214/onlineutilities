@@ -12,13 +12,16 @@ import {
   useTransition,
 } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { notesService, NoteDocument, notepadDb } from "./notepad-db";
+import { nanoid } from "nanoid";
+import { NoteModel } from "../types";
+import { notesService } from "./notepad-service";
+import { notepadDb } from "./notepad-db";
 import { handleNotepadError, showSuccessToast } from "./notepad-error-handler";
 import { useTranslations } from "next-intl";
 
 interface NotepadContextType {
-  notes: NoteDocument[];
-  currentNote: NoteDocument | null;
+  notes: NoteModel[];
+  currentNote: NoteModel | null;
   currentNoteId: string | null;
   loading: boolean;
   // Form state
@@ -82,16 +85,19 @@ export function NotepadProvider({
     return { wordCount, charCount, charCountNoSpaces, readingTime };
   }, [content]);
 
-  // Use Dexie's reactive query for real-time updates
+  // Use optimized Dexie reactive query for real-time updates
   const notes =
-    useLiveQuery(async () => {
-      try {
-        return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
-      } catch (error) {
-        console.error("Failed to fetch notes:", error);
-        return [];
-      }
-    }, []) ?? [];
+    useLiveQuery(
+      async () => {
+        try {
+          return await notepadDb.notes.orderBy("updatedAt").reverse().toArray();
+        } catch (error) {
+          console.error("Failed to fetch notes:", error);
+          return [];
+        }
+      },
+      [], // Dependencies array
+    ) ?? [];
 
   // Use reactive query for current note
   const currentNote =
@@ -105,7 +111,8 @@ export function NotepadProvider({
       }
     }, [currentNoteId]) ?? null;
 
-  const loading = notes === undefined || false;
+  // Improved loading state management
+  const loading = notes === undefined;
 
   // Initialize with the provided note ID
   useEffect(() => {
@@ -173,7 +180,7 @@ export function NotepadProvider({
         clearTimeout(saveTimeoutRef.current);
       }
 
-      // If no note exists and we haven't started creating one, create one when content is added
+      // Optimized note creation with better error handling
       if (
         !currentNoteId &&
         !hasInitialized &&
@@ -181,25 +188,25 @@ export function NotepadProvider({
         newTitle.trim()
       ) {
         setHasInitialized(true);
-        const newId = Date.now().toString();
+        const newId = nanoid(); // Use nanoid for better IDs
         creatingNoteRef.current = newId;
 
-        // Create note immediately and wait for it to be created
+        // Create note immediately with optimized approach
         startTransition(() => {
           (async () => {
             try {
               await notesService.createNote({
                 id: newId,
-                title: newTitle,
-                content: content || "",
+                title: newTitle.trim(),
+                content: (content || "").trim(),
               });
 
               // Only set the ID after successful creation
               setCurrentNoteId(newId);
               creatingNoteRef.current = null;
               lastSavedContent.current = {
-                title: newTitle,
-                content: content || "",
+                title: newTitle.trim(),
+                content: (content || "").trim(),
               };
 
               if (typeof window !== "undefined") {

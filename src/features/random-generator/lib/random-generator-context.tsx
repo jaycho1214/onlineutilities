@@ -9,10 +9,8 @@ import React, {
 } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import {
-  randomGeneratorService,
-  type GeneratorType,
-} from "./random-generator-db";
+import { randomGeneratorService } from "./random-generator-service";
+import type { GeneratorType } from "../types";
 import type {
   GeneratorConfig,
   GenerationEntry,
@@ -97,7 +95,7 @@ const initialState: RandomGeneratorContextState = {
 
 function randomGeneratorReducer(
   state: RandomGeneratorContextState,
-  action: RandomGeneratorAction
+  action: RandomGeneratorAction,
 ): RandomGeneratorContextState {
   switch (action.type) {
     case "SET_ACTIVE_TYPE":
@@ -149,7 +147,7 @@ function randomGeneratorReducer(
       return {
         ...state,
         presets: state.presets.map((preset) =>
-          preset.id === action.payload.id ? action.payload : preset
+          preset.id === action.payload.id ? action.payload : preset,
         ),
       };
 
@@ -180,7 +178,7 @@ interface RandomGeneratorContextInterface {
   updateConfig: (type: GeneratorType, config: GeneratorConfig) => void;
   generateValues: (
     type: GeneratorType,
-    config: GeneratorConfig
+    config: GeneratorConfig,
   ) => Promise<string[]>;
 
   // History management
@@ -193,11 +191,11 @@ interface RandomGeneratorContextInterface {
   savePreset: (
     name: string,
     type: GeneratorType,
-    config: GeneratorConfig
+    config: GeneratorConfig,
   ) => Promise<void>;
   updatePreset: (
     id: string,
-    updates: Partial<GeneratorPreset>
+    updates: Partial<GeneratorPreset>,
   ) => Promise<void>;
   deletePreset: (id: string) => Promise<void>;
   loadPreset: (preset: GeneratorPreset) => void;
@@ -254,7 +252,7 @@ export function RandomGeneratorProvider({
     (type: GeneratorType, config: GeneratorConfig) => {
       dispatch({ type: "UPDATE_CONFIG", payload: { type, config } });
     },
-    []
+    [],
   );
 
   // ========================================================================
@@ -271,7 +269,7 @@ export function RandomGeneratorProvider({
         toast.error(t("notifications.copyError"));
       }
     },
-    [t]
+    [t],
   );
 
   // ========================================================================
@@ -304,7 +302,7 @@ export function RandomGeneratorProvider({
           const historyEntry = await randomGeneratorService.addToHistory(
             type,
             config as unknown as Record<string, unknown>,
-            results
+            results,
           );
           dispatch({ type: "ADD_HISTORY_ENTRY", payload: historyEntry });
         }
@@ -312,7 +310,7 @@ export function RandomGeneratorProvider({
         // Auto-copy if enabled
         if (state.settings.autoCopy && results.length > 0) {
           await copyToClipboard(
-            results.length === 1 ? results[0] : results.join("\n")
+            results.length === 1 ? results[0] : results.join("\n"),
           );
         }
 
@@ -328,7 +326,7 @@ export function RandomGeneratorProvider({
         dispatch({ type: "SET_GENERATING", payload: false });
       }
     },
-    [state.settings.saveHistory, state.settings.autoCopy, t, copyToClipboard]
+    [state.settings.saveHistory, state.settings.autoCopy, t, copyToClipboard],
   );
 
   // ========================================================================
@@ -373,7 +371,7 @@ export function RandomGeneratorProvider({
         toast.error("An error occurred");
       }
     },
-    [state.history]
+    [state.history],
   );
 
   // ========================================================================
@@ -397,7 +395,7 @@ export function RandomGeneratorProvider({
       try {
         const exists = await randomGeneratorService.presetNameExists(
           name,
-          type
+          type,
         );
         if (exists) {
           toast.error(t("notifications.presetNameExists"));
@@ -407,7 +405,7 @@ export function RandomGeneratorProvider({
         const preset = await randomGeneratorService.savePreset(
           name,
           type,
-          config as unknown as Record<string, unknown>
+          config as unknown as Record<string, unknown>,
         );
         dispatch({ type: "ADD_PRESET", payload: preset });
         toast.success(t("notifications.presetSaved"));
@@ -416,7 +414,7 @@ export function RandomGeneratorProvider({
         toast.error("An error occurred");
       }
     },
-    [t]
+    [t],
   );
 
   const updatePreset = useCallback(
@@ -436,7 +434,7 @@ export function RandomGeneratorProvider({
         toast.error("An error occurred");
       }
     },
-    [state.presets, t]
+    [state.presets, t],
   );
 
   const deletePreset = useCallback(
@@ -452,7 +450,7 @@ export function RandomGeneratorProvider({
         toast.error("An error occurred");
       }
     },
-    [t]
+    [t],
   );
 
   const loadPreset = useCallback(
@@ -467,7 +465,7 @@ export function RandomGeneratorProvider({
       });
       toast.success(t("notifications.presetLoaded"));
     },
-    [t]
+    [t],
   );
 
   // ========================================================================
@@ -489,9 +487,8 @@ export function RandomGeneratorProvider({
   const updateSettings = useCallback(
     async (updates: Partial<GeneratorSettings>) => {
       try {
-        const updatedSettings = await randomGeneratorService.updateSettings(
-          updates
-        );
+        const updatedSettings =
+          await randomGeneratorService.updateSettings(updates);
         dispatch({ type: "SET_SETTINGS", payload: updatedSettings });
         toast.success(t("notifications.settingsUpdated"));
       } catch (error) {
@@ -499,9 +496,8 @@ export function RandomGeneratorProvider({
         toast.error("An error occurred");
       }
     },
-    [t]
+    [t],
   );
-
 
   const copyAllResults = useCallback(async () => {
     if (state.lastResults.length === 0) {
@@ -551,7 +547,7 @@ export function useRandomGenerator() {
   const context = useContext(RandomGeneratorContext);
   if (context === undefined) {
     throw new Error(
-      "useRandomGenerator must be used within a RandomGeneratorProvider"
+      "useRandomGenerator must be used within a RandomGeneratorProvider",
     );
   }
   return context;

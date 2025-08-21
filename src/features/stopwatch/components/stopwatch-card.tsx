@@ -22,14 +22,14 @@ import {
   Maximize2,
 } from "lucide-react";
 import { useStopwatch } from "../lib/stopwatch-context";
-import { Stopwatch } from "../types";
+import { StopwatchModel } from "../types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { formatElapsedTime, formatLapTime } from "@/lib/time";
 import { useTranslations } from "next-intl";
 
 interface StopwatchCardProps {
-  stopwatch: Stopwatch;
+  stopwatch: StopwatchModel;
   isActive?: boolean;
   onActivate?: () => void;
 }
@@ -73,7 +73,7 @@ function StopwatchCardComponent({
 
   // Memoize reversed laps to avoid recreating on every render
   const reversedLaps = useMemo(
-    () => stopwatch.laps.slice().reverse(),
+    () => stopwatch.laps.toReversed(),
     [stopwatch.laps],
   );
 

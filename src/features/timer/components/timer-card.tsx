@@ -19,14 +19,14 @@ import {
   Maximize2,
 } from "lucide-react";
 import { useTimer } from "../lib/timer-context";
-import { Timer } from "../types";
+import { TimerModel } from "../types";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { formatDuration } from "@/lib/time";
 import { useTranslations } from "next-intl";
 
 interface TimerCardProps {
-  timer: Timer;
+  timer: TimerModel;
   isActive?: boolean;
   onActivate?: () => void;
 }

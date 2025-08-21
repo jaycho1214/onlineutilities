@@ -8,36 +8,39 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { Timer, TimerContextType } from "../types";
-import { timerDB } from "./timer-db";
+import { useLiveQuery } from "dexie-react-hooks";
+import { TimerModel, TimerContextType } from "../types";
+import { timerService } from "./timer-service";
+import { timerDb } from "./timer-db";
 import { useRafTicker } from "@/hooks/use-raf-ticker";
 import { nanoid } from "nanoid";
 
 const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
 export function TimerProvider({ children }: { children: React.ReactNode }) {
-  const [timers, setTimers] = useState<Timer[]>([]);
   const [activeTimerId, setActiveTimerId] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Use useLiveQuery to get real-time timers data
+  const timers = useLiveQuery<TimerModel[]>(
+    async (): Promise<TimerModel[]> => {
+      try {
+        return await timerDb.timers.orderBy("createdAt").reverse().toArray();
+      } catch (error) {
+        console.error("Failed to fetch timers:", error);
+        return [];
+      }
+    },
+    [], // No dependencies - always watch all timers
+  );
+
+  const isLoaded = timers !== undefined;
+
   // Determine if any timer is running to activate RAF ticker
-  const anyRunning = useMemo(() => timers.some((t) => t.isRunning), [timers]);
+  const anyRunning = useMemo(
+    () => (timers ? timers.some((t) => t.isRunning) : false),
+    [timers],
+  );
   const now = useRafTicker(anyRunning, 16); // ~60fps throttled
-
-  const loadTimers = useCallback(async () => {
-    try {
-      const loadedTimers = await timerDB.getAllTimers();
-      setTimers(loadedTimers);
-      setIsLoaded(true);
-    } catch (error) {
-      console.error("Failed to load timers:", error);
-      setIsLoaded(true);
-    }
-  }, []);
-
-  // Load timers from IndexedDB on mount
-  useEffect(() => {
-    loadTimers();
-  }, [loadTimers]);
 
   // Completion detection runs when ticker updates.
 
@@ -74,41 +77,46 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!anyRunning) return; // Only check completions while active
-    setTimers((prev) =>
-      prev.map((timer) => {
-        if (
-          !timer.isRunning ||
-          !timer.startedAt ||
-          timer.remainingAtStart === null
-        )
-          return timer;
-        const elapsed = now - timer.startedAt;
-        const remaining = Math.max(0, timer.remainingAtStart - elapsed);
-        if (remaining === 0 && !timer.completedAt) {
-          if (timer.soundEnabled) playAlarmSound();
-          const updated: Timer = {
-            ...timer,
-            remainingTime: 0,
-            isRunning: false,
-            completedAt: now,
-            startedAt: null,
-            remainingAtStart: null,
-          };
-          timerDB.saveTimer(updated);
-          return updated;
+    if (!anyRunning || !timers) return; // Only check completions while active
+
+    // Check for timer completions and update database directly
+    timers.forEach(async (timer) => {
+      if (
+        !timer.isRunning ||
+        !timer.startedAt ||
+        timer.remainingAtStart === null
+      )
+        return;
+
+      const elapsed = now - timer.startedAt;
+      const remaining = Math.max(0, timer.remainingAtStart - elapsed);
+
+      if (remaining === 0 && !timer.completedAt) {
+        if (timer.soundEnabled) playAlarmSound();
+
+        const updates: Partial<TimerModel> = {
+          remainingTime: 0,
+          isRunning: false,
+          completedAt: now,
+          startedAt: null,
+          remainingAtStart: null,
+        };
+
+        try {
+          await timerService.updateTimer(timer.id, updates);
+        } catch (error) {
+          console.error("Failed to update completed timer:", error);
         }
-        return timer;
-      }),
-    );
-  }, [now, anyRunning, playAlarmSound]);
+      }
+    });
+  }, [now, anyRunning, timers, playAlarmSound]);
 
   const createTimer = useCallback(
     async (duration: number): Promise<string> => {
       const id = nanoid();
-      const newTimer: Timer = {
+      const newTimer: TimerModel = {
         id,
-        title: `Timer ${timers.length + 1}`,
+        title: `Timer ${(timers?.length || 0) + 1}`,
         duration,
         remainingTime: duration,
         isRunning: false,
@@ -120,17 +128,15 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         remainingAtStart: null,
       };
 
-      await timerDB.saveTimer(newTimer);
-      setTimers((prev) => [newTimer, ...prev]);
+      await timerService.createTimer(newTimer);
       return id;
     },
-    [timers.length],
+    [timers?.length],
   );
 
   const deleteTimer = useCallback(
     async (id: string) => {
-      await timerDB.deleteTimer(id);
-      setTimers((prev) => prev.filter((t) => t.id !== id));
+      await timerService.deleteTimer(id);
       if (activeTimerId === id) {
         setActiveTimerId(null);
       }
@@ -138,9 +144,14 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
     [activeTimerId],
   );
 
+  const clearAll = useCallback(async () => {
+    await timerService.clearAll();
+    setActiveTimerId(null);
+  }, []);
+
   const startTimer = useCallback(
     async (id: string) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer) return;
 
       // Request notification permission on first timer start
@@ -148,30 +159,27 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         await Notification.requestPermission();
       }
 
-      const updatedTimer: Timer = {
-        ...timer,
+      const updates: Partial<TimerModel> = {
         isRunning: true,
         startedAt: Date.now(),
         pausedAt: null,
         remainingAtStart: timer.remainingTime,
       };
 
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, updates);
     },
     [timers],
   );
 
   const pauseTimer = useCallback(
     async (id: string) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer || !timer.startedAt || timer.remainingAtStart === null) return;
 
       const elapsed = Date.now() - timer.startedAt;
       const newRemainingTime = Math.max(0, timer.remainingAtStart - elapsed);
 
-      const updatedTimer: Timer = {
-        ...timer,
+      const updates: Partial<TimerModel> = {
         isRunning: false,
         pausedAt: Date.now(),
         remainingTime: newRemainingTime,
@@ -179,19 +187,17 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         remainingAtStart: null,
       };
 
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, updates);
     },
     [timers],
   );
 
   const resetTimer = useCallback(
     async (id: string) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer) return;
 
-      const updatedTimer: Timer = {
-        ...timer,
+      const updates: Partial<TimerModel> = {
         remainingTime: timer.duration,
         isRunning: false,
         startedAt: null,
@@ -200,57 +206,42 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
         remainingAtStart: null,
       };
 
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, updates);
     },
     [timers],
   );
 
   const updateTimerTitle = useCallback(
     async (id: string, title: string) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer) return;
 
-      const updatedTimer: Timer = {
-        ...timer,
-        title,
-      };
-
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, { title });
     },
     [timers],
   );
 
   const updateTimerDuration = useCallback(
     async (id: string, duration: number) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer || timer.isRunning) return;
 
-      const updatedTimer: Timer = {
-        ...timer,
+      const updates: Partial<TimerModel> = {
         duration,
         remainingTime: duration,
       };
 
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, updates);
     },
     [timers],
   );
 
   const toggleSound = useCallback(
     async (id: string) => {
-      const timer = timers.find((t) => t.id === id);
+      const timer = timers?.find((t) => t.id === id);
       if (!timer) return;
 
-      const updatedTimer: Timer = {
-        ...timer,
-        soundEnabled: !timer.soundEnabled,
-      };
-
-      await timerDB.saveTimer(updatedTimer);
-      setTimers((prev) => prev.map((t) => (t.id === id ? updatedTimer : t)));
+      await timerService.updateTimer(id, { soundEnabled: !timer.soundEnabled });
     },
     [timers],
   );
@@ -260,7 +251,7 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const getRemainingTime = useCallback(
-    (timer: Timer): number => {
+    (timer: TimerModel): number => {
       if (
         !timer.isRunning ||
         !timer.startedAt ||
@@ -275,10 +266,11 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
 
   const value: TimerContextType = useMemo(
     () => ({
-      timers,
+      timers: timers || [],
       activeTimerId,
       createTimer,
       deleteTimer,
+      clearAll,
       startTimer,
       pauseTimer,
       resetTimer,
@@ -295,6 +287,7 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
       activeTimerId,
       createTimer,
       deleteTimer,
+      clearAll,
       startTimer,
       pauseTimer,
       resetTimer,

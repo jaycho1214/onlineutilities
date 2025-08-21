@@ -143,7 +143,7 @@ function FormatterSidebarComponent() {
                         : entry.input}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {formatTimestamp(entry.timestamp)}
+                      {formatTimestamp(entry.createdAt)}
                     </p>
                   </div>
                 </SidebarMenuButton>

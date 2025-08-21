@@ -1,18 +1,12 @@
-import { notepadDb, notesService } from "./notepad-db";
+import { notesService } from "./notepad-service";
+import { notepadDb } from "./notepad-db";
+import { NoteModel } from "../types";
 import { nanoid } from "nanoid";
-
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 /**
  * Download a note as a markdown file
  */
-export function downloadNote(note: Note) {
+export function downloadNote(note: NoteModel) {
   if (!note) return;
 
   const blob = new Blob([note.content], { type: "text/markdown" });

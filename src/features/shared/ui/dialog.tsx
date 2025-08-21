@@ -67,7 +67,9 @@ function DialogContent({
         )}
         {...props}
       >
-        <GlassSurface className={cn("size-full p-4 shadow-2xl")}>
+        <GlassSurface
+          className={cn("size-full p-4 shadow-2xl backdrop-blur-xl")}
+        >
           {children}
           {showCloseButton && (
             <DialogPrimitive.Close data-slot="dialog-close" asChild>

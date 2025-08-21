@@ -16,6 +16,7 @@ import React, {
   useMemo,
   type ReactNode,
 } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -27,7 +28,8 @@ import type {
   CsvDelimiter,
   CsvViewMode,
 } from "../types";
-import { formatterService } from "./formatter-db";
+import { formatterService } from "./formatter-service";
+import { formatterDb } from "./formatter-db";
 import {
   formatEnhanced,
   validateEnhanced,
@@ -79,29 +81,25 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
 
   // State management
   const [state, setState] = useState<FormatterState>(initialState);
-  const [history, setHistory] = useState<FormatterEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // =========================================================================
-  // EFFECTS
-  // =========================================================================
-
-  // Load history on mount
-  useEffect(() => {
-    const loadHistory = async () => {
-      setIsLoading(true);
+  // Use useLiveQuery to get real-time formatter history
+  const history = useLiveQuery<FormatterEntry[]>(
+    async (): Promise<FormatterEntry[]> => {
       try {
-        const entries = await formatterService.getRecentEntries(50);
-        setHistory(entries);
-      } catch {
-        // Failed to load formatter history
-      } finally {
-        setIsLoading(false);
+        return await formatterDb.entries
+          .orderBy("createdAt")
+          .reverse()
+          .limit(50)
+          .toArray();
+      } catch (error) {
+        console.error("Failed to fetch formatter history:", error);
+        return [];
       }
-    };
+    },
+    [], // No dependencies - always watch entries
+  );
 
-    loadHistory();
-  }, []);
+  const isLoading = history === undefined;
 
   // Update CSV table data when input or delimiter changes
   useEffect(() => {
@@ -294,7 +292,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
         }));
 
         // Add to history
-        const entry: Omit<FormatterEntry, "id" | "timestamp"> = {
+        const entry: Omit<FormatterEntry, "id" | "createdAt" | "updatedAt"> = {
           type: state.type,
           input: state.input,
           output: result.output,
@@ -303,8 +301,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
           ...(state.type === "csv" && { delimiter: state.csvDelimiter }),
         };
 
-        const savedEntry = await formatterService.addEntry(entry);
-        setHistory((prev) => [savedEntry, ...prev.slice(0, 49)]);
+        await formatterService.addEntry(entry);
 
         toast.success(
           t("notifications.formatted", { type: state.type.toUpperCase() }),
@@ -352,7 +349,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
         }));
 
         // Add to history
-        const entry: Omit<FormatterEntry, "id" | "timestamp"> = {
+        const entry: Omit<FormatterEntry, "id" | "createdAt" | "updatedAt"> = {
           type: state.type,
           input: state.input,
           output: state.input, // For validation, output is same as input
@@ -361,8 +358,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
           ...(state.type === "csv" && { delimiter: state.csvDelimiter }),
         };
 
-        const savedEntry = await formatterService.addEntry(entry);
-        setHistory((prev) => [savedEntry, ...prev.slice(0, 49)]);
+        await formatterService.addEntry(entry);
 
         toast.success(
           t("notifications.validated", { type: state.type.toUpperCase() }),
@@ -375,7 +371,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
         }));
 
         // Still add to history for invalid entries
-        const entry: Omit<FormatterEntry, "id" | "timestamp"> = {
+        const entry: Omit<FormatterEntry, "id" | "createdAt" | "updatedAt"> = {
           type: state.type,
           input: state.input,
           output: result.error?.message || "Invalid",
@@ -384,8 +380,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
           ...(state.type === "csv" && { delimiter: state.csvDelimiter }),
         };
 
-        const savedEntry = await formatterService.addEntry(entry);
-        setHistory((prev) => [savedEntry, ...prev.slice(0, 49)]);
+        await formatterService.addEntry(entry);
 
         toast.error(
           result.error?.message ||
@@ -417,7 +412,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
         }));
 
         // Add to history
-        const entry: Omit<FormatterEntry, "id" | "timestamp"> = {
+        const entry: Omit<FormatterEntry, "id" | "createdAt" | "updatedAt"> = {
           type: state.type,
           input: state.input,
           output: result.output,
@@ -426,8 +421,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
           ...(state.type === "csv" && { delimiter: state.csvDelimiter }),
         };
 
-        const savedEntry = await formatterService.addEntry(entry);
-        setHistory((prev) => [savedEntry, ...prev.slice(0, 49)]);
+        await formatterService.addEntry(entry);
 
         toast.success(
           t("notifications.minified", { type: state.type.toUpperCase() }),
@@ -485,14 +479,17 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
   // HISTORY OPERATIONS
   // =========================================================================
 
-  const addToHistory = useCallback((entry: FormatterEntry) => {
-    setHistory((prev) => [entry, ...prev.slice(0, 49)]);
+  const addToHistory = useCallback(async (entry: FormatterEntry) => {
+    try {
+      await formatterService.addEntry(entry);
+    } catch (error) {
+      console.error("Failed to add entry to history:", error);
+    }
   }, []);
 
   const clearHistory = useCallback(async () => {
     try {
       await formatterService.clearHistory();
-      setHistory([]);
       toast.success(t("notifications.historyCleared"));
     } catch {
       toast.error("Failed to clear history");
@@ -821,7 +818,7 @@ export function FormatterProvider({ children }: FormatterProviderProps) {
   const contextValue = useMemo<FormatterContextValue>(
     () => ({
       state,
-      history,
+      history: history || [],
       isLoading,
       // State actions
       setType,

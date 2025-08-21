@@ -9,6 +9,7 @@ import {
   Dices,
   FileDiff,
   Lock,
+  Focus,
   type LucideIcon,
 } from "lucide-react";
 
@@ -142,7 +143,8 @@ export const utilities: Utility[] = [
   {
     id: "encoder-decoder",
     name: "Encoder/Decoder",
-    description: "Encode and decode text with Base64, URL, HTML entities, Hex, ASCII, Binary, Unicode, and more formats",
+    description:
+      "Encode and decode text with Base64, URL, HTML entities, Hex, ASCII, Binary, Unicode, and more formats",
     icon: Lock,
     href: "/encoder-decoder",
     category: "Text",
@@ -164,6 +166,27 @@ export const utilities: Utility[] = [
       "unescape",
       "encryption",
       "conversion",
+    ],
+  },
+  {
+    id: "pomodoro",
+    name: "Pomodoro",
+    description:
+      "Focus timer with sessions, todo lists, and customizable breaks",
+    icon: Focus,
+    href: "/pomodoro",
+    category: "Time",
+    keywords: [
+      "pomodoro",
+      "focus",
+      "productivity",
+      "timer",
+      "work",
+      "break",
+      "session",
+      "todo",
+      "tasks",
+      "concentration",
     ],
   },
 ];

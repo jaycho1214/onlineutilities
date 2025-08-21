@@ -1,80 +1,41 @@
+/**
+ * Color Picker Database Module - Optimized for Dexie 4.2
+ *
+ * This module handles all database operations for the color picker feature.
+ * Optimized with modern Dexie patterns, proper TypeScript types, and enhanced error handling.
+ */
+
 import Dexie, { type EntityTable } from "dexie";
+import type { RecentColorModel } from "../types";
 
-export interface RecentColor {
-  id?: number;
-  color: string;
-  timestamp: number;
-}
+/**
+ * Color Picker database class extending Dexie with enhanced error handling
+ */
+class ColorPickerDatabase extends Dexie {
+  recentColors!: EntityTable<RecentColorModel, "id">;
 
-const db = new Dexie("ColorPickerDB") as Dexie & {
-  recentColors: EntityTable<RecentColor, "id">;
-};
+  constructor() {
+    super("ColorPickerDB");
 
-db.version(1).stores({
-  recentColors: "++id, color, timestamp",
-});
+    this.version(1).stores({
+      recentColors: "++id, color, timestamp",
+    });
 
-export class ColorDB {
-  static async addRecentColor(color: string): Promise<void> {
-    try {
-      // Check if color already exists
-      const existingColor = await db.recentColors
-        .where("color")
-        .equals(color)
-        .first();
+    // Remove model class mapping
 
-      if (existingColor) {
-        // Update timestamp if color already exists
-        await db.recentColors.update(existingColor.id!, {
-          timestamp: Date.now(),
-        });
-      } else {
-        // Add new color
-        await db.recentColors.add({
-          color,
-          timestamp: Date.now(),
-        });
-      }
+    // Enhanced error handling
+    this.on("blocked", () => {
+      console.warn("Color picker database blocked by another connection");
+    });
 
-      // Keep only the most recent 24 colors
-      const allColors = await db.recentColors
-        .orderBy("timestamp")
-        .reverse()
-        .toArray();
-
-      if (allColors.length > 24) {
-        const colorsToDelete = allColors.slice(24);
-        await db.recentColors.bulkDelete(
-          colorsToDelete.map((c) => c.id!).filter(Boolean),
-        );
-      }
-    } catch (error) {
-      console.error("Failed to add recent color:", error);
-    }
-  }
-
-  static async getRecentColors(): Promise<string[]> {
-    try {
-      const colors = await db.recentColors
-        .orderBy("timestamp")
-        .reverse()
-        .limit(24)
-        .toArray();
-
-      return colors.map((c) => c.color);
-    } catch (error) {
-      console.error("Failed to get recent colors:", error);
-      return [];
-    }
-  }
-
-  static async clearRecentColors(): Promise<void> {
-    try {
-      await db.recentColors.clear();
-    } catch (error) {
-      console.error("Failed to clear recent colors:", error);
-    }
+    this.on("versionchange", () => {
+      console.log("Color picker database version changed in another tab");
+    });
   }
 }
 
-export default db;
+// Export database instance
+export const colorDb = new ColorPickerDatabase();
+
+// Backward compatibility - no longer needed but kept for legacy support
+export { colorDb as default };

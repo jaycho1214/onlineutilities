@@ -9,20 +9,21 @@ import React, {
   useMemo,
 } from "react";
 import { useRafTicker } from "@/hooks/use-raf-ticker";
-import { Stopwatch, StopwatchState, Lap } from "../types";
-import { stopwatchService } from "./stopwatch-db";
+import { StopwatchModel, StopwatchState, LapModel } from "../types";
+import { stopwatchService } from "./stopwatch-service";
 import { nanoid } from "nanoid";
 
 interface StopwatchContextType extends StopwatchState {
   createStopwatch: (title?: string) => Promise<string>;
   deleteStopwatch: (id: string) => Promise<void>;
+  clearAll: () => Promise<void>;
   updateStopwatchTitle: (id: string, title: string) => Promise<void>;
   startStopwatch: (id: string) => Promise<void>;
   pauseStopwatch: (id: string) => Promise<void>;
   resetStopwatch: (id: string) => Promise<void>;
   addLap: (id: string) => Promise<void>;
   setActiveStopwatch: (id: string | null) => void;
-  getCurrentTime: (stopwatch: Stopwatch) => number;
+  getCurrentTime: (stopwatch: StopwatchModel) => number;
   now: number; // shared ticking time reference
   isLoaded: boolean; // whether initial load from DB completed
 }
@@ -53,7 +54,7 @@ export function StopwatchProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const getCurrentTime = useCallback((stopwatch: Stopwatch): number => {
+  const getCurrentTime = useCallback((stopwatch: StopwatchModel): number => {
     if (!stopwatch.isRunning || !stopwatch.startTime) {
       return stopwatch.pausedTime;
     }
@@ -90,6 +91,19 @@ export function StopwatchProvider({ children }: { children: React.ReactNode }) {
       }));
     } catch (error) {
       console.error("Failed to delete stopwatch:", error);
+      throw error;
+    }
+  }, []);
+
+  const clearAll = useCallback(async (): Promise<void> => {
+    try {
+      await stopwatchService.clearAll();
+      setState({
+        stopwatches: [],
+        activeStopwatchId: null,
+      });
+    } catch (error) {
+      console.error("Failed to clear all stopwatches:", error);
       throw error;
     }
   }, []);
@@ -207,7 +221,7 @@ export function StopwatchProvider({ children }: { children: React.ReactNode }) {
             ? stopwatch.laps[stopwatch.laps.length - 1].time
             : 0;
 
-        const newLap: Lap = {
+        const newLap: LapModel = {
           id: nanoid(),
           time: currentTime,
           lapTime: currentTime - lastLapTime,
@@ -255,6 +269,7 @@ export function StopwatchProvider({ children }: { children: React.ReactNode }) {
     ...state,
     createStopwatch,
     deleteStopwatch,
+    clearAll,
     updateStopwatchTitle,
     startStopwatch,
     pauseStopwatch,

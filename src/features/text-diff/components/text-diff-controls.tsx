@@ -18,7 +18,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { ErrorDisplay } from "@/features/shared/components/error-display";
-import { useTextDiff } from "../lib/text-diff-context";
+import { useTextDiff } from "@/features/text-diff/lib/text-diff-context";
 
 interface TextDiffControlsProps {
   onSettingsClick?: () => void;

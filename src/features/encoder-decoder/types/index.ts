@@ -1,11 +1,11 @@
 /**
  * Encoder/Decoder Types
- * 
+ *
  * Type definitions for the encoder/decoder feature.
  */
 
 // Core encoding types
-export type EncodingType = 
+export type EncodingType =
   // Basic encodings
   | "base64"
   | "url"
@@ -26,16 +26,20 @@ export type EncodingType =
 
 export type Operation = "encode" | "decode";
 
-export interface EncoderDecoderEntry {
+export interface EncoderDecoderEntryModel {
   id: string;
   type: EncodingType;
   input: string;
   output: string;
   operation: Operation;
-  timestamp: string;
+  createdAt: string;
+  updatedAt?: string;
   isValid: boolean;
   error?: string;
 }
+
+// Backward compatibility type
+export type EncoderDecoderEntry = EncoderDecoderEntryModel;
 
 export interface EncodingConfig {
   id: EncodingType;

@@ -1,20 +1,22 @@
 /**
  * Encoder/Decoder Context
- * 
+ *
  * React context for managing encoder/decoder state and operations.
  */
 
 "use client";
 
-import React, { createContext, useContext, useReducer, useCallback, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useEffect,
+} from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import type { 
-  EncoderDecoderState, 
-  EncodingType, 
-  Operation 
-} from "../types";
-import { encoderDecoderService } from "./encoder-decoder-db";
+import type { EncoderDecoderState, EncodingType, Operation } from "../types";
+import { encoderDecoderService } from "./encoder-decoder-service";
 import { getEncoder, detectEncoding } from "../encoders/encoder-registry";
 
 // ============================================================================
@@ -76,7 +78,7 @@ interface StoredSettings {
 
 const getStoredSettings = (): Partial<StoredSettings> => {
   if (typeof window === "undefined") return {};
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : {};
@@ -88,7 +90,7 @@ const getStoredSettings = (): Partial<StoredSettings> => {
 
 const saveSettings = (settings: Partial<StoredSettings>) => {
   if (typeof window === "undefined") return;
-  
+
   try {
     const existing = getStoredSettings();
     const updated = { ...existing, ...settings };
@@ -132,11 +134,11 @@ function encoderDecoderReducer(
     case "SET_OPERATION":
       return { ...state, operation: action.payload, error: null };
     case "SET_INPUT":
-      return { 
-        ...state, 
+      return {
+        ...state,
         input: action.payload,
-        sizeLimitExceeded: action.payload.length > (1024 * 1024), // MAX_INPUT_SIZE
-        error: null 
+        sizeLimitExceeded: action.payload.length > 1024 * 1024, // MAX_INPUT_SIZE
+        error: null,
       };
     case "SET_OUTPUT":
       return { ...state, output: action.payload };
@@ -151,20 +153,24 @@ function encoderDecoderReducer(
     case "SET_SIZE_LIMIT_EXCEEDED":
       return { ...state, sizeLimitExceeded: action.payload };
     case "SET_DRAG_OVER":
-      return { 
-        ...state, 
-        dragDrop: { ...state.dragDrop, isDragOver: action.payload } 
+      return {
+        ...state,
+        dragDrop: { ...state.dragDrop, isDragOver: action.payload },
       };
     case "RESET":
-      return { ...initialState, autoConvert: state.autoConvert, saveHistory: state.saveHistory };
+      return {
+        ...initialState,
+        autoConvert: state.autoConvert,
+        saveHistory: state.saveHistory,
+      };
     case "CLEAR_ALL":
-      return { 
-        ...state, 
-        input: "", 
-        output: "", 
-        error: null, 
-        isValid: true, 
-        sizeLimitExceeded: false 
+      return {
+        ...state,
+        input: "",
+        output: "",
+        error: null,
+        isValid: true,
+        sizeLimitExceeded: false,
       };
     default:
       return state;
@@ -175,7 +181,9 @@ function encoderDecoderReducer(
 // CONTEXT
 // ============================================================================
 
-const EncoderDecoderContext = createContext<EncoderDecoderContextType | null>(null);
+const EncoderDecoderContext = createContext<EncoderDecoderContextType | null>(
+  null,
+);
 
 // ============================================================================
 // PROVIDER
@@ -185,18 +193,32 @@ interface EncoderDecoderProviderProps {
   children: React.ReactNode;
 }
 
-export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps) {
+export function EncoderDecoderProvider({
+  children,
+}: EncoderDecoderProviderProps) {
   const [state, dispatch] = useReducer(encoderDecoderReducer, initialState);
   const t = useTranslations("EncoderDecoder");
 
   // Hydrate settings from localStorage after mount
   useEffect(() => {
     const storedSettings = getStoredSettings();
-    if (storedSettings.autoConvert !== undefined && storedSettings.autoConvert !== state.autoConvert) {
-      dispatch({ type: "SET_AUTO_CONVERT", payload: storedSettings.autoConvert });
+    if (
+      storedSettings.autoConvert !== undefined &&
+      storedSettings.autoConvert !== state.autoConvert
+    ) {
+      dispatch({
+        type: "SET_AUTO_CONVERT",
+        payload: storedSettings.autoConvert,
+      });
     }
-    if (storedSettings.saveHistory !== undefined && storedSettings.saveHistory !== state.saveHistory) {
-      dispatch({ type: "SET_SAVE_HISTORY", payload: storedSettings.saveHistory });
+    if (
+      storedSettings.saveHistory !== undefined &&
+      storedSettings.saveHistory !== state.saveHistory
+    ) {
+      dispatch({
+        type: "SET_SAVE_HISTORY",
+        payload: storedSettings.saveHistory,
+      });
     }
     if (storedSettings.type && storedSettings.type !== state.type) {
       dispatch({ type: "SET_TYPE", payload: storedSettings.type });
@@ -233,9 +255,10 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
 
     try {
       const encoder = getEncoder(state.type);
-      const result = state.operation === "encode" 
-        ? encoder.encode(state.input)
-        : encoder.decode(state.input);
+      const result =
+        state.operation === "encode"
+          ? encoder.encode(state.input)
+          : encoder.decode(state.input);
 
       if (result.success) {
         dispatch({ type: "SET_OUTPUT", payload: result.result || "" });
@@ -259,11 +282,13 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
         const errorMessage = result.error || "Processing failed";
         dispatch({ type: "SET_OUTPUT", payload: "" });
         dispatch({ type: "SET_ERROR", payload: errorMessage });
-        
-        toast.error(t(`notifications.${state.operation}Failed`, { 
-          error: errorMessage 
-        }));
-        
+
+        toast.error(
+          t(`notifications.${state.operation}Failed`, {
+            error: errorMessage,
+          }),
+        );
+
         // Save failed attempt to history if enabled
         if (state.saveHistory) {
           try {
@@ -281,13 +306,16 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
         }
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       dispatch({ type: "SET_OUTPUT", payload: "" });
       dispatch({ type: "SET_ERROR", payload: errorMessage });
-      
-      toast.error(t(`notifications.${state.operation}Failed`, { 
-        error: errorMessage 
-      }));
+
+      toast.error(
+        t(`notifications.${state.operation}Failed`, {
+          error: errorMessage,
+        }),
+      );
     } finally {
       dispatch({ type: "SET_PROCESSING", payload: false });
     }
@@ -305,7 +333,14 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
       dispatch({ type: "SET_OUTPUT", payload: "" });
       dispatch({ type: "SET_ERROR", payload: null });
     }
-  }, [state.input, state.type, state.operation, state.autoConvert, state.sizeLimitExceeded, processInput]);
+  }, [
+    state.input,
+    state.type,
+    state.operation,
+    state.autoConvert,
+    state.sizeLimitExceeded,
+    processInput,
+  ]);
 
   const clearAll = useCallback(() => {
     dispatch({ type: "CLEAR_ALL" });
@@ -343,7 +378,7 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
       toast.error(t("notifications.noInputToCopy"));
       return;
     }
-    
+
     try {
       await navigator.clipboard.writeText(state.input);
     } catch (error) {
@@ -357,7 +392,7 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
       toast.error(t("notifications.noOutputToCopy"));
       return;
     }
-    
+
     try {
       await navigator.clipboard.writeText(state.output);
     } catch (error) {
@@ -371,7 +406,7 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
       const text = await navigator.clipboard.readText();
       if (text) {
         dispatch({ type: "SET_INPUT", payload: text });
-        
+
         // Try auto-detection on paste
         if (state.autoConvert) {
           detectAndSetType(text);
@@ -392,17 +427,18 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
         // If input is empty, perform action reversal
         if (!state.input.trim()) {
           // Reverse the operation
-          const reversedOperation = state.operation === "encode" ? "decode" : "encode";
-          
+          const reversedOperation =
+            state.operation === "encode" ? "decode" : "encode";
+
           // Set the pasted text as input and reverse the operation
           dispatch({ type: "SET_INPUT", payload: text });
           dispatch({ type: "SET_OPERATION", payload: reversedOperation });
-          
+
           // Try auto-detection on the pasted text
           if (state.autoConvert) {
             detectAndSetType(text);
           }
-          
+
           // No success notification, just perform the action silently
         } else {
           // If input is not empty, just paste to output (normal behavior)
@@ -463,45 +499,51 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
     e.stopPropagation();
   }, []);
 
-  const handleDrop = useCallback(async (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    dispatch({ type: "SET_DRAG_OVER", payload: false });
+  const handleDrop = useCallback(
+    async (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      const file = files[0];
-      
-      // Check file size (1MB limit)
-      if (file.size > 1024 * 1024) {
-        dispatch({ type: "SET_ERROR", payload: "File size exceeds 1MB limit" });
-        return;
-      }
+      dispatch({ type: "SET_DRAG_OVER", payload: false });
 
-      try {
-        const text = await file.text();
-        dispatch({ type: "SET_INPUT", payload: text });
-        
-        // Try auto-detection
-        if (state.autoConvert) {
-          detectAndSetType(text);
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length > 0) {
+        const file = files[0];
+
+        // Check file size (1MB limit)
+        if (file.size > 1024 * 1024) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: "File size exceeds 1MB limit",
+          });
+          return;
         }
-      } catch {
-        dispatch({ type: "SET_ERROR", payload: "Failed to read file" });
-      }
-    } else {
-      // Handle text drag
-      const text = e.dataTransfer.getData("text");
-      if (text) {
-        dispatch({ type: "SET_INPUT", payload: text });
-        
-        if (state.autoConvert) {
-          detectAndSetType(text);
+
+        try {
+          const text = await file.text();
+          dispatch({ type: "SET_INPUT", payload: text });
+
+          // Try auto-detection
+          if (state.autoConvert) {
+            detectAndSetType(text);
+          }
+        } catch {
+          dispatch({ type: "SET_ERROR", payload: "Failed to read file" });
+        }
+      } else {
+        // Handle text drag
+        const text = e.dataTransfer.getData("text");
+        if (text) {
+          dispatch({ type: "SET_INPUT", payload: text });
+
+          if (state.autoConvert) {
+            detectAndSetType(text);
+          }
         }
       }
-    }
-  }, [state.autoConvert, detectAndSetType]);
+    },
+    [state.autoConvert, detectAndSetType],
+  );
 
   // ========================================================================
   // CONTEXT VALUE
@@ -548,7 +590,9 @@ export function EncoderDecoderProvider({ children }: EncoderDecoderProviderProps
 export function useEncoderDecoder(): EncoderDecoderContextType {
   const context = useContext(EncoderDecoderContext);
   if (!context) {
-    throw new Error("useEncoderDecoder must be used within EncoderDecoderProvider");
+    throw new Error(
+      "useEncoderDecoder must be used within EncoderDecoderProvider",
+    );
   }
   return context;
 }

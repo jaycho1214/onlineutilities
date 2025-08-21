@@ -1,6 +1,6 @@
 /**
  * Collision Probability Utilities
- * 
+ *
  * Shared utilities for calculating and formatting collision probabilities
  * for different random generation scenarios.
  */
@@ -19,14 +19,15 @@ export interface CollisionScenario {
  */
 export function calculateCollisionProbability(
   numberOfItems: number,
-  totalPossibleValues: number
+  totalPossibleValues: number,
 ): number {
   if (numberOfItems >= totalPossibleValues) {
     return 100; // Guaranteed collision
   }
 
   // Birthday paradox: probability of at least one collision
-  const probability = 1 - Math.exp(-Math.pow(numberOfItems, 2) / (2 * totalPossibleValues));
+  const probability =
+    1 - Math.exp(-Math.pow(numberOfItems, 2) / (2 * totalPossibleValues));
   return probability * 100;
 }
 
@@ -38,11 +39,14 @@ export function calculateCollisionProbability(
  */
 export function calculateCollisionScenarios(
   totalPossibleValues: number,
-  scenarios: Pick<CollisionScenario, "users" | "label">[]
+  scenarios: Pick<CollisionScenario, "users" | "label">[],
 ): CollisionScenario[] {
   return scenarios.map((scenario) => ({
     ...scenario,
-    probability: calculateCollisionProbability(scenario.users, totalPossibleValues),
+    probability: calculateCollisionProbability(
+      scenario.users,
+      totalPossibleValues,
+    ),
   }));
 }
 
@@ -54,7 +58,7 @@ export function calculateCollisionScenarios(
  */
 export function formatProbability(
   probability: number,
-  format: "standard" | "scientific" | "uuid" = "standard"
+  format: "standard" | "scientific" | "uuid" = "standard",
 ): string {
   switch (format) {
     case "uuid":
@@ -63,11 +67,11 @@ export function formatProbability(
       if (probability < 0.001) return probability.toExponential(2) + "%";
       if (probability < 1) return probability.toFixed(6) + "%";
       return probability.toFixed(2) + "%";
-    
+
     case "scientific":
       if (probability < 0.001) return probability.toExponential(2) + "%";
       return probability.toFixed(3) + "%";
-    
+
     case "standard":
     default:
       if (probability < 0.001) return "< 0.001%";

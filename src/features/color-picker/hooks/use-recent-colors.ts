@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { ColorDB } from "@/features/color-picker/lib/color-db";
+import { ColorDB } from "@/features/color-picker/lib/color-service";
 
 export const useRecentColors = () => {
   const [recentColors, setRecentColors] = useState<string[]>([]);

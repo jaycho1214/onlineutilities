@@ -6,7 +6,7 @@ import { ActionButton } from "@/features/shared/ui/action-button";
 import { Plus, History, Trash2 } from "lucide-react";
 import { useEncoderDecoder } from "../lib/encoder-decoder-context";
 import { encodingConfigs } from "../encoders/encoder-registry";
-import { encoderDecoderService } from "../lib/encoder-decoder-db";
+import { encoderDecoderService } from "../lib/encoder-decoder-service";
 import {
   SidebarHeader,
   SidebarContent,
@@ -18,11 +18,11 @@ import {
 } from "@/features/shared/ui/sidebar";
 import { Input } from "@/features/shared/ui/input";
 import { Button } from "@/features/shared/ui/button";
-import type { EncoderDecoderEntry } from "../types";
+import type { EncoderDecoderEntryModel } from "../types";
 
 interface HistoryItemProps {
-  entry: EncoderDecoderEntry;
-  onSelect: (entry: EncoderDecoderEntry) => void;
+  entry: EncoderDecoderEntryModel;
+  onSelect: (entry: EncoderDecoderEntryModel) => void;
   onDelete: (id: string) => void;
   isActive?: boolean;
 }
@@ -43,7 +43,7 @@ function HistoryItem({ entry, onSelect, isActive }: HistoryItemProps) {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -64,9 +64,7 @@ function HistoryItem({ entry, onSelect, isActive }: HistoryItemProps) {
         }}
       >
         <div className="flex items-center justify-between w-full">
-          <span className="font-medium text-sm">
-            {config.name}
-          </span>
+          <span className="font-medium text-sm">{config.name}</span>
           <span className="text-xs text-muted-foreground">
             {entry.operation === "encode" ? "Encode" : "Decode"}
           </span>
@@ -76,7 +74,7 @@ function HistoryItem({ entry, onSelect, isActive }: HistoryItemProps) {
             {truncateText(entry.input)}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            {formatDate(entry.timestamp)}
+            {formatDate(entry.createdAt)}
           </p>
         </div>
       </SidebarMenuButton>
@@ -88,7 +86,7 @@ function EncoderDecoderSidebarComponent() {
   const t = useTranslations("EncoderDecoder");
   const { state, setType, setOperation, setInput } = useEncoderDecoder();
   const [search, setSearch] = useState("");
-  const [entries, setEntries] = useState<EncoderDecoderEntry[]>([]);
+  const [entries, setEntries] = useState<EncoderDecoderEntryModel[]>([]);
   const [, startTransition] = useTransition();
 
   const handleNewEncoding = useCallback(() => {
@@ -97,25 +95,22 @@ function EncoderDecoderSidebarComponent() {
   }, [setType, setOperation]);
 
   const handleSelectHistoryItem = useCallback(
-    (entry: EncoderDecoderEntry) => {
+    (entry: EncoderDecoderEntryModel) => {
       setType(entry.type);
       setOperation(entry.operation);
       setInput(entry.input);
     },
-    [setType, setOperation, setInput]
+    [setType, setOperation, setInput],
   );
 
-  const handleDeleteHistoryItem = useCallback(
-    async (id: string) => {
-      try {
-        await encoderDecoderService.deleteEntry(id);
-        setEntries(prev => prev.filter(entry => entry.id !== id));
-      } catch (error) {
-        console.error("Failed to delete entry:", error);
-      }
-    },
-    []
-  );
+  const handleDeleteHistoryItem = useCallback(async (id: string) => {
+    try {
+      await encoderDecoderService.deleteEntry(id);
+      setEntries((prev) => prev.filter((entry) => entry.id !== id));
+    } catch (error) {
+      console.error("Failed to delete entry:", error);
+    }
+  }, []);
 
   const handleClearHistory = useCallback(async () => {
     try {
@@ -161,7 +156,7 @@ function EncoderDecoderSidebarComponent() {
   }, [state.isProcessing, state.output, state.saveHistory]);
 
   // Filter history based on search
-  const filteredEntries = entries.filter(entry => {
+  const filteredEntries = entries.filter((entry) => {
     if (!search.trim()) return true;
     const searchLower = search.toLowerCase();
     const config = encodingConfigs[entry.type];
@@ -194,7 +189,11 @@ function EncoderDecoderSidebarComponent() {
                 setSearch(e.target.value);
               });
             }}
-            placeholder={state.saveHistory ? t("sidebar.search.placeholder") : t("sidebar.disabled.searchPlaceholder")}
+            placeholder={
+              state.saveHistory
+                ? t("sidebar.search.placeholder")
+                : t("sidebar.disabled.searchPlaceholder")
+            }
             disabled={!state.saveHistory}
             autoComplete="off"
             spellCheck="false"

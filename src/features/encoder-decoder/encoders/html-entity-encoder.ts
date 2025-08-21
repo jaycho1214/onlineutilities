@@ -1,6 +1,6 @@
 /**
  * HTML Entity Encoder
- * 
+ *
  * Handles HTML entity encoding and decoding.
  */
 
@@ -45,17 +45,20 @@ export class HtmlEntityEncoder extends AbstractEncoder {
   encode(input: string): EncodingResult {
     try {
       let encoded = input;
-      
+
       // Replace each character with its HTML entity
       for (const [char, entity] of Object.entries(this.htmlEntities)) {
-        encoded = encoded.replace(new RegExp(this.escapeRegex(char), "g"), entity);
+        encoded = encoded.replace(
+          new RegExp(this.escapeRegex(char), "g"),
+          entity,
+        );
       }
-      
+
       // Encode other special characters as numeric entities
       encoded = encoded.replace(/[^\x00-\x7F]/g, (char) => {
         return `&#${char.charCodeAt(0)};`;
       });
-      
+
       return this.createResult(true, encoded);
     } catch (error) {
       return this.handleError(error, "HTML entity encoding");
@@ -65,21 +68,24 @@ export class HtmlEntityEncoder extends AbstractEncoder {
   decode(input: string): EncodingResult {
     try {
       let decoded = input;
-      
+
       // Decode named entities
       for (const [entity, char] of Object.entries(this.namedEntities)) {
-        decoded = decoded.replace(new RegExp(this.escapeRegex(entity), "g"), char);
+        decoded = decoded.replace(
+          new RegExp(this.escapeRegex(entity), "g"),
+          char,
+        );
       }
-      
+
       // Decode numeric entities (&#123; and &#xFF;)
       decoded = decoded.replace(/&#(\d+);/g, (_, num) => {
         return String.fromCharCode(parseInt(num, 10));
       });
-      
+
       decoded = decoded.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => {
         return String.fromCharCode(parseInt(hex, 16));
       });
-      
+
       return this.createResult(true, decoded);
     } catch (error) {
       return this.handleError(error, "HTML entity decoding");
@@ -88,27 +94,28 @@ export class HtmlEntityEncoder extends AbstractEncoder {
 
   detect(input: string): number {
     if (!input) return 0;
-    
+
     // Look for HTML entities
     const namedEntityPattern = /&[a-zA-Z][a-zA-Z0-9]+;/g;
     const numericEntityPattern = /&#\d+;/g;
     const hexEntityPattern = /&#x[0-9A-Fa-f]+;/g;
-    
+
     const namedMatches = input.match(namedEntityPattern) || [];
     const numericMatches = input.match(numericEntityPattern) || [];
     const hexMatches = input.match(hexEntityPattern) || [];
-    
-    const totalEntities = namedMatches.length + numericMatches.length + hexMatches.length;
-    
+
+    const totalEntities =
+      namedMatches.length + numericMatches.length + hexMatches.length;
+
     if (totalEntities === 0) return 0;
-    
+
     // Check for common HTML entities
     const commonEntities = /&(amp|lt|gt|quot|apos|nbsp);/g;
     const hasCommonEntities = commonEntities.test(input);
-    
+
     let confidence = Math.min(totalEntities * 0.1, 0.8);
     if (hasCommonEntities) confidence += 0.2;
-    
+
     return Math.min(confidence, 1);
   }
 

@@ -1,3 +1,39 @@
+// ============================================================================
+// DATABASE MODEL INTERFACES
+// ============================================================================
+
+/**
+ * Diff entry model interface - represents a single diff in the database
+ */
+export interface DiffEntryModel {
+  id: string;
+  originalText: string;
+  modifiedText: string;
+  viewMode: "side-by-side" | "unified";
+  diffOptions: DiffOptions;
+  createdAt: string;
+  updatedAt?: string;
+  title?: string;
+  mergedText?: string;
+}
+
+/**
+ * Diff settings model interface - represents user preferences in the database
+ */
+export interface DiffSettingsModel {
+  id: string;
+  defaultViewMode: "side-by-side" | "unified";
+  defaultOptions: DiffOptions;
+  theme?: "light" | "dark" | "auto";
+  lineNumbers?: boolean;
+  wordWrap?: boolean;
+  fontSize?: number;
+}
+
+// ============================================================================
+// UI TYPE DEFINITIONS
+// ============================================================================
+
 export type DiffViewMode = "side-by-side" | "unified";
 
 export type MergeAction = "accept-current" | "accept-incoming" | "accept-both";
@@ -76,6 +112,10 @@ export interface UISettings {
   highlightSyntax: boolean;
   showMinimap: boolean;
 }
+
+// Re-export database model interfaces for backward compatibility
+export type DiffEntry = DiffEntryModel;
+export type DiffSettings = DiffSettingsModel;
 
 export interface TextDiffState {
   originalText: string;

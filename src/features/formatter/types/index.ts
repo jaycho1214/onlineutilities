@@ -5,6 +5,25 @@
  */
 
 // ============================================================================
+// DATABASE MODEL INTERFACES
+// ============================================================================
+
+/**
+ * Formatter entry model interface - represents a single formatter entry in the database
+ */
+export interface FormatterEntryModel {
+  id: string;
+  type: FormatterType;
+  input: string;
+  output: string;
+  operation: "format" | "validate" | "minify";
+  createdAt: string;
+  updatedAt?: string;
+  isValid: boolean;
+  delimiter?: CsvDelimiter; // For CSV entries
+}
+
+// ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
 
@@ -53,18 +72,9 @@ export interface FormatResult {
 }
 
 /**
- * Formatter history entry interface
+ * Formatter history entry interface (Re-export for backward compatibility)
  */
-export interface FormatterEntry {
-  id: string;
-  type: FormatterType;
-  input: string;
-  output: string;
-  operation: "format" | "validate" | "minify";
-  timestamp: string;
-  isValid: boolean;
-  delimiter?: CsvDelimiter; // For CSV entries
-}
+export type FormatterEntry = FormatterEntryModel;
 
 /**
  * CSV table data structure

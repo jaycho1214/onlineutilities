@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { textDiffReducer, initialState } from "./text-diff-reducer";
 import { computeLineDiff } from "./diff-engine";
-import { textDiffService } from "./text-diff-db";
+import { textDiffService } from "./text-diff-service";
 import type {
   TextDiffState,
   TextDiffAction,

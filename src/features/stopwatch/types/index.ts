@@ -1,22 +1,22 @@
-export interface Lap {
+export interface LapModel {
   id: string;
   time: number;
   lapTime: number;
   timestamp: number;
 }
 
-export interface Stopwatch {
+export interface StopwatchModel {
   id: string;
   title: string;
   startTime: number | null;
   pausedTime: number;
   isRunning: boolean;
-  laps: Lap[];
+  laps: LapModel[];
   createdAt: number;
   updatedAt: number;
 }
 
 export interface StopwatchState {
-  stopwatches: Stopwatch[];
+  stopwatches: StopwatchModel[];
   activeStopwatchId: string | null;
 }

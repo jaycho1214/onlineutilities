@@ -24,7 +24,7 @@ const buttonGroupVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 const buttonGroupItemVariants = cva(
@@ -40,7 +40,7 @@ const buttonGroupItemVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 interface ButtonGroupProps
@@ -77,7 +77,7 @@ const ButtonGroupItem = React.forwardRef<
         buttonGroupItemVariants({ variant }),
         "data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
         "data-[state=unchecked]:text-muted-foreground data-[state=unchecked]:hover:text-foreground data-[state=unchecked]:hover:bg-muted/50 data-[state=unchecked]:bg-transparent",
-        className
+        className,
       )}
       {...props}
     >

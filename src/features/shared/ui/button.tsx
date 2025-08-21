@@ -37,7 +37,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "none",
     },
-  }
+  },
 );
 
 // Optimized glass variants - removed empty strings for better performance
@@ -90,7 +90,7 @@ function Button({
         className={cn(
           buttonVariants({ variant, size }),
           "transition-transform",
-          className
+          className,
         )}
         {...props}
       >
@@ -107,7 +107,7 @@ function Button({
           "transition-transform",
           glassVariants({ variant, size }),
           buttonVariants({ variant, size }),
-          className
+          className,
         )}
         {...props}
       >

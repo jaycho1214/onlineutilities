@@ -7,7 +7,9 @@ interface EncoderDecoderLayoutContentProps {
   children: React.ReactNode;
 }
 
-export function EncoderDecoderLayoutContent({ children }: EncoderDecoderLayoutContentProps) {
+export function EncoderDecoderLayoutContent({
+  children,
+}: EncoderDecoderLayoutContentProps) {
   return (
     <div className="flex flex-row h-[calc(100vh-3rem)] pt-2">
       <EncoderDecoderSidebar />

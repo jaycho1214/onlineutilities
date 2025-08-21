@@ -1,6 +1,6 @@
 /**
  * Encoder/Decoder Page
- * 
+ *
  * Main page for the encoder/decoder feature.
  */
 

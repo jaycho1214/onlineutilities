@@ -235,13 +235,24 @@ export interface ValidationErrors {
 }
 
 // ============================================================================
-// PRESET AND HISTORY INTERFACES
+// DATABASE MODEL INTERFACES
 // ============================================================================
 
 /**
- * Generator preset (re-exported from database types)
+ * Generation history entry model interface - represents a single generation in the database
  */
-export interface GeneratorPreset {
+export interface GenerationEntryModel {
+  id: string;
+  type: GeneratorType;
+  config: Record<string, unknown>;
+  results: string[];
+  createdAt: string;
+}
+
+/**
+ * Preset configuration model interface - represents saved generator configurations
+ */
+export interface GeneratorPresetModel {
   id: string;
   name: string;
   type: GeneratorType;
@@ -251,26 +262,23 @@ export interface GeneratorPreset {
 }
 
 /**
- * Generation history entry (re-exported from database types)
+ * User settings model interface - represents generator preferences
  */
-export interface GenerationEntry {
-  id: string;
-  type: GeneratorType;
-  config: Record<string, unknown>;
-  results: string[];
-  createdAt: string;
-}
-
-/**
- * Generator settings (re-exported from database types)
- */
-export interface GeneratorSettings {
+export interface GeneratorSettingsModel {
   id: string;
   autoCopy: boolean;
   showStrength: boolean;
   saveHistory: boolean;
   updatedAt: string;
 }
+
+// ============================================================================
+// PRESET AND HISTORY INTERFACES (Re-exports for backward compatibility)
+// ============================================================================
+
+export type GeneratorPreset = GeneratorPresetModel;
+export type GenerationEntry = GenerationEntryModel;
+export type GeneratorSettings = GeneratorSettingsModel;
 
 // ============================================================================
 // UTILITY TYPES

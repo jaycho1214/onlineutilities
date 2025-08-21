@@ -12,8 +12,9 @@ import {
 } from "@/features/shared/ui/dialog";
 import { Button } from "@/features/shared/ui/button";
 import { History, Trash2, Clock, FileText } from "lucide-react";
-import { useTextDiff } from "../lib/text-diff-context";
-import { textDiffService, type DiffEntry } from "../lib/text-diff-db";
+import { useTextDiff } from "@/features/text-diff/lib/text-diff-context";
+import { textDiffService } from "@/features/text-diff/lib/text-diff-service";
+import type { DiffEntry } from "@/features/text-diff/types";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -114,7 +115,7 @@ export function TextDiffHistoryDialog({
                       <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="size-3" />
-                          {formatDate(entry.timestamp)}
+                          {formatDate(entry.createdAt)}
                         </span>
                         <span>{entry.viewMode}</span>
                         <span>

@@ -1,6 +1,6 @@
 /**
  * Punycode Encoder
- * 
+ *
  * Handles Punycode encoding and decoding for international domain names.
  */
 
@@ -15,7 +15,7 @@ export class PunycodeEncoder extends AbstractEncoder {
   private readonly damp = 700;
   private readonly initialBias = 72;
   private readonly initialN = 0x80;
-  private readonly delimiter = '-';
+  private readonly delimiter = "-";
 
   encode(input: string): EncodingResult {
     try {
@@ -26,12 +26,12 @@ export class PunycodeEncoder extends AbstractEncoder {
         const result = (window as any).punycode.encode(input);
         return this.createResult(true, result);
       }
-      
+
       // Basic ASCII check - if all ASCII, return as-is
       if (/^[\x00-\x7F]*$/.test(input)) {
         return this.createResult(true, input);
       }
-      
+
       // For non-ASCII, we'll use a simplified approach
       // In a real implementation, you'd want the full Punycode algorithm
       let encoded = "";
@@ -44,7 +44,7 @@ export class PunycodeEncoder extends AbstractEncoder {
           encoded += `xn--${char.charCodeAt(0).toString(36)}`;
         }
       }
-      
+
       return this.createResult(true, encoded);
     } catch (error) {
       return this.handleError(error, "Punycode encoding");
@@ -60,18 +60,18 @@ export class PunycodeEncoder extends AbstractEncoder {
         const result = (window as any).punycode.decode(input);
         return this.createResult(true, result);
       }
-      
+
       // If no special encoding, return as-is
       if (!input.includes("xn--")) {
         return this.createResult(true, input);
       }
-      
+
       // Simple decoding (not real Punycode)
       const decoded = input.replace(/xn--([0-9a-z]+)/g, (match, code) => {
         const charCode = parseInt(code, 36);
         return String.fromCharCode(charCode);
       });
-      
+
       return this.createResult(true, decoded);
     } catch (error) {
       return this.handleError(error, "Punycode decoding");
@@ -80,17 +80,17 @@ export class PunycodeEncoder extends AbstractEncoder {
 
   detect(input: string): number {
     if (!input) return 0;
-    
+
     // Look for Punycode patterns
     if (input.includes("xn--")) {
       return 0.8;
     }
-    
+
     // Look for non-ASCII characters (might need Punycode)
     if (/[^\x00-\x7F]/.test(input)) {
       return 0.3;
     }
-    
+
     return 0;
   }
 }

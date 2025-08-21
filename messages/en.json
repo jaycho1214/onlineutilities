@@ -211,6 +211,13 @@
       "Your stopwatches keep running even when you close the browser",
       "Click fullscreen for a clean, focused timing display"
     ],
+    "pomodoro": [
+      "Create multiple sessions to organize different projects or contexts",
+      "Add todos to each session to track your tasks and progress",
+      "Use the statistics view to see your daily and weekly focus patterns",
+      "The cycle indicator shows your progress through pomodoro intervals",
+      "Customize timer durations and settings for each session independently"
+    ],
     "color-picker": [
       "Drag and drop images directly onto the page to extract their colors",
       "Click anywhere on the canvas to pick colors from uploaded images",
@@ -326,7 +333,8 @@
     "formatter": "Formatter",
     "random-generator": "Random Generator",
     "text-diff": "Text Diff",
-    "encoder-decoder": "Encoder/Decoder"
+    "encoder-decoder": "Encoder/Decoder",
+    "pomodoro": "Pomodoro"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -1128,6 +1136,191 @@
       "decodingFailed": "Decoding operation failed",
       "invalidFormat": "Invalid format for this encoding type",
       "unsupportedOperation": "Operation not supported for this encoding type"
+    }
+  },
+  "Pomodoro": {
+    "title": "Pomodoro Timer",
+    "description": "Boost your productivity with focused work sessions and breaks",
+    "timer": {
+      "focus": "Focus Time",
+      "shortBreak": "Short Break",
+      "longBreak": "Long Break",
+      "cycle": "Cycle {cycle}"
+    },
+    "actions": {
+      "start": "Start Focus",
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop",
+      "reset": "Reset",
+      "skip": "Skip",
+      "manageSessions": "Manage Sessions",
+      "settings": "Settings",
+      "todos": "Todo List",
+      "editCurrentTask": "Edit current task",
+      "saveChanges": "Save changes",
+      "cancelEditing": "Cancel editing",
+      "startWorkingOnTask": "Start working on this task",
+      "startFocusSession": "Start Focus Session"
+    },
+    "quickActions": {
+      "pomodoro": "Start Pomodoro",
+      "shortBreak": "Short Break",
+      "longBreak": "Long Break"
+    },
+    "shortcuts": {
+      "space": "Press SPACE to start/pause • R to reset • S to skip • T for todos",
+      "keys": "ESC to close dialogs"
+    },
+    "stats": {
+      "title": "Session Statistics",
+      "pomodoros": "Pomodoros",
+      "focused": "Focused",
+      "tasks": "Tasks",
+      "breaks": "Break Time",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "todaysPomodoros": "Today's Pomodoros",
+      "todaysTimeline": "Today's Timeline",
+      "skipped": "Skipped",
+      "running": "Running",
+      "dailyView": "Daily View",
+      "weeklyView": "Weekly View",
+      "entries": "{count} entries",
+      "noStats": "No statistics available",
+      "consistencyMessage": "🔥 {name, select, undefined {Your} other {{name}, your}} consistency is inspiring!",
+      "none": "None",
+      "motivationalMessages": {
+        "0": "🌟 {name, select, other {{name}, you're} none {You're}} building amazing focus habits!",
+        "1": "🔥 {name, select, other {{name}, your} none {Your}} consistency is inspiring!",
+        "2": "💪 {name, select, other {Keep it up, {name}!} none {Keep it up!}} Every pomodoro counts!",
+        "3": "🎯 {name, select, other {{name}, you're} none {You're}} in the zone! Stay focused!",
+        "4": "⚡ {name, select, other {Amazing work, {name}!} none {Amazing work!}} You're crushing it!",
+        "5": "🚀 {name, select, other {{name}, you're} none {You're}} on fire! Keep the momentum!",
+        "6": "🏆 {name, select, other {{name}, you're} none {You're}} a productivity champion!",
+        "7": "✨ {name, select, other {Brilliant focus, {name}!} none {Brilliant focus!}} You're unstoppable!",
+        "welcome": "👋 {name, select, other {Welcome, {name}!} none {Welcome!}} Ready to start your focus journey?",
+        "mastery": "🎉 {name, select, other {{name}, you're} none {You're}} a Pomodoro master! {pomodoroCount} sessions completed!",
+        "onRoll": "🔥 {name, select, other {{name}, you're} none {You're}} on a roll! {pomodoroCount} pomodoros and counting!",
+        "greatProgress": "💪 {name, select, other {Great progress, {name}!} none {Great progress!}} {pomodoroCount} sessions down!"
+      }
+    },
+    "welcome": {
+      "title": "Welcome to Pomodoro Timer",
+      "description": "Create your first session to start focusing and being productive with the Pomodoro Technique.",
+      "createSession": "Create Your First Session"
+    },
+    "session": {
+      "selectSession": "Select Session",
+      "activeSession": "Active Session",
+      "noActiveSession": "No active session",
+      "quickBreak": "Quick Break",
+      "quickLongBreak": "Quick Long Break"
+    },
+    "sessions": {
+      "title": "Manage Sessions",
+      "create": {
+        "title": "Create New Session",
+        "placeholders": {
+          "title": "Session name (e.g., 'Work', 'Study', 'Personal Projects')",
+          "description": "Optional description for this session"
+        },
+        "button": "Create Session"
+      },
+      "list": {
+        "title": "Your Sessions",
+        "empty": {
+          "message": "No sessions yet",
+          "hint": "Create your first session to get started"
+        }
+      },
+      "actions": {
+        "close": "Close"
+      }
+    },
+    "todos": {
+      "title": "Todo List",
+      "placeholders": {
+        "title": "What needs to be done?",
+        "description": "Additional details (optional)"
+      },
+      "labels": {
+        "estimatedPomodoros": "Est. Pomodoros"
+      },
+      "priority": {
+        "high": "High Priority",
+        "medium": "Medium Priority",
+        "low": "Low Priority"
+      },
+      "sections": {
+        "active": "Active Tasks",
+        "completed": "Completed Tasks"
+      },
+      "actions": {
+        "add": "Add Task"
+      },
+      "empty": {
+        "message": "No tasks yet",
+        "hint": "Add your first task to get organized"
+      }
+    },
+    "settings": {
+      "title": "Pomodoro Settings",
+      "sections": {
+        "durations": "Timer Durations",
+        "autoStart": "Auto-Start Options",
+        "sound": "Sound Alerts",
+        "notifications": "Desktop Notifications",
+        "background": "Background Image"
+      },
+      "labels": {
+        "pomodoroMinutes": "Pomodoro Duration",
+        "shortBreakMinutes": "Short Break",
+        "longBreakMinutes": "Long Break",
+        "longBreakInterval": "Long Break After",
+        "autoStartBreaks": "Auto-start breaks",
+        "autoStartPomodoros": "Auto-start pomodoros",
+        "soundEnabled": "Enable sound alerts",
+        "volume": "Volume",
+        "notificationsEnabled": "Enable notifications"
+      },
+      "descriptions": {
+        "longBreakInterval": "Take a long break after this many pomodoros",
+        "autoStartBreaks": "Automatically start break timers when pomodoro ends",
+        "autoStartPomodoros": "Automatically start pomodoro timers when break ends",
+        "volume": "Volume level: {volume}%",
+        "notifications": "Show desktop notifications when timers complete",
+        "background": "Upload a custom background image for this session"
+      },
+      "actions": {
+        "testSound": "Test",
+        "uploadBackground": "Upload Image",
+        "saveBackground": "Save Background",
+        "remove": "Remove",
+        "saveSettings": "Save Settings",
+        "cancel": "Cancel"
+      }
+    },
+    "notifications": {
+      "pomodoroComplete": "Pomodoro Complete!",
+      "breakComplete": "Break Complete!",
+      "timeForBreak": "Time for a break!",
+      "readyToFocus": "Ready to focus again?",
+      "chooseBreak": "🎉 Pomodoro Complete! Choose your break:",
+      "selectBreakType": "Select break type"
+    },
+    "breakSelection": {
+      "shortBreak": "Short Break ({minutes} min)",
+      "longBreak": "Long Break ({minutes} min)"
+    },
+    "errors": {
+      "noActiveSession": "No active session"
+    },
+    "durations": {
+      "minutes": "{count, plural, one {# minute} other {# minutes}}",
+      "hours": "{count, plural, one {# hour} other {# hours}}",
+      "hoursAndMinutes": "{hours}h {minutes}m",
+      "minutesShort": "{minutes}m"
     }
   }
 }
