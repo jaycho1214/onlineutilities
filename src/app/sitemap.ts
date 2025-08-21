@@ -26,16 +26,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Category pages (future implementation)
-  const categories = [
-    ...new Set(utilities.map((u) => u.category).filter(Boolean)),
-  ];
-  const categoryPages = categories.map((category) => ({
-    url: `${baseUrl}/category/${category?.toLowerCase()}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
-
-  return [...staticPages, ...utilityPages, ...categoryPages];
+  return [...staticPages, ...utilityPages];
 }
