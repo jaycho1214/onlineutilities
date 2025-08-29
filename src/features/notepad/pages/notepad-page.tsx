@@ -19,13 +19,13 @@ const MarkdownEditor = dynamic(
         <Loader2 className="animate-spin" />
       </div>
     ),
-  },
+  }
 );
 
 function NotepadComponent() {
   const t = useTranslations("Notepad");
-  const { currentNoteId } = useNotepad();
   const {
+    currentNoteId,
     title,
     content,
     saveStatus,
@@ -56,7 +56,7 @@ function NotepadComponent() {
       currentNoteId
         ? t("placeholders.titleWithNote")
         : t("placeholders.titleWithoutNote"),
-    [currentNoteId, t],
+    [currentNoteId, t]
   );
 
   const contentPlaceholder = useMemo(
@@ -64,7 +64,7 @@ function NotepadComponent() {
       currentNoteId
         ? t("placeholders.contentWithNote")
         : t("placeholders.contentWithoutNote"),
-    [currentNoteId, t],
+    [currentNoteId, t]
   );
 
   return (
