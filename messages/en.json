@@ -268,6 +268,12 @@
       "Preview files before including them in your llms.txt",
       "The generated llms.txt follows the standard format for LLM consumption",
       "Large files over 1MB are automatically excluded for performance"
+    ],
+    "quicknote": [
+      "Type anywhere on the page to instantly focus the note area",
+      "Your note is automatically saved to your browser as you type",
+      "Perfect for quick thoughts, temporary notes, or draft writing",
+      "No accounts needed - everything stays private in your browser"
     ]
   },
   "ColorPicker": {
@@ -342,6 +348,7 @@
     "text-diff": "Text Diff",
     "encoder-decoder": "Encoder/Decoder",
     "pomodoro": "Pomodoro",
+    "quicknote": "Quicknote",
     "github-to-llms-txt": "GitHub to llms.txt"
   },
   "Feedback": {
@@ -1329,6 +1336,23 @@
       "hours": "{count, plural, one {# hour} other {# hours}}",
       "hoursAndMinutes": "{hours}h {minutes}m",
       "minutesShort": "{minutes}m"
+    }
+  },
+  "Quicknote": {
+    "title": "Quicknote",
+    "description": "Lightning-fast note taking with instant saving",
+    "placeholder": "Start typing your note here...",
+    "notifications": {
+      "saved": "Note saved automatically",
+      "saveError": "Failed to save note",
+      "cleared": "Note cleared"
+    },
+    "actions": {
+      "clear": "Clear Note"
+    },
+    "stats": {
+      "characters": "{count, plural, one {# character} other {# characters}}",
+      "words": "{count, plural, one {# word} other {# words}}"
     }
   },
   "GitHubToLlmsTxt": {

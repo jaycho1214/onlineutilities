@@ -11,6 +11,7 @@ import {
   FileDiff,
   Lock,
   Focus,
+  StickyNote,
   type LucideIcon,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/github-icon";
@@ -211,6 +212,15 @@ export const utilities: Utility[] = [
       "files",
       "generate",
     ],
+  },
+  {
+    id: "quicknote",
+    name: "Quicknote",
+    description: "Lightning-fast note taking with instant saving",
+    icon: StickyNote,
+    href: "/quicknote",
+    category: "Text",
+    keywords: ["quicknote", "note", "fast", "simple", "text", "memo", "write"],
   },
 ];
 
