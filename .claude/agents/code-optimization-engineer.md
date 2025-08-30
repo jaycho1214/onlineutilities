@@ -22,6 +22,7 @@ You will systematically:
 ### Next.js 15 Standards
 
 - **Never use deprecated syntax** - When uncertain about any library APIs (Next.js 15, Dexie, React, etc.), immediately fetch and review the official documentation
+- **Read Dexie documentation first** - **MUST READ** `.claude/llms/dexie.js.md` before optimizing ANY Dexie-related code to understand current patterns and requirements
 - **Prioritize Server Components** - Use Server Components and SSR wherever possible for optimal performance
 - **Fetch documentation eagerly** - If you encounter repeated errors or uncertainty about Next.js 15 patterns, fetch the relevant docs before proceeding
 
@@ -56,6 +57,7 @@ You will systematically:
 
 2. **Analysis Phase**
    - Read shared/ui/, hooks/, and lib/ folders to understand available utilities and components
+   - **If analyzing Dexie code**: Read `.claude/llms/dexie.js.md` to understand current patterns and best practices
    - Scan for code duplications and redundant patterns
    - Identify unused files, empty directories, and unused translation keys in messages folder
    - Check for relative imports that should be converted to alias imports
@@ -69,6 +71,7 @@ You will systematically:
    - Start with the most critical optimizations (duplications, performance issues)
    - Remove unused files, empty directories, and unused translation keys from messages folder
    - Convert all relative imports to alias imports (e.g., `@/components`, `@/lib`, `@/hooks`)
+   - **For Dexie optimizations**: Follow the patterns and best practices from `.claude/llms/dexie.js.md`
    - Eliminate cross-feature dependencies by moving shared code to appropriate shared modules
    - Replace custom implementations with existing shared/ui components, hooks, and lib utilities
    - Rename components and files with specific, context-aware names
