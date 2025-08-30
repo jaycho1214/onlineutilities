@@ -261,6 +261,13 @@
     ],
     "encoder-decoder": [
       "Paste encoded text to the output area (when input is empty) to automatically switch to decode mode"
+    ],
+    "github-to-llms-txt": [
+      "Enter any public GitHub repository URL to get started",
+      "Use bulk selection to quickly include files by type or extension",
+      "Preview files before including them in your llms.txt",
+      "The generated llms.txt follows the standard format for LLM consumption",
+      "Large files over 1MB are automatically excluded for performance"
     ]
   },
   "ColorPicker": {
@@ -334,7 +341,8 @@
     "random-generator": "Random Generator",
     "text-diff": "Text Diff",
     "encoder-decoder": "Encoder/Decoder",
-    "pomodoro": "Pomodoro"
+    "pomodoro": "Pomodoro",
+    "github-to-llms-txt": "GitHub to llms.txt"
   },
   "Feedback": {
     "title": "Send Feedback",
@@ -1322,5 +1330,147 @@
       "hoursAndMinutes": "{hours}h {minutes}m",
       "minutesShort": "{minutes}m"
     }
+  },
+  "GitHubToLlmsTxt": {
+    "title": "GitHub to llms.txt",
+    "description": "Generate llms.txt files from GitHub repositories with customizable file selection and proper formatting",
+    "input": {
+      "repositoryUrl": "Repository URL",
+      "repositoryUrlPlaceholder": "https://github.com/owner/repository",
+      "repositoryUrlDescription": "Enter a public GitHub repository URL",
+      "loadRepository": "Load Repository",
+      "loading": "Loading repository...",
+      "fetchFailed": "Failed to fetch repository"
+    },
+    "repository": {
+      "title": "Repository Details",
+      "name": "Repository",
+      "owner": "Owner",
+      "description": "Description",
+      "language": "Language",
+      "stars": "Stars",
+      "forks": "Forks",
+      "lastUpdated": "Last Updated",
+      "noDescription": "No description available",
+      "private": "Private Repository",
+      "archived": "Archived Repository"
+    },
+    "files": {
+      "title": "File Selection",
+      "totalFiles": "{count, plural, one {# file} other {# files}} found",
+      "selectedFiles": "{count, plural, one {# file} other {# files}} selected",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "filterFiles": "Filter files...",
+      "showSelected": "Show Selected Only",
+      "showAll": "Show All Files",
+      "byExtension": "Select by Extension",
+      "bulkActions": "Bulk Actions",
+      "extensions": {
+        "markdown": "Markdown (.md, .mdx)",
+        "javascript": "JavaScript (.js, .jsx, .ts, .tsx)",
+        "python": "Python (.py, .pyx)",
+        "documentation": "Documentation (.md, .rst, .txt)",
+        "config": "Config (.json, .yaml, .toml, .ini)",
+        "code": "Code Files (.js, .py, .go, .rs, .java)",
+        "all": "All Files"
+      },
+      "excludeDotFiles": "Exclude dot files (.*)",
+      "excludeLargeFiles": "Exclude files over 1MB",
+      "fileSize": "{size} KB",
+      "filePath": "Path: {path}",
+      "fileType": "Type: {type}",
+      "previewContent": "Preview Content",
+      "noFilesSelected": "No files selected",
+      "selectFilesPrompt": "Select files to include in your llms.txt"
+    },
+    "generator": {
+      "title": "llms.txt Generator",
+      "projectName": "Project Name",
+      "projectNamePlaceholder": "Enter project name...",
+      "projectDescription": "Project Description",
+      "projectDescriptionPlaceholder": "Optional short summary of the project...",
+      "includeMetadata": "Include Repository Metadata",
+      "includeFileList": "Include File List",
+      "includeContent": "Include File Content",
+      "generateButton": "Generate llms.txt",
+      "generating": "Generating...",
+      "downloadButton": "Download llms.txt",
+      "copyButton": "Copy to Clipboard",
+      "previewTitle": "Preview",
+      "noContent": "No content to preview",
+      "generatedSuccess": "llms.txt generated successfully"
+    },
+    "output": {
+      "title": "Generated llms.txt",
+      "preview": "Preview",
+      "download": "Download File",
+      "copy": "Copy Content",
+      "clear": "Clear",
+      "fileSize": "File size: {size} KB",
+      "characterCount": "{count, plural, one {# character} other {# characters}}",
+      "lineCount": "{count, plural, one {# line} other {# lines}}",
+      "emptyOutput": "Generate an llms.txt file to see the output here"
+    },
+    "actions": {
+      "generate": "Generate",
+      "regenerate": "Regenerate",
+      "download": "Download",
+      "copy": "Copy",
+      "clear": "Clear",
+      "reset": "Reset",
+      "save": "Save Configuration",
+      "load": "Load Configuration"
+    },
+    "settings": {
+      "title": "Generator Settings",
+      "format": "Output Format",
+      "includeTimestamp": "Include Timestamp",
+      "includeRepositoryInfo": "Include Repository Information",
+      "maxFileSize": "Max File Size (KB)",
+      "fileEncoding": "File Encoding",
+      "lineEndings": "Line Endings"
+    },
+    "history": {
+      "title": "Generation History",
+      "empty": "No generation history yet",
+      "noHistory": "Your llms.txt generation history will appear here",
+      "clearAll": "Clear All",
+      "itemTitle": "llms.txt for {repository}",
+      "regenerate": "Regenerate with same settings"
+    },
+    "errors": {
+      "invalidUrl": "Please enter a valid GitHub repository URL",
+      "repositoryNotFound": "Repository not found or is private",
+      "fetchFailed": "Failed to fetch repository data",
+      "noFilesSelected": "Please select at least one file",
+      "generationFailed": "Failed to generate llms.txt",
+      "downloadFailed": "Failed to download file",
+      "copyFailed": "Failed to copy to clipboard",
+      "networkError": "Network error occurred",
+      "rateLimited": "GitHub API rate limit exceeded",
+      "unauthorized": "Repository access unauthorized",
+      "fileTooLarge": "File {filename} is too large to process",
+      "unsupportedFile": "File type not supported: {filename}",
+      "failedToLoadFile": "Failed to load content for {filename}"
+    },
+    "notifications": {
+      "repositoryLoaded": "Repository loaded successfully",
+      "filesSelected": "{count, plural, one {# file} other {# files}} selected",
+      "generated": "llms.txt generated successfully",
+      "downloaded": "File downloaded successfully",
+      "copied": "Content copied to clipboard",
+      "cleared": "Content cleared",
+      "configSaved": "Configuration saved",
+      "configLoaded": "Configuration loaded",
+      "historyCleared": "History cleared"
+    },
+    "tips": [
+      "Enter any public GitHub repository URL to get started",
+      "Use bulk selection to quickly include files by type or extension",
+      "Preview files before including them in your llms.txt",
+      "The generated llms.txt follows the standard format for LLM consumption",
+      "Large files over 1MB are automatically excluded for performance"
+    ]
   }
 }

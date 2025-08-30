@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Timer,
   Clock,
@@ -12,6 +13,7 @@ import {
   Focus,
   type LucideIcon,
 } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/github-icon";
 
 export const baseUrl = "https://onlineutilities.org";
 
@@ -19,7 +21,7 @@ export interface Utility {
   id: string;
   name: string;
   description: string;
-  icon: LucideIcon;
+  icon: LucideIcon | React.ComponentType<{ className?: string }>;
   href: string;
   category?: string;
   keywords?: string[];
@@ -189,6 +191,27 @@ export const utilities: Utility[] = [
       "concentration",
     ],
   },
+  {
+    id: "github-to-llms-txt",
+    name: "GitHub to llms.txt",
+    description:
+      "Generate llms.txt files from GitHub repositories with file selection and formatting",
+    icon: GitHubIcon,
+    href: "/llms-txt-maker",
+    category: "Generator",
+    keywords: [
+      "llms.txt",
+      "github",
+      "repository",
+      "markdown",
+      "ai",
+      "llm",
+      "context",
+      "documentation",
+      "files",
+      "generate",
+    ],
+  },
 ];
 
 export const getUtilityById = (id: string): Utility | undefined => {
@@ -217,6 +240,7 @@ export const SIDEBAR_SUPPORTED_PAGES = [
   "/random-generator",
   "/text-diff",
   "/encoder-decoder",
+  "/llms-txt-maker",
 ];
 
 export const isSidebarSupported = (pathname: string): boolean => {
