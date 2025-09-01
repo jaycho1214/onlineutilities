@@ -51,7 +51,7 @@ export function Quicknote() {
         }
       }, AUTO_SAVE_DELAY);
     },
-    [t],
+    [t]
   );
 
   // Handle content change
@@ -61,7 +61,7 @@ export function Quicknote() {
       setContent(value);
       debouncedSave(value);
     },
-    [debouncedSave],
+    [debouncedSave]
   );
 
   // Global keypress handler - typing anywhere focuses the textarea
@@ -119,7 +119,7 @@ export function Quicknote() {
         textareaRef.current.focus();
       }
     },
-    [],
+    []
   );
 
   // Cleanup timeout on unmount
@@ -154,6 +154,7 @@ export function Quicknote() {
           // Text styling
           "text-base leading-relaxed text-foreground",
           "placeholder:text-muted-foreground/50",
+          "mt-6",
           // Padding for comfortable reading
           "p-8 md:p-12 lg:p-16",
           // Selection colors
@@ -161,7 +162,7 @@ export function Quicknote() {
           // Remove focus rings and visible focus states
           "focus:ring-0 focus:outline-none focus-visible:ring-0",
           // Smooth transitions
-          "transition-all duration-200",
+          "transition-all duration-200"
         )}
         style={{
           // Ensure no browser default styling
