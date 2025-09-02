@@ -23,7 +23,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const t = useTranslations("Formatter");
     const [isCopied, setIsCopied] = useState(false);
@@ -50,7 +50,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
           setIsCopied(false);
         }, feedbackDuration);
       },
-      [disabled, onClick, feedbackDuration]
+      [disabled, onClick, feedbackDuration],
     );
 
     // Use size directly from ActionButton variants
@@ -63,7 +63,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
             "transition-all duration-200 ease-out",
             isCopied
               ? "scale-0 rotate-90 opacity-0"
-              : "scale-100 rotate-0 opacity-100"
+              : "scale-100 rotate-0 opacity-100",
           )}
         >
           <Copy
@@ -71,7 +71,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
               "transition-all duration-200",
               size === "sm" && "h-3 w-3",
               size === "default" && "h-4 w-4",
-              size === "lg" && "h-5 w-5"
+              size === "lg" && "h-5 w-5",
             )}
           />
         </div>
@@ -81,7 +81,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
             "absolute transition-all duration-200 ease-out",
             isCopied
               ? "scale-100 rotate-0 opacity-100"
-              : "scale-0 rotate-90 opacity-0"
+              : "scale-0 rotate-90 opacity-0",
           )}
         >
           <Check
@@ -89,7 +89,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
               "transition-all duration-200 text-green-500",
               size === "sm" && "h-3 w-3",
               size === "default" && "h-4 w-4",
-              size === "lg" && "h-5 w-5"
+              size === "lg" && "h-5 w-5",
             )}
           />
         </div>
@@ -109,12 +109,12 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
           "relative overflow-hidden",
           isCopied && "text-green-500",
           isAnimating && "scale-95",
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 CopyButton.displayName = "CopyButton";

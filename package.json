@@ -45,7 +45,8 @@
     "react-colorful": "^5.6.1",
     "react-dom": "19.1.1",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "youtube-transcript-ts": "file:/Users/jay/Codes/youtube-transcript-ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

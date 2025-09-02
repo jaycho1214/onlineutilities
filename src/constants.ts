@@ -13,6 +13,7 @@ import {
   Focus,
   StickyNote,
   type LucideIcon,
+  Captions,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/github-icon";
 
@@ -221,6 +222,15 @@ export const utilities: Utility[] = [
     href: "/quicknote",
     category: "Text",
     keywords: ["quicknote", "note", "fast", "simple", "text", "memo", "write"],
+  },
+  {
+    id: "youtube-transcription",
+    name: "YouTube Transcription",
+    description: "Extract and copy YouTube subtitles",
+    icon: Captions,
+    href: "/yt",
+    category: "Text",
+    keywords: ["youtube", "transcript", "subtitle", "captions", "video", "cc"],
   },
 ];
 

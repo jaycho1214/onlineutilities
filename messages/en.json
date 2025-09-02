@@ -274,6 +274,11 @@
       "Your note is automatically saved to your browser as you type",
       "Perfect for quick thoughts, temporary notes, or draft writing",
       "No accounts needed - everything stays private in your browser"
+    ],
+    "youtube-transcription": [
+      "Pick subtitle language from both manual and auto-generated tracks",
+      "Toggle timestamps and copy or download the full transcript",
+      "All processing happens locally in your browser"
     ]
   },
   "ColorPicker": {
@@ -349,7 +354,56 @@
     "encoder-decoder": "Encoder/Decoder",
     "pomodoro": "Pomodoro",
     "quicknote": "Quicknote",
-    "github-to-llms-txt": "GitHub to llms.txt"
+    "github-to-llms-txt": "GitHub to llms.txt",
+    "youtube-transcription": "YouTube Transcription"
+  },
+  "YouTubeTranscription": {
+    "title": "YouTube Transcription",
+    "description": "Extract and copy subtitles from YouTube videos.",
+    "input": {
+      "label": "YouTube URL or ID",
+      "placeholder": "Paste a YouTube URL or video ID...",
+      "open": "Open",
+      "invalid": "Invalid YouTube URL or ID"
+    },
+    "viewer": {
+      "languages": "Languages",
+      "selectLanguage": "Select subtitle language",
+      "generated": "Auto-generated",
+      "manual": "Manually created",
+      "fetching": "Fetching transcript...",
+      "noSubtitles": "No subtitles available",
+      "showTimestamps": "Show timestamps",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "downloadTxt": "Download .txt",
+      "error": "Failed to fetch transcript",
+      "autoScroll": "Auto scroll",
+      "autoFollow": "Auto follow",
+      "info": {
+        "title": "Video Info",
+        "videoId": "Video ID",
+        "language": "Language",
+        "lines": "Lines",
+        "duration": "Duration",
+        "export": "Export",
+        "openYoutube": "Open on YouTube",
+        "copyLinkAtTime": "Copy link at current"
+      },
+      "exportButton": "Export",
+      "exportDialog": {
+        "title": "Export Transcript",
+        "format": "Format",
+        "range": "Range",
+        "rangeAll": "All entries",
+        "rangeSelected": "Selected entry",
+        "includeTimestamps": "Include timestamps",
+        "actions": {
+          "copy": "Copy",
+          "download": "Download"
+        }
+      }
+    }
   },
   "Feedback": {
     "title": "Send Feedback",
