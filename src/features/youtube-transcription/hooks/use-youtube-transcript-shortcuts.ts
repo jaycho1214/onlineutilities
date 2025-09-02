@@ -46,23 +46,18 @@ export function useYouTubeTranscriptShortcuts({
 
       if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelectedIndex(
-          (idx) =>
-            Math.max(
-              0,
-              (typeof idx === "number" ? idx : selectedIndex) - 1,
-            ) as any,
+        setSelectedIndex((idx) =>
+          Math.max(0, (typeof idx === "number" ? idx : selectedIndex) - 1),
         );
         return;
       }
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelectedIndex(
-          (idx) =>
-            Math.min(
-              snippets.length - 1,
-              (typeof idx === "number" ? idx : selectedIndex) + 1,
-            ) as any,
+        setSelectedIndex((idx) =>
+          Math.min(
+            snippets.length - 1,
+            (typeof idx === "number" ? idx : selectedIndex) + 1,
+          ),
         );
         return;
       }
@@ -79,7 +74,7 @@ export function useYouTubeTranscriptShortcuts({
           const next = Math.max(0, val - 1);
           const s = snippets[next];
           if (s) seekTo(Math.max(0, Math.floor(s.start)));
-          return next as any;
+          return next;
         });
         return;
       }
@@ -90,7 +85,7 @@ export function useYouTubeTranscriptShortcuts({
           const next = Math.min(snippets.length - 1, val + 1);
           const s = snippets[next];
           if (s) seekTo(Math.max(0, Math.floor(s.start)));
-          return next as any;
+          return next;
         });
         return;
       }

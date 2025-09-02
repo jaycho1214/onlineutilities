@@ -64,7 +64,7 @@ function decodeEntities(str: string) {
     .replace(/&apos;/g, "'")
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)))
     .replace(/&#x([0-9a-fA-F]+);/g, (_, n) =>
-      String.fromCharCode(parseInt(n, 16))
+      String.fromCharCode(parseInt(n, 16)),
     );
 }
 
@@ -171,7 +171,7 @@ export function ExportDialog({
                 </div>
                 <Select
                   value={format}
-                  onValueChange={(v) => setFormat(v as any)}
+                  onValueChange={(v) => setFormat(v as "txt" | "srt" | "vtt")}
                 >
                   <SelectTrigger className="min-w-[160px]">
                     <SelectValue placeholder="TXT" />
@@ -188,7 +188,10 @@ export function ExportDialog({
                 <div className="text-sm text-foreground">
                   {t("viewer.exportDialog.range")}
                 </div>
-                <Select value={range} onValueChange={(v) => setRange(v as any)}>
+                <Select
+                  value={range}
+                  onValueChange={(v) => setRange(v as "all" | "selected")}
+                >
                   <SelectTrigger className="min-w-[160px]">
                     <SelectValue
                       placeholder={t("viewer.exportDialog.rangeAll")}

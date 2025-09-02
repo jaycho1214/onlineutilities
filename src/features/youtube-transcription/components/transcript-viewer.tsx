@@ -14,7 +14,6 @@ import {
 import { Switch } from "@/features/shared/ui/switch";
 import { Label } from "@/features/shared/ui/label";
 import { CopyButton } from "@/features/shared/components/copy-button";
-import { Button } from "@/features/shared/ui/button";
 import { Copy as CopyIcon, FileX } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollArea } from "@/features/shared/ui/scroll-area";
@@ -112,15 +111,16 @@ export function TranscriptViewer({
       setLoading(true);
       setError(null);
       try {
-        const { YouTubeTranscriptApi } = await import("youtube-transcript-ts");
-        const boundFetch = (globalThis.fetch as any).bind(globalThis);
-        const api = new YouTubeTranscriptApi({ fetch: boundFetch });
+        const { YouTubeTranscriptApi } = await import(
+          "@/lib/youtube-transcript"
+        );
+        const api = new YouTubeTranscriptApi();
         const fetched = await api.fetch(videoId, [selected]);
         if (cancelled) return;
         setSnippets(fetched.toRawData());
         setSelectedIndex(0);
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || t("viewer.error"));
+      } catch (e: unknown) {
+        if (!cancelled) setError((e as Error)?.message || t("viewer.error"));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -158,20 +158,6 @@ export function TranscriptViewer({
       .catch(() => void 0);
   }, [transcriptText]);
 
-  const handleDownload = useCallback(() => {
-    const blob = new Blob([transcriptText], {
-      type: "text/plain;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${videoId}-${selected || "transcript"}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }, [transcriptText, videoId, selected]);
-
   const formatHMS = (sec: number) => {
     const h = Math.floor(sec / 3600);
     const m = Math.floor((sec % 3600) / 60)
@@ -183,7 +169,7 @@ export function TranscriptViewer({
     return h > 0 ? `${h.toString().padStart(2, "0")}:${m}:${s}` : `${m}:${s}`;
   };
 
-  const postToPlayer = useCallback((func: string, args: any[] = []) => {
+  const postToPlayer = useCallback((func: string, args: unknown[] = []) => {
     const frame = iframeRef.current;
     if (!frame || !frame.contentWindow) return;
     try {
@@ -256,8 +242,6 @@ export function TranscriptViewer({
     URL.revokeObjectURL(url);
   };
 
-  const exportTxt = () =>
-    downloadAs(`${videoId}-${selected || "transcript"}.txt`, transcriptText);
   const exportSrt = () =>
     downloadAs(
       `${videoId}-${selected || "transcript"}.srt`,
@@ -278,7 +262,8 @@ export function TranscriptViewer({
   useYouTubeTranscriptShortcuts({
     snippets,
     selectedIndex,
-    setSelectedIndex: (updater: any) => setSelectedIndex(updater),
+    setSelectedIndex: (updater: (prev: number) => number) =>
+      setSelectedIndex(updater),
     seekTo: (s: number) => seekTo(s),
     handleCopyAll: handleCopy,
     exportSrt: () => exportSrt(),
@@ -311,11 +296,10 @@ export function TranscriptViewer({
     if (!autoFollow) return;
     let currentTime = 0;
     let isPlaying = false;
-    let isReady = false;
 
     const onMessage = (e: MessageEvent) => {
       if (e.origin !== "https://www.youtube.com") return;
-      let data: any = e.data;
+      let data: unknown = e.data;
       if (typeof data === "string") {
         try {
           data = JSON.parse(data);
@@ -325,25 +309,30 @@ export function TranscriptViewer({
       }
 
       // Handle different YouTube events
+      const dataObj = data as {
+        event?: string;
+        info?: { currentTime?: number; playerState?: number };
+      };
       if (
-        data?.event === "video-progress" &&
-        typeof data.info?.currentTime === "number"
+        dataObj?.event === "video-progress" &&
+        typeof dataObj.info?.currentTime === "number"
       ) {
-        currentTime = data.info.currentTime;
+        currentTime = dataObj.info.currentTime;
       }
-      if (data?.event === "infoDelivery" && data.info) {
-        if (typeof data.info.currentTime === "number") {
-          currentTime = data.info.currentTime;
+      if (dataObj?.event === "infoDelivery" && dataObj.info) {
+        if (typeof dataObj.info.currentTime === "number") {
+          currentTime = dataObj.info.currentTime;
         }
-        if (typeof data.info.playerState === "number") {
-          isPlaying = data.info.playerState === 1; // 1 = playing
+        if (typeof dataObj.info.playerState === "number") {
+          isPlaying = dataObj.info.playerState === 1; // 1 = playing
         }
       }
-      if (data?.event === "onStateChange" && typeof data.info === "number") {
-        isPlaying = data.info === 1; // 1 = playing
-      }
-      if (data?.event === "onReady") {
-        isReady = true;
+      const stateChangeData = data as { event?: string; info?: number };
+      if (
+        stateChangeData?.event === "onStateChange" &&
+        typeof stateChangeData.info === "number"
+      ) {
+        isPlaying = stateChangeData.info === 1; // 1 = playing
       }
     };
 
@@ -414,7 +403,7 @@ export function TranscriptViewer({
               setTimeout(() => setAutoFollowIndicator(false), 1000);
             }
           }
-        } catch (e) {
+        } catch {
           // Ignore errors in polling
         }
       }, 500); // Poll every 500ms

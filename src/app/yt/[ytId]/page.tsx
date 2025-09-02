@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { YouTubeTranscriptApi } from "youtube-transcript-ts";
+import { YouTubeTranscriptApi } from "@/lib/youtube-transcript";
 import {
   TranscriptViewer,
   type TrackInfo,
@@ -21,11 +21,17 @@ export default async function YtTranscriptPage({
   try {
     const api = new YouTubeTranscriptApi();
     const list = await api.list(videoId);
-    tracks = Array.from(list).map((tr: any) => ({
-      language: tr.language,
-      languageCode: tr.languageCode,
-      isGenerated: tr.isGenerated,
-    }));
+    tracks = Array.from(list).map(
+      (tr: {
+        language: string;
+        languageCode: string;
+        isGenerated: boolean;
+      }) => ({
+        language: tr.language,
+        languageCode: tr.languageCode,
+        isGenerated: tr.isGenerated,
+      }),
+    );
     initialLanguageCode =
       tracks.find((x) => x.languageCode?.startsWith("en"))?.languageCode ||
       tracks[0]?.languageCode ||
@@ -35,7 +41,7 @@ export default async function YtTranscriptPage({
       const fetched = await transcript.fetch(false);
       initialSnippets = fetched.toRawData();
     }
-  } catch (e) {
+  } catch {
     // Ignore; client will handle errors when fetching interactively
   }
 

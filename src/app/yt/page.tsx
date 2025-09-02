@@ -52,7 +52,7 @@ export default function YtLandingPage() {
     }
     setError(null);
     router.push(`/yt/${id}`);
-  }, [value, router]);
+  }, [value, router, t]);
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -60,7 +60,7 @@ export default function YtLandingPage() {
         handleOpen();
       }
     },
-    [handleOpen]
+    [handleOpen],
   );
 
   return (
