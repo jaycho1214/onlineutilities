@@ -8,11 +8,7 @@ import { ActionButton } from "../ui/action-button";
 import { cn } from "@/lib/utils";
 
 interface CopyButtonProps
-  extends Omit<
-    React.ComponentProps<typeof ActionButton>,
-    "onClick" | "children" | "icon"
-  > {
-  onClick?: () => void;
+  extends Omit<React.ComponentProps<typeof ActionButton>, "children" | "icon"> {
   feedbackDuration?: number;
 }
 
@@ -27,32 +23,35 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
       disabled,
       ...props
     },
-    ref,
+    ref
   ) => {
     const t = useTranslations("Formatter");
     const [isCopied, setIsCopied] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
 
-    const handleCopy = useCallback(() => {
-      if (disabled) return;
+    const handleCopy: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+      (e) => {
+        if (disabled) return;
 
-      // Trigger animation
-      setIsAnimating(true);
-      setIsCopied(true);
+        // Trigger animation
+        setIsAnimating(true);
+        setIsCopied(true);
 
-      // Call custom onClick handler if provided
-      onClick?.();
+        // Call custom onClick handler if provided
+        onClick?.(e);
 
-      // Reset animation after brief delay
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 150);
+        // Reset animation after brief delay
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 150);
 
-      // Reset state after feedback duration
-      setTimeout(() => {
-        setIsCopied(false);
-      }, feedbackDuration);
-    }, [disabled, onClick, feedbackDuration]);
+        // Reset state after feedback duration
+        setTimeout(() => {
+          setIsCopied(false);
+        }, feedbackDuration);
+      },
+      [disabled, onClick, feedbackDuration]
+    );
 
     // Use size directly from ActionButton variants
 
@@ -64,7 +63,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
             "transition-all duration-200 ease-out",
             isCopied
               ? "scale-0 rotate-90 opacity-0"
-              : "scale-100 rotate-0 opacity-100",
+              : "scale-100 rotate-0 opacity-100"
           )}
         >
           <Copy
@@ -72,7 +71,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
               "transition-all duration-200",
               size === "sm" && "h-3 w-3",
               size === "default" && "h-4 w-4",
-              size === "lg" && "h-5 w-5",
+              size === "lg" && "h-5 w-5"
             )}
           />
         </div>
@@ -82,7 +81,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
             "absolute transition-all duration-200 ease-out",
             isCopied
               ? "scale-100 rotate-0 opacity-100"
-              : "scale-0 rotate-90 opacity-0",
+              : "scale-0 rotate-90 opacity-0"
           )}
         >
           <Check
@@ -90,7 +89,7 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
               "transition-all duration-200 text-green-500",
               size === "sm" && "h-3 w-3",
               size === "default" && "h-4 w-4",
-              size === "lg" && "h-5 w-5",
+              size === "lg" && "h-5 w-5"
             )}
           />
         </div>
@@ -110,12 +109,12 @@ const CopyButton = React.forwardRef<HTMLButtonElement, CopyButtonProps>(
           "relative overflow-hidden",
           isCopied && "text-green-500",
           isAnimating && "scale-95",
-          className,
+          className
         )}
         {...props}
       />
     );
-  },
+  }
 );
 
 CopyButton.displayName = "CopyButton";
