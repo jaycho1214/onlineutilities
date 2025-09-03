@@ -114,7 +114,12 @@ export function TranscriptViewer({
         const { YouTubeTranscriptApi } = await import(
           "@/lib/youtube-transcript"
         );
-        const api = new YouTubeTranscriptApi();
+        const api = new YouTubeTranscriptApi({
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          },
+        });
         const fetched = await api.fetch(videoId, [selected]);
         if (cancelled) return;
         setSnippets(fetched.toRawData());
