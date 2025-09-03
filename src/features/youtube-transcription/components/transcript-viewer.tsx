@@ -152,7 +152,13 @@ export function TranscriptViewer({
       } catch (e: unknown) {
         if (!cancelled) {
           console.error("Failed to fetch transcript tracks:", e);
-          setError((e as Error)?.message || t("viewer.error"));
+          // Show specific message for CORS/hosting provider blocking
+          const errorMessage = (e as Error)?.message || "";
+          if (errorMessage.includes("Failed to fetch") || errorMessage.includes("CORS") || errorMessage.includes("blocked")) {
+            setError("YouTube transcripts are not available in production due to hosting provider restrictions. This feature works in development only.");
+          } else {
+            setError(errorMessage || t("viewer.error"));
+          }
         }
       } finally {
         if (!cancelled) setLoading(false);
