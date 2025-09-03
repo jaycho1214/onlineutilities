@@ -19,7 +19,7 @@ export class HttpClient {
   private fetchImpl: FetchLike;
 
   constructor(fetchImpl?: FetchLike, headers?: HeadersInitLike) {
-    this.fetchImpl = fetchImpl || (globalThis.fetch as unknown as FetchLike);
+    this.fetchImpl = fetchImpl || (fetch as unknown as FetchLike);
     this.defaultHeaders = {
       "Accept-Language": "en-US",
       ...headers,
