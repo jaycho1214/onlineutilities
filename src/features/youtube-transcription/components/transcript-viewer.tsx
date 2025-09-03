@@ -59,6 +59,7 @@ export function TranscriptViewer({
 }: TranscriptViewerProps) {
   const t = useTranslations("YouTubeTranscription");
 
+  const [clientTracks, setClientTracks] = useState<TrackInfo[]>(tracks || []);
   const [selected, setSelected] = useState<string>(initialLanguageCode || "");
   const [snippets, setSnippets] = useState<TranscriptSnippet[]>(
     initialSnippets || [],
@@ -102,6 +103,66 @@ export function TranscriptViewer({
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch tracks on client-side if server-side failed (empty tracks)
+  useEffect(() => {
+    if (clientTracks.length > 0) return; // Already have tracks
+
+    let cancelled = false;
+    async function fetchTracks() {
+      setLoading(true);
+      setError(null);
+      try {
+        const { YouTubeTranscriptApi } = await import(
+          "@/lib/youtube-transcript"
+        );
+        const api = new YouTubeTranscriptApi({
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          },
+        });
+        const list = await api.list(videoId);
+        if (cancelled) return;
+
+        const fetchedTracks = Array.from(list).map(
+          (tr: {
+            language: string;
+            languageCode: string;
+            isGenerated: boolean;
+          }) => ({
+            language: tr.language,
+            languageCode: tr.languageCode,
+            isGenerated: tr.isGenerated,
+          }),
+        );
+
+        setClientTracks(fetchedTracks);
+
+        // Auto-select English or first available language
+        const englishTrack = fetchedTracks.find((x) =>
+          x.languageCode?.startsWith("en"),
+        );
+        const defaultLanguage =
+          englishTrack?.languageCode || fetchedTracks[0]?.languageCode || "";
+        if (defaultLanguage && !selected) {
+          setSelected(defaultLanguage);
+        }
+      } catch (e: unknown) {
+        if (!cancelled) {
+          console.error("Failed to fetch transcript tracks:", e);
+          setError((e as Error)?.message || t("viewer.error"));
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchTracks();
+    return () => {
+      cancelled = true;
+    };
+  }, [videoId, clientTracks.length, selected, t]);
 
   useEffect(() => {
     if (!selected) return;
@@ -259,8 +320,8 @@ export function TranscriptViewer({
     );
 
   const selectedTrack = useMemo(
-    () => tracks.find((t) => t.languageCode === selected),
-    [tracks, selected],
+    () => clientTracks.find((t) => t.languageCode === selected),
+    [clientTracks, selected],
   );
 
   // Keyboard shortcuts (extracted hook)
@@ -499,7 +560,7 @@ export function TranscriptViewer({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {tracks.map((tr) => (
+                  {clientTracks.map((tr) => (
                     <SelectItem key={tr.languageCode} value={tr.languageCode}>
                       <span className="flex w-full min-w-0 items-center gap-2">
                         <span className="truncate flex-1" title={tr.language}>
