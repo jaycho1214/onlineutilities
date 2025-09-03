@@ -104,9 +104,10 @@ export function TranscriptViewer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch tracks on client-side if server-side failed (empty tracks)
+  // Fetch tracks on client-side if server-side failed (empty tracks and no initial snippets)
   useEffect(() => {
     if (clientTracks.length > 0) return; // Already have tracks
+    if (initialSnippets.length > 0) return; // Already have server-side data
 
     let cancelled = false;
     async function fetchTracks() {
@@ -162,7 +163,7 @@ export function TranscriptViewer({
     return () => {
       cancelled = true;
     };
-  }, [videoId, clientTracks.length, selected, t]);
+  }, [videoId, clientTracks.length, selected, t, initialSnippets.length]);
 
   useEffect(() => {
     if (!selected) return;

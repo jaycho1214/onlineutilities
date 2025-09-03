@@ -20,7 +20,16 @@ export class HttpClient {
   private fetchImpl: FetchLike;
 
   constructor(fetchImpl?: FetchLike, headers?: HeadersInitLike) {
-    this.fetchImpl = fetchImpl || (fetch as unknown as FetchLike);
+    // Create a properly bound fetch function that won't lose context
+    const boundFetch = async (
+      url: string,
+      init?: { method?: string; headers?: HeadersInitLike; body?: string },
+    ) => {
+      const response = await fetch(url, init);
+      return response as unknown as ResponseLike;
+    };
+
+    this.fetchImpl = fetchImpl || boundFetch;
     this.defaultHeaders = {
       "Accept-Language": "en-US",
       ...headers,
