@@ -1,4 +1,5 @@
 import { IpBlocked, YouTubeRequestFailed } from "./errors";
+import fetch from "cross-fetch";
 
 export type HeadersInitLike = Record<string, string>;
 
